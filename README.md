@@ -38,14 +38,26 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 
 ## Ablauf in der Lektion
 
-1. **Vorbereitung:** Auf dem Laptop der Lehrperson `spielleitung.html` öffnen. Im Bereich «Countdown synchronisieren» das Spielende wählen, zum Beispiel 10:45.
-2. **Tablets:** Auf jedem Tablet den angezeigten Tablet-Link öffnen, zum Beispiel `index.html?ende=10:45`. Alle Geräte zählen dann auf dieselbe Uhrzeit herunter (die Uhren der Geräte sollten automatisch gestellt sein).
-3. **Beamer:** Mit «Beamer mit dieser Endzeit öffnen» läuft der grosse Countdown synchron. Mit «Vollbild» wird er bildschirmfüllend.
-4. **Einstieg:** «Hackervideo» abspielen (oder «Botschaft von NULLBYTE»), danach die Story-Texte «Alarm», «Auftrag» und «Regeln» zeigen. Die Story wird auf Wunsch automatisch vorgelesen.
-5. Die Teams geben ihren Namen ein und tippen auf **«Spiel starten»** (das entsperrt auch den Ton).
+1. **Vorbereitung:** Auf dem Laptop der Lehrperson (am Beamer) `spielleitung.html` öffnen und mit «Vollbild» bildschirmfüllend machen. Auf der Leinwand steht gross ein **Spielcode** aus fünf Buchstaben, zum Beispiel KXRTM.
+2. **Anmelden:** Die Teams öffnen auf ihrem Tablet die Startseite `index.html`, geben Teamname und Spielcode ein und tippen auf «Spiel starten». Das Tablet zeigt nun «Warten auf die Spielleitung». Mit «Wir sind bereit» schalten die Teams den Ton ein. Die Aufgaben sind noch gesperrt und nicht sichtbar.
+3. **Spiel starten:** Die Spielleitung drückt in der Steuerung auf **«▶ Spiel starten»**. Das Hackervideo läuft (oder, falls `videos/intro.mp4` fehlt, die Botschaft von NULLBYTE mit Maske und Hackerstimme).
+4. **Aufgaben erhalten:** Nach dem Intro startet automatisch der Countdown auf dem Beamer, die Story «Euer Auftrag» wird gezeigt und vorgelesen, und alle Tablets erhalten innerhalb weniger Sekunden das Startsignal: «Aufgaben empfangen», Protokoll 1 erscheint, der Countdown läuft synchron.
+5. Wer das Intro abkürzen will, drückt «Aufgaben jetzt freigeben ▶» (im Intro) oder «Aufgaben sofort freigeben (ohne Intro)».
 6. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
-Ohne den Parameter `?ende=HH:MM` startet der Countdown auf jedem Tablet beim Klick auf «Spiel starten» mit 45:00.
+Für die nächste Runde: «Reset (PIN)» in der Steuerung (erzeugt einen neuen Spielcode) und die Tablets zurücksetzen.
+
+### Wie kommt das Startsignal auf die Tablets?
+
+Das Spiel hat keinen eigenen Server. Das Startsignal läuft deshalb über den freien Benachrichtigungsdienst [ntfy.sh](https://ntfy.sh): Die Spielleitung sendet eine kurze Nachricht an einen Kanal, dessen Name den Spielcode enthält, und die wartenden Tablets fragen alle 3 Sekunden nach. Übertragen werden nur der Spielcode und die Endzeit, **keine Namen, keine Punkte, keine Personendaten**. Tablets, die sich erst nach dem Start anmelden oder neu laden, erhalten das Signal ebenfalls (es bleibt 6 Stunden abrufbar).
+
+* Voraussetzung: Beamer-Laptop und Tablets haben Internet, und das Schulnetz blockiert ntfy.sh nicht. Am besten vor der Lektion einmal testen.
+* **Ohne Internet:** Auf jedem Tablet «Spielleitung: manuell starten (PIN)» tippen. Der Countdown startet dann mit 45:00 (oder synchron, wenn der Tablet-Link `?ende=HH:MM` verwendet wurde).
+* Server und Kanalname stehen oben in `js/app.js` (`SIGNAL_SERVER`, `SIGNAL_PRAEFIX`). Wer will, kann einen eigenen ntfy-Server betreiben und dort eintragen.
+
+### Alternative: synchronisieren über die Uhrzeit
+
+Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: Im Bereich «Countdown synchronisieren» ein Spielende wählen und auf den Tablets den Link `index.html?ende=10:45` öffnen. Dann braucht es keinen Spielcode, und jedes Tablet startet beim Klick auf «Spiel starten» sofort mit dem Countdown bis 10:45 (die Uhren der Geräte sollten automatisch gestellt sein). Ohne Spielcode und ohne `?ende` lässt sich ein Tablet nur mit der PIN starten.
 
 ### Die drei Protokolle
 

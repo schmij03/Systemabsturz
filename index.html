@@ -25,8 +25,11 @@ NOTFALL-TERMINAL ..... BEREIT</pre>
       <form id="start-formular" autocomplete="off">
         <label for="teamname" class="label">Teamname</label>
         <input id="teamname" name="teamname" type="text" maxlength="24" placeholder="z. B. Team Firewall" required>
+        <label for="spielcode" class="label">Spielcode (steht auf der Leinwand)</label>
+        <input id="spielcode" name="spielcode" type="text" maxlength="8" placeholder="z. B. KXRTM" autocapitalize="characters" autocorrect="off" spellcheck="false" class="code-feld">
         <button type="submit" class="knopf primaer gross">Spiel starten</button>
         <p id="start-meldung" class="fehler" role="alert"></p>
+        <button type="button" id="ohne-code" class="knopf klein-knopf" hidden>Spielleitung: ohne Spielcode starten (PIN)</button>
       </form>
 
       <div id="spiel-laeuft" hidden>

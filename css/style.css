@@ -538,3 +538,30 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* ====================== Spielcode und Warten ======================== */
+
+.code-feld { text-transform: uppercase; letter-spacing: 0.3em; }
+#ohne-code { align-self: flex-start; background: transparent; color: var(--text-schwach); }
+.buehne-anmeldung { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 2vh; padding: 10px 28px; border: 2px dashed var(--gelb); border-radius: var(--radius); }
+.buehne-anmeldung .label { color: var(--gelb); font-size: clamp(0.8rem, 1.4vw, 1.2rem); }
+.buehne-code { font-size: clamp(2.5rem, 7vw, 6rem); font-weight: 700; letter-spacing: 0.25em; color: var(--gelb); text-shadow: 0 0 20px rgba(255, 213, 79, 0.5); }
+.ablauf { border-color: var(--gruen); }
+.ablauf ol { padding-left: 1.3em; }
+.ablauf .spielcode-wert { color: var(--gelb); letter-spacing: 0.15em; font-family: var(--mono); }
+.gross-knopf { font-size: 1.15rem; padding: 0 1.6em; }
+.ablauf-status { min-height: 1.5em; font-weight: 700; }
+.ablauf-status.ok { color: var(--gruen); }
+.ablauf-status.fehler { color: var(--rot); }
+.ablauf-status.warnung { color: var(--gelb); }
+.ablauf-status.info { color: var(--text-schwach); }
+.warten { background: radial-gradient(circle, #08190f, #020604); z-index: 250; }
+.buehne-anmeldung:not([hidden]) ~ .gross-countdown { font-size: clamp(4rem, 15vw, 12rem); }
+.warten .overlay-box { max-width: 640px; }
+.warten h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); }
+.warten-maske { width: 130px; height: auto; margin: 0 auto 14px; animation: maskeschweben 4s ease-in-out infinite; }
+.warten-status { color: var(--text-schwach); min-height: 3em; }
+.warten-status.ok::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 8px; border-radius: 50%; background: var(--gruen); animation: puls 1.2s infinite; }
+.warten-status.fehler { color: var(--rot); }
+.warten #bereit-knopf { max-width: 360px; }
+.warten.empfangen h1 { color: var(--gelb); animation: puls 0.5s infinite; }

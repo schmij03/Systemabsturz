@@ -17,6 +17,10 @@
       <span class="label">SCHULNETZ: NOTFALL-MODUS</span>
       <span class="label rot blinkt-langsam">● NULLBYTE AKTIV</span>
     </div>
+    <div id="buehne-anmeldung" class="buehne-anmeldung">
+      <span class="label">ANMELDUNG FÜR NOTFALL-TEAMS: TEAMNAME UND SPIELCODE EINGEBEN</span>
+      <span class="spielcode-wert buehne-code"></span>
+    </div>
     <div id="gross-label" class="gross-label">BEREIT</div>
     <div id="gross-countdown" class="gross-countdown">45:00</div>
     <div class="szene">
@@ -30,6 +34,22 @@
   <section id="steuerung" class="steuerung">
     <h2>Steuerung</h2>
     <p id="sync-info" class="klein"></p>
+
+    <div class="karte ablauf">
+      <h3>Spielablauf</h3>
+      <ol>
+        <li>Teams öffnen auf den Tablets die Startseite und geben Teamname und Spielcode <strong class="spielcode-wert"></strong> ein. Die Tablets warten dann auf euch.<br><span class="klein">Direkter Link: <code id="anmelde-link"></code></span></li>
+        <li>«Spiel starten» zeigt das Hackervideo (oder die Botschaft von NULLBYTE mit Maske und Stimme).</li>
+        <li>Nach dem Intro startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben.</li>
+      </ol>
+      <div class="knopf-reihe">
+        <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
+        <button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben (ohne Intro)</button>
+        <button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button>
+        <button type="button" id="neuer-code" class="knopf">Neuer Spielcode</button>
+      </div>
+      <p id="ablauf-status" class="ablauf-status" role="status"></p>
+    </div>
 
     <div class="knopf-reihe">
       <button type="button" class="knopf" data-szene="intro">Story: Alarm</button>
@@ -45,7 +65,6 @@
     <div class="knopf-reihe">
       <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
       <button type="button" id="nur-botschaft" class="knopf gefahr">Botschaft von NULLBYTE</button>
-      <button type="button" id="start-countdown" class="knopf primaer">Countdown starten (45:00)</button>
       <button type="button" id="system-gerettet" class="knopf primaer">System gerettet</button>
       <button type="button" id="vollbild" class="knopf">Vollbild</button>
       <button type="button" id="reset-countdown" class="knopf">Reset (PIN)</button>
@@ -116,6 +135,7 @@
     </div>
     <div class="video-knoepfe">
       <button type="button" id="nochmals-vorlesen" class="knopf">Botschaft nochmals abspielen</button>
+      <button type="button" id="video-freigeben" class="knopf primaer">Aufgaben jetzt freigeben ▶</button>
       <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
     </div>
   </div>

@@ -2,12 +2,16 @@
 
 Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
 
-## Vorbereitung
+## Vorbereitung und Spielstart
 
-1. `spielleitung.html` öffnen, im Bereich «Countdown synchronisieren» eine Endzeit wählen (zum Beispiel in 50 Minuten).
-2. Den Tablet-Link auf dem Testtablet öffnen. Erwartung: Startseite zeigt «Countdown synchronisiert: Das Spiel endet um HH:MM Uhr.»
-3. Teamnamen eingeben, «Spiel starten». Erwartung: Terminal mit Teamname, Countdown, 100 Punkten und drei Jokern.
-4. Lautstärke prüfen: Beim Tippen auf das Ziffernfeld ist ein Klick zu hören.
+1. `spielleitung.html` auf dem Beamer-Laptop öffnen. Erwartung: Auf der Leinwand steht ein Spielcode aus fünf Buchstaben.
+2. Auf dem Testtablet `index.html` öffnen, Teamnamen und Spielcode eingeben, «Spiel starten». Erwartung: «Warten auf die Spielleitung», Status «Verbunden. Warte auf das Startsignal». Die Aufgaben sind nicht sichtbar.
+3. «Wir sind bereit» tippen. Erwartung: «Bereit ✓ Ton ist eingeschaltet.»
+4. Auf dem Laptop «▶ Spiel starten». Erwartung: Video oder Botschaft von NULLBYTE mit Maske und Stimme. Danach startet der Beamer-Countdown, die Story «Euer Auftrag» erscheint, Status «Aufgaben freigegeben».
+5. Erwartung auf dem Tablet innerhalb weniger Sekunden: «AUFGABEN EMPFANGEN», dann Protokoll 1 mit Countdown (gleich wie auf dem Beamer), 100 Punkte, drei Joker.
+6. Ein zweites Tablet erst jetzt anmelden. Erwartung: Es startet sofort mit derselben Restzeit.
+7. Notfall ohne Internet: WLAN auf einem Tablet ausschalten, anmelden. Erwartung: rote Meldung «Keine Verbindung». «Spielleitung: manuell starten (PIN)» startet das Tablet.
+8. Lautstärke prüfen: Beim Tippen auf das Ziffernfeld ist ein Klick zu hören.
 
 ## Protokoll 1
 
