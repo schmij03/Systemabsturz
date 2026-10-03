@@ -757,3 +757,98 @@ body[data-phase="beendet"] .phase-chip strong { color: var(--text-schwach); }
   .kopf-knoepfe .knopf { flex: 1 1 auto; }
 }
 .p1-verschiebung-info { margin: 10px 0 0; font-weight: 600; color: var(--gelb); }
+
+/* ===================== Unterrichtsinfo (Fenster in der Spielleitung) ===================== */
+html.info-offen, html.info-offen body { overflow: hidden; }
+.info-overlay {
+  position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: rgba(0, 0, 0, 0.82);
+}
+.info-overlay[hidden] { display: none; }
+.info-fenster {
+  position: relative; width: min(980px, 100%); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px);
+  overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 22px 26px 0; font-family: var(--sans); line-height: 1.5;
+  background: var(--flaeche); border: 1px solid var(--gruen); border-radius: var(--radius);
+  box-shadow: 0 0 40px rgba(61, 220, 132, 0.25);
+}
+.info-x {
+  position: absolute; top: 10px; right: 10px; width: 48px; height: 48px; display: grid; place-items: center;
+  font-size: 1.3rem; color: var(--text); background: transparent; border: 1px solid var(--rand); border-radius: var(--radius); cursor: pointer;
+}
+.info-x:hover { border-color: var(--gruen); color: #fff; }
+.info-x:focus-visible, .info-abschnitt summary:focus-visible { outline: 3px solid var(--gelb); outline-offset: 2px; }
+.info-hinweis {
+  margin: 0 56px 14px 0; padding: 8px 12px; font-size: 0.92rem; font-weight: 700; color: var(--gelb);
+  border: 1px dashed var(--gelb); border-radius: var(--radius); background: rgba(255, 213, 79, 0.07);
+}
+.info-fenster h2 { margin: 0; font-family: var(--mono); font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--gruen-hell); }
+.info-untertitel { margin: 4px 0 16px; color: var(--text-schwach); }
+.info-abschnitt { border: 1px solid var(--rand); border-radius: var(--radius); background: var(--hintergrund); margin-bottom: 10px; }
+.info-abschnitt summary {
+  min-height: 52px; display: flex; align-items: center; padding: 8px 16px; cursor: pointer; list-style: none;
+  font-weight: 700; font-size: 1.05rem; color: var(--gruen-hell); white-space: pre-wrap;
+}
+.info-abschnitt summary::-webkit-details-marker { display: none; }
+.info-abschnitt summary::before { content: "▸"; display: inline-block; width: 1.2em; color: var(--gruen); }
+.info-abschnitt[open] summary::before { content: "▾"; }
+.info-abschnitt[open] summary { border-bottom: 1px solid var(--rand); }
+.info-koerper { padding: 6px 18px 14px; color: var(--text); }
+.info-koerper h4 { margin: 14px 0 4px; color: var(--gelb); font-size: 0.98rem; }
+.info-koerper p { margin: 8px 0; }
+.info-koerper ul { margin: 6px 0; padding-left: 1.3em; }
+.info-koerper li { margin-bottom: 6px; }
+.info-koerper strong { color: #fff; }
+.info-koerper code { font-family: var(--mono); font-size: 0.9em; padding: 1px 5px; background: #000; border: 1px solid var(--rand); border-radius: 4px; color: var(--gruen-hell); }
+.info-koerper a { color: var(--gruen-hell); word-break: break-all; }
+.info-tabelle-huelle { overflow-x: auto; margin: 6px 0 10px; }
+.info-tabelle { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.info-tabelle th, .info-tabelle td { padding: 8px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rand); overflow-wrap: anywhere; }
+.info-tabelle th { color: var(--text-schwach); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.info-tabelle td:first-child { white-space: nowrap; font-weight: 700; color: #fff; }
+.info-knoepfe {
+  position: sticky; bottom: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px;
+  margin: 14px -26px 0; padding: 14px 26px; background: var(--flaeche); border-top: 1px solid var(--rand);
+}
+.info-knoepfe .knopf, #unterrichtsinfo-knopf { min-height: 48px; }
+@media (max-width: 700px) {
+  .info-fenster { padding: 18px 16px 0; }
+  .info-knoepfe { margin: 14px -16px 0; padding: 12px 16px; }
+  .info-knoepfe .knopf { flex: 1 1 100%; }
+  .info-tabelle thead { display: none; }
+  .info-tabelle tr { display: block; border-bottom: 1px solid var(--rand); padding: 6px 0; }
+  .info-tabelle td { display: block; border: none; padding: 3px 0; white-space: normal !important; }
+}
+
+/* Drucken: nur der Fensterinhalt auf A4 */
+@media print {
+  html.info-druck, html.info-druck body { overflow: visible !important; height: auto !important; background: #fff !important; }
+  html.info-druck body::after, html.info-druck body > *:not(#unterrichtsinfo) { display: none !important; }
+  html.info-druck .info-overlay { position: static; display: block; padding: 0; background: none; }
+  html.info-druck .info-fenster {
+    width: auto; max-height: none; overflow: visible; padding: 0; border: none; box-shadow: none;
+    background: #fff; color: #111; font-family: Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 1.35;
+  }
+  html.info-druck .info-x, html.info-druck .info-knoepfe { display: none !important; }
+  html.info-druck .info-hinweis { color: #111; border-color: #999; background: none; margin-right: 0; }
+  html.info-druck .info-fenster h2 { color: #111; font-family: Arial, Helvetica, sans-serif; }
+  html.info-druck .info-untertitel { color: #555; }
+  html.info-druck .info-abschnitt { border: none; background: none; margin: 0 0 4mm; break-inside: auto; }
+  html.info-druck .info-abschnitt summary { min-height: 0; padding: 2mm 0 1mm; color: #111; border-bottom: 1.2pt solid #111; font-size: 12pt; }
+  html.info-druck .info-abschnitt summary::before { content: none; }
+  html.info-druck .info-koerper { padding: 1mm 0; color: #111; }
+  html.info-druck .info-koerper h4 { color: #111; }
+  html.info-druck .info-koerper strong { color: #111; }
+  html.info-druck .info-koerper code { background: #f2f2f2; color: #111; border-color: #ccc; }
+  html.info-druck .info-koerper a { color: #111; }
+  html.info-druck .info-tabelle th { color: #555; border-bottom: 1pt solid #111; }
+  html.info-druck .info-tabelle td { border-bottom: 0.5pt solid #bbb; color: #111; }
+  html.info-druck .info-tabelle td:first-child { color: #111; }
+  html.info-druck .info-tabelle tr { break-inside: avoid; }
+  html.info-druck .info-tabelle { font-size: 9pt; }
+  html.info-druck .info-tabelle th { font-size: 8pt; }
+  html.info-druck .info-koerper h4 { font-size: 10.5pt; }
+  html.info-druck .info-fenster h2 { font-size: 17pt; }
+  html.info-druck .info-hinweis { font-size: 9.5pt; }
+}
+@page { size: A4; margin: 15mm; }

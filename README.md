@@ -24,6 +24,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
 | `material/` | Teamsets pro Stufe als eigenständige HTML-Dateien, Download auf der Spielleitungsseite |
 | `js/netzwerke.js` | Netzwerkpläne für Protokoll 3 pro Stufe mit Lösung |
+| `js/unterrichtsinfo.js` | Fenster «Einsatz im Unterricht» in der Spielleitung: Lehrplanbezüge, Einsatzideen, Differenzierung (Texte oben in der Datei) |
 | `druck/` | Druckmaterial: komplettes Teamset (`teamset.html`) und Einzelblätter, Inhalt in `seiten.js`, Gestaltung in `druck.css` |
 | `sw.js` | Service Worker: speichert alles für den Offline-Betrieb |
 | `TESTPLAN.md` | Kurzer Testplan vor dem Einsatz |
@@ -143,6 +144,16 @@ Das Terminal zeigt «SYSTEM GELÖSCHT», alle Eingaben sind gesperrt, der Punkte
 ### Tablets zurücksetzen
 
 Auf dem Tablet unten rechts auf «Spielleitung» tippen und die PIN eingeben (Standard **4711**). Danach wählt ihr «Spiel zurücksetzen» (mit Bestätigung) oder «Zur Spielleitungsansicht», um vom Tablet aus die Spielleitung zu öffnen. Der Spielstand liegt nur im Browser des jeweiligen Geräts (localStorage).
+
+## Unterrichtsinfo (Fenster in der Spielleitung)
+
+Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im Unterricht»** mit fünf aufklappbaren Abschnitten: Auf einen Blick, Lehrplanbezüge (Lehrplan 21, MI.2 mit Tabelle pro Protokoll), Einsatz im Unterricht (Ablauf und Reflexionsfragen), Differenzierung und Beurteilung, Voraussetzungen und Technik. Erst nach «Weiter zur Spielleitung», dem Kreuz oder der Escape-Taste ist die Steuerung bedienbar.
+
+* Das Fenster ist nur für die Lehrperson: vor dem Anschliessen oder Teilen des Beamers schliessen.
+* Läuft bereits ein Spiel (Aufgaben freigegeben oder Countdown aktiv, gespeichert unter `systemabsturz-spielleitung`), erscheint es beim Neuladen nicht automatisch.
+* Der Knopf **«ⓘ Unterrichtsinfo»** in der Kopfleiste öffnet es jederzeit wieder, auch während des Spiels (nichts wird pausiert).
+* «Drucken oder als PDF sichern» druckt nur den Fensterinhalt auf A4, alle Abschnitte aufgeklappt.
+* **Texte ändern:** in `js/unterrichtsinfo.js` in der Datenstruktur `UNTERRICHTSINFO` oben in der Datei. Die Lehrplanangaben stammen aus dem Kompetenzraster des Lehrplans 21 (Stand 29.2.2016) und sind bei Bedarf mit der kantonalen Version abzugleichen.
 
 ## Anpassen
 

@@ -2,6 +2,17 @@
 
 Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
 
+## Unterrichtsinfo
+
+1. `spielleitung.html` mit leerem Spielstand öffnen. Erwartung: Fenster «Einsatz im Unterricht» mit Hinweis «Nur für die Lehrperson», Abschnitt A offen, B bis E zu. Steuerung dahinter nicht bedienbar, Hintergrund scrollt nicht, kein Ton, kein Vollbild.
+2. Tab mehrmals drücken. Erwartung: Der Fokus bleibt im Fenster.
+3. Schliessen nacheinander mit «Weiter zur Spielleitung», dem Kreuz und der Escape-Taste (Seite dazwischen neu laden). Erwartung: Alle drei schliessen gleich, danach ist die Steuerung normal bedienbar.
+4. Knopf «ⓘ Unterrichtsinfo» in der Kopfleiste. Erwartung: Fenster öffnet, nach dem Schliessen liegt der Fokus wieder auf dem Knopf.
+5. Abschnitt B auf dem iPad im Querformat öffnen. Erwartung: Tabelle lesbar, Text bricht sauber um, das Fenster scrollt.
+6. «Drucken oder als PDF sichern». Erwartung: Nur der Fensterinhalt mit allen fünf Abschnitten, A4, hell.
+7. Spiel freigeben, dann die Seite neu laden. Erwartung: kein Fenster, Countdown läuft weiter. «Unterrichtsinfo» öffnet es trotzdem, der Countdown läuft dabei weiter.
+8. Offline: Seite einmal online laden, WLAN aus, neu laden. Erwartung: Fenster erscheint mit allen Texten.
+
 ## Vorbereitung und Spielstart
 
 1. Auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» das Teamset der gewählten Stufe öffnen und drucken. Erwartung: 7 A4-Seiten, die Chiffrierscheiben in voller Grösse (gross 172 mm, klein 142 mm), Seite 7 (Netzwerkplan) quer und farbig. Den Link «HTML» herunterladen, die Datei ohne Internet öffnen: gleiche 7 Seiten.
