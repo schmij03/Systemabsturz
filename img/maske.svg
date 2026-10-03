@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" role="img" aria-label="Maske von NULLBYTE">
+  <!-- Eigene Zeichnung einer Hackermaske für NULLBYTE (CC BY-SA 4.0) -->
+  <defs>
+    <radialGradient id="haut" cx="50%" cy="38%" r="65%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.7" stop-color="#e9ece6"/>
+      <stop offset="1" stop-color="#b9c0b5"/>
+    </radialGradient>
+    <radialGradient id="wange" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#f28b8b" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#f28b8b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Gesicht -->
+  <path d="M100 6 C152 6 186 44 186 100 C186 168 150 238 100 254 C50 238 14 168 14 100 C14 44 48 6 100 6 Z" fill="url(#haut)" stroke="#2b2b2b" stroke-width="3"/>
+  <!-- Augenbrauen -->
+  <path d="M34 84 C52 62 78 60 92 78 C78 72 56 74 38 90 Z" fill="#111"/>
+  <path d="M166 84 C148 62 122 60 108 78 C122 72 144 74 162 90 Z" fill="#111"/>
+  <!-- Augen (schmale Schlitze) -->
+  <path d="M46 102 C58 92 78 92 88 104 C76 110 58 110 46 102 Z" fill="#050a07"/>
+  <path d="M154 102 C142 92 122 92 112 104 C124 110 142 110 154 102 Z" fill="#050a07"/>
+  <circle cx="68" cy="102" r="3" fill="#3ddc84"/>
+  <circle cx="132" cy="102" r="3" fill="#3ddc84"/>
+  <!-- Nase -->
+  <path d="M100 104 C96 128 92 142 88 150 C94 156 106 156 112 150 C108 142 104 128 100 104 Z" fill="none" stroke="#9aa196" stroke-width="2.5"/>
+  <!-- Wangen -->
+  <ellipse cx="52" cy="150" rx="22" ry="16" fill="url(#wange)"/>
+  <ellipse cx="148" cy="150" rx="22" ry="16" fill="url(#wange)"/>
+  <!-- Schnurrbart, an den Enden nach oben gezwirbelt -->
+  <path d="M100 168 C86 160 64 162 50 176 C44 182 36 180 34 170 C34 186 50 194 66 184 C80 176 92 176 100 180 C108 176 120 176 134 184 C150 194 166 186 166 170 C164 180 156 182 150 176 C136 162 114 160 100 168 Z" fill="#111"/>
+  <!-- Lächeln -->
+  <path d="M62 190 C80 206 120 206 138 190" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round"/>
+  <!-- Kinnbart -->
+  <path d="M100 212 C94 222 94 236 100 246 C106 236 106 222 100 212 Z" fill="#111"/>
+  <!-- Zeichen von NULLBYTE auf der Stirn -->
+  <text x="100" y="52" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="22" fill="#3ddc84" opacity="0.85">0x00</text>
+</svg>

@@ -22,7 +22,7 @@ const SPIELDAUER_MINUTEN = 45;
 const START_PUNKTE = 100;
 const PUNKTE_PRO_PROTOKOLL = 20;
 const JOKER_ANZAHL = 3;
-const JOKER_KOSTEN = 10;
+const JOKER_KOSTEN = 20;
 const BONUS_PUNKTE = 10;
 const PUNKTE_PRO_RESTMINUTE = 1;
 
@@ -54,6 +54,18 @@ const KISTE2_VERSCHLUESSELT = '813e87';
 
 /** Lösungsliste für die Spielleitung, verschlüsselt mit der PIN als Schlüssel */
 const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d75671b18077f0a2ed9c3ca11055edc252c688af4e9ee9799f062b19899a8c15b4fdab963a999fd257228fd1268d3124388c4717846fcedd1a9854cef6ad453cff058d8ef981ad7f6030556d03c3e043016d2eb1e467323c02b258c6994465731c4d956cbb4ecdeac53e529eeeb92b98bb675db187cbc0db19c441654e2a86e340bb0f08b401b51ee0cb14f58b52c815d9d0c4adfb1b098cab66fcd8a1c790e8f5a4b1ed7c465052aa09b7271fcb3bcfb9f99f37d5e6be18ae40c87499920b1e4bd0dc5816e596ee43936059e4d47d515e20adb959e016f37ac16abbe3f16fb5d360c8c57316b7aba394baf5983c9a9c765705eb75ee27cff04fe162dfe9d90f7b2c99244f368b44ddd49bb67f0e11e3b7db2180605a23847be2a0ffacf223a93e7c5441bce489c869224218ef176ae88d06dd9601d9f22ef1b703038066f5be7ae23e8648e2bc08087e58e4dc9093ef381a08cd4999916a7796c55c158e9dc1396e74a7da9acd8525f3a69eb59d91c55e051eeebcef8849e747cc83d2a2bb458a67395b8d0b9c33629c240844c493def7a0983f2f00b71e43cbb5f89e804d0ff3804dfd0ae7215370c96c83adb34ea29de6214feda368af6f8f3c17d3420bd322c060a8e9c46321aaa82';
+
+/* Startsignal der Spielleitung an die Tablets.
+   Weil das Spiel keinen eigenen Server hat, läuft das Signal über den
+   freien Dienst ntfy.sh. Übertragen werden nur der Spielcode und die
+   Endzeit, keine Teamnamen und keine Punkte. Ohne Internet startet die
+   Spielleitung die Tablets manuell mit der PIN. */
+const SIGNAL_SERVER = 'https://ntfy.sh';
+const SIGNAL_PRAEFIX = 'systemabsturz-phlu-';
+const SIGNAL_ABFRAGE_MS = 3000;       // so oft fragen wartende Tablets nach
+const SIGNAL_GUELTIG = '6h';          // so lange bleibt ein Startsignal abrufbar
+const SPIELCODE_ZEICHEN = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+const SPIELCODE_LAENGE = 5;
 
 /** Speicherort im Browser (localStorage) */
 const SPEICHER_TEAM = 'systemabsturz-spielstand';
@@ -96,12 +108,31 @@ const TEXTE = {
       ]
     }
   },
+  /* Botschaft von NULLBYTE (Hackervideo-Ersatz auf dem Beamer, wird vorgelesen).
+     Jede Zeile wird einzeln getippt. */
+  nullbyte: [
+    'VERBINDUNG HERGESTELLT.',
+    'Hier spricht NULLBYTE.',
+    'Wir sind viele. Wir sind überall. Und jetzt sind wir in eurem Schulnetz.',
+    'Seit Wochen beobachten wir euch.',
+    'Eure Passwörter heissen 123456, Passwort oder wie euer Haustier.',
+    'Ihr klickt auf jeden Link, der euch ein Gratis-Handy verspricht.',
+    'Ihr lasst Computer entsperrt stehen und schreibt Codes auf Zettel unter die Tastatur.',
+    'Warum wir das tun? Ganz einfach: Wir wollen beweisen, dass niemand eure Daten schützt.',
+    'Euch ist Sicherheit egal. Also nehmen wir uns, was ungeschützt herumliegt.',
+    'Noten, Stundenpläne, Fotos, alle Dateien: Wir haben alles verschlüsselt.',
+    'Um 08:13 Uhr haben wir euch eine Nachricht geschickt. Niemand hat sie verstanden.',
+    'Drei Sicherheitsprotokolle schützen den Override. Kryptografie. Algorithmen. Netzwerke.',
+    'Ihr glaubt, ihr könnt sie knacken? Ihr habt 45 Minuten.',
+    'Danach löschen wir alles. Für immer.',
+    'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
+  ],
   bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
   /* Texte für die Beamer-Ansicht der Spielleitung */
   szenen: {
     intro: {
       titel: 'ALARM: SCHULNETZ GESPERRT',
-      text: 'Heute Morgen um 08:13 Uhr ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Sie hat das Netz gesperrt und droht, in 45 Minuten alle Daten der Schule zu löschen.'
+      text: 'Heute Morgen um 08:13 Uhr ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Ihr Ziel: Sie wollen beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. Schwache Passwörter, offene Computer, unvorsichtige Klicks. Darum haben sie das Netz gesperrt und drohen, in 45 Minuten alle Daten der Schule zu löschen.'
     },
     auftrag: {
       titel: 'EUER AUFTRAG',
@@ -109,7 +140,7 @@ const TEXTE = {
     },
     regeln: {
       titel: 'REGELN',
-      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet 10 Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
+      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
     },
     gerettet: {
       titel: 'SYSTEM WIEDERHERGESTELLT',
@@ -362,6 +393,128 @@ const Ton = (function () {
 })();
 
 /* ===================================================================
+   VORLESEN (Text-to-Speech über die Web Speech API des Browsers)
+   =================================================================== */
+
+/** Stimmen: «hacker» klingt tief und langsam, «normal» für Story und Tipps */
+const STIMMEN = {
+  hacker: { tonhoehe: 0.2, tempo: 0.82 },
+  normal: { tonhoehe: 1, tempo: 0.95 }
+};
+
+const Sprache = (function () {
+  'use strict';
+
+  const verfuegbar = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  let stimme = null;
+
+  /* Beste deutsche Stimme wählen: zuerst Schweiz, dann Deutschland, dann jede deutsche */
+  function waehleStimme() {
+    if (!verfuegbar) return;
+    const alle = window.speechSynthesis.getVoices();
+    stimme = alle.find(function (v) { return /^de[-_]CH/i.test(v.lang); }) ||
+      alle.find(function (v) { return /^de[-_]DE/i.test(v.lang); }) ||
+      alle.find(function (v) { return /^de/i.test(v.lang); }) || null;
+  }
+
+  if (verfuegbar) {
+    waehleStimme();
+    window.speechSynthesis.addEventListener('voiceschanged', waehleStimme);
+  }
+
+  /** Liest einen Text vor. Liefert ein Promise, das am Ende erfüllt wird. */
+  function sprich(text, art) {
+    return new Promise(function (fertig) {
+      if (!verfuegbar || !text) { fertig(); return; }
+      stopp();
+      if (!stimme) waehleStimme();
+      const e = STIMMEN[art] || STIMMEN.normal;
+      // Zeichen, die schlecht klingen, entfernen
+      const sauber = String(text).replace(/[«»>]/g, '').replace(/ANTI-V/g, 'Anti V')
+        // Wörter in GROSSBUCHSTABEN normal schreiben, sonst buchstabieren manche Stimmen
+        .replace(/[A-ZÄÖÜ]{3,}/g, function (w) { return w[0] + w.slice(1).toLowerCase(); }).replace(/\s+/g, ' ');
+      const a = new SpeechSynthesisUtterance(sauber);
+      a.lang = stimme ? stimme.lang : 'de-DE';
+      if (stimme) a.voice = stimme;
+      a.pitch = e.tonhoehe;
+      a.rate = e.tempo;
+      // Sicherheitsnetz: manche Browser melden das Ende nicht zuverlässig
+      let erledigt = false;
+      const ende = function () { if (!erledigt) { erledigt = true; fertig(); } };
+      a.onend = ende;
+      a.onerror = ende;
+      setTimeout(ende, 3000 + sauber.length * 140);
+      window.speechSynthesis.speak(a);
+    });
+  }
+
+  function stopp() {
+    if (verfuegbar) window.speechSynthesis.cancel();
+  }
+
+  /** Erstellt einen Vorlese-Knopf. text kann eine Funktion sein. */
+  function knopf(text, art, beschriftung) {
+    const b = erstelle('button', 'knopf vorlesen-knopf', beschriftung || '🔊 Vorlesen');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Text vorlesen');
+    if (!verfuegbar) b.hidden = true;
+    b.addEventListener('click', function () {
+      if (window.speechSynthesis.speaking) { stopp(); return; }
+      sprich(typeof text === 'function' ? text() : text, art);
+    });
+    return b;
+  }
+
+  return { verfuegbar: verfuegbar, sprich: sprich, stopp: stopp, knopf: knopf };
+})();
+
+/* ===================================================================
+   STARTSIGNAL (Spielleitung an Tablets, über ntfy.sh)
+   =================================================================== */
+
+const Signal = (function () {
+  'use strict';
+
+  function thema(code) { return SIGNAL_SERVER + '/' + SIGNAL_PRAEFIX + String(code).toLowerCase(); }
+
+  /** Sendet eine Nachricht an alle Tablets mit diesem Spielcode. */
+  async function sende(code, daten) {
+    const r = await fetch(thema(code), { method: 'POST', body: JSON.stringify(daten) });
+    if (!r.ok) throw new Error('Signal nicht gesendet: ' + r.status);
+  }
+
+  /** Liefert die neuste Nachricht eines Typs (oder null). */
+  async function letzte(code, typ) {
+    const r = await fetch(thema(code) + '/json?poll=1&since=' + SIGNAL_GUELTIG, { cache: 'no-store' });
+    if (!r.ok) throw new Error('Abfrage fehlgeschlagen: ' + r.status);
+    const text = await r.text();
+    let treffer = null;
+    text.split('\n').forEach(function (zeile) {
+      if (!zeile.trim()) return;
+      try {
+        const ev = JSON.parse(zeile);
+        if (ev.event !== 'message' || !ev.message) return;
+        const daten = JSON.parse(ev.message);
+        if (daten && daten.typ === typ) treffer = daten;
+      } catch (e) { /* fremde Nachricht: ignorieren */ }
+    });
+    return treffer;
+  }
+
+  function neuerCode() {
+    let c = '';
+    const zufall = new Uint32Array(SPIELCODE_LAENGE);
+    (window.crypto || window.msCrypto).getRandomValues(zufall);
+    for (let i = 0; i < SPIELCODE_LAENGE; i++) c += SPIELCODE_ZEICHEN[zufall[i] % SPIELCODE_ZEICHEN.length];
+    return c;
+  }
+
+  function normiere(code) { return String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+
+  return { sende: sende, letzte: letzte, neuerCode: neuerCode, normiere: normiere };
+})();
+
+/* ===================================================================
    HILFSFUNKTIONEN
    =================================================================== */
 
@@ -580,11 +733,13 @@ function erstelleZiffernfeld(container, optionen) {
    SPIELSTAND (pro Gerät im localStorage)
    =================================================================== */
 
-function neuerSpielstand(team, endzeit, endeText) {
+function neuerSpielstand(team, endzeit, endeText, spielcode) {
   const jetzt = Date.now();
   return {
     version: 1,
     team: team,
+    spielcode: spielcode || null,
+    wartet: !!spielcode,                 // wartet auf das Startsignal der Spielleitung
     startzeit: jetzt,
     endzeit: endzeit,
     endeAusUrl: endeText || null,
@@ -630,18 +785,51 @@ function initStartseite() {
     });
   }
 
-  formular.addEventListener('submit', function (e) {
-    e.preventDefault();
+  const codeAusUrl = Signal.normiere(new URLSearchParams(location.search).get('spiel'));
+  if (codeAusUrl) $('#spielcode').value = codeAusUrl;
+
+  function starte(name, code) {
+    Ton.entsperren();   // Klick auf «Spiel starten» entsperrt den Ton
+    Ton.spiele('klick');
+    const endzeit = code ? null : (ende ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000);
+    speichereSpielstand(neuerSpielstand(name, endzeit, ende && !code ? ende.text : null, code));
+    setTimeout(function () { location.href = mitParameter('terminal.html'); }, 150);
+  }
+
+  function teamname() {
     const name = $('#teamname').value.trim().replace(/\s+/g, ' ');
     if (name.length < 2) {
       $('#start-meldung').textContent = 'Bitte gebt einen Teamnamen ein (mindestens 2 Zeichen).';
+      return null;
+    }
+    return name;
+  }
+
+  formular.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = teamname();
+    if (!name) return;
+    const code = Signal.normiere($('#spielcode').value);
+    if (!code && !ende) {
+      $('#start-meldung').textContent = 'Gebt den Spielcode ein, der auf der Leinwand steht.';
+      $('#ohne-code').hidden = false;
       return;
     }
-    Ton.entsperren();   // Klick auf «Spiel starten» entsperrt den Ton
-    Ton.spiele('klick');
-    const endzeit = ende ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000;
-    speichereSpielstand(neuerSpielstand(name, endzeit, ende ? ende.text : null));
-    setTimeout(function () { location.href = mitParameter('terminal.html'); }, 150);
+    if (code && code.length !== SPIELCODE_LAENGE) {
+      $('#start-meldung').textContent = 'Der Spielcode hat ' + SPIELCODE_LAENGE + ' Buchstaben. Schaut nochmals auf die Leinwand.';
+      return;
+    }
+    starte(name, code);
+  });
+
+  // Notlösung: ohne Spielcode sofort starten (nur mit PIN)
+  $('#ohne-code').addEventListener('click', async function () {
+    const name = teamname();
+    if (!name) return;
+    const pin = await fragePin('Ohne Spielcode starten');
+    if (pin === null) return;
+    if (pin !== SPIELLEITUNG_PIN) { Ton.spiele('fehler'); toast('Falsche PIN.', 'warnung'); return; }
+    starte(name, null);
   });
 
   $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
@@ -685,7 +873,7 @@ function initTerminal() {
   }
   // Endzeit aus der URL hat Vorrang (Synchronisation durch die Spielleitung)
   const ende = endeAusUrl();
-  if (ende && !stand.override && stand.endeAusUrl !== ende.text) {
+  if (ende && !stand.override && !stand.wartet && stand.endeAusUrl !== ende.text) {
     stand.endzeit = ende.zeit;
     stand.endeAusUrl = ende.text;
   }
@@ -715,13 +903,99 @@ function initTerminal() {
   baueProtokoll1();
   baueProtokoll2();
   baueProtokoll3();
+  // Vorlese-Knöpfe neben den Story-Texten
+  [1, 2, 3].forEach(function (p) {
+    const story = $('#protokoll-' + p + ' .story');
+    story.insertBefore(Sprache.knopf(function () {
+      return TEXTE.protokolle[p].story + (TEXTE.protokolle[p].hinweis ? ' Hinweis: ' + TEXTE.protokolle[p].hinweis : '');
+    }, 'normal', '🔊'), story.firstChild);
+  });
+  $('#helpdesk-vorlesen').appendChild(Sprache.knopf(function () {
+    const s = Terminal.stand;
+    const p = aktuellesProtokoll();
+    const frei = TEXTE.protokolle[p].tipps.slice(0, s.tippStufe[p]);
+    if (!frei.length) return 'Noch kein Tipp freigeschaltet. Ihr habt ' + (JOKER_ANZAHL - s.jokerEingeloest) + ' Joker.';
+    return frei.map(function (t, i) { return 'Tipp ' + (i + 1) + ': ' + t; }).join(' ');
+  }, 'normal', '🔊 Tipps vorlesen'));
   aktualisiereKopf();
   aktualisiereTabs();
   zeigeTab(aktuellesProtokoll());
 
   if (stand.override) zeigeSieg(false);
+  if (stand.wartet) zeigeWarten();
   tick();
   Terminal.timer = setInterval(tick, 250);
+}
+
+/* --------------------- Warten auf die Spielleitung ------------------ */
+
+function zeigeWarten() {
+  const s = Terminal.stand;
+  $('#warten').hidden = false;
+  $('#warten-team').textContent = s.team;
+  $('#warten-code').textContent = s.spielcode;
+  $('#bereit-knopf').addEventListener('click', function () {
+    Ton.entsperren();
+    Ton.spiele('klick');
+    $('#bereit-knopf').hidden = true;
+    $('#bereit-info').hidden = false;
+  });
+  $('#manuell-start').addEventListener('click', async function () {
+    const pin = await fragePin('Tablet manuell starten');
+    if (pin === null) return;
+    if (pin !== SPIELLEITUNG_PIN) { Ton.spiele('fehler'); toast('Falsche PIN.', 'warnung'); return; }
+    const ende = endeAusUrl();
+    starteNachSignal(ende ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000);
+  });
+  frageStartsignal();
+  Terminal.signalTimer = setInterval(frageStartsignal, SIGNAL_ABFRAGE_MS);
+}
+
+async function frageStartsignal() {
+  const s = Terminal.stand;
+  if (!s.wartet) return;
+  const status = $('#warten-status');
+  try {
+    const start = await Signal.letzte(s.spielcode, 'start');
+    const zeit = new Date().toLocaleTimeString('de-CH');
+    if (start && start.ende && s.wartet) {
+      starteNachSignal(start.ende);
+      return;
+    }
+    status.textContent = 'Verbunden. Warte auf das Startsignal … (geprüft ' + zeit + ')';
+    status.className = 'warten-status ok';
+  } catch (e) {
+    status.textContent = 'Keine Verbindung zum Startsignal. Prüft das WLAN. Die Spielleitung kann das Tablet auch manuell starten.';
+    status.className = 'warten-status fehler';
+  }
+}
+
+/** Startsignal erhalten: Countdown setzen, Aufgaben freischalten. */
+function starteNachSignal(endzeit) {
+  const s = Terminal.stand;
+  if (!s.wartet) return;
+  clearInterval(Terminal.signalTimer);
+  const jetzt = Date.now();
+  s.wartet = false;
+  s.endzeit = endzeit;
+  s.startzeit = jetzt;
+  s.protokollStart[1] = jetzt;
+  speichere();
+  Ton.entsperren();
+  Ton.spiele('alarm');
+  const box = $('#warten');
+  box.classList.add('empfangen');
+  $('#warten-titel').textContent = 'AUFGABEN EMPFANGEN';
+  $('#warten-status').textContent = 'Sicherheitsprotokolle werden geladen …';
+  $('#warten-status').className = 'warten-status ok';
+  $('#bereit-knopf').hidden = true;
+  $('#bereit-info').hidden = true;
+  setTimeout(function () {
+    box.hidden = true;
+    zeigeTab(1);
+    tick();
+    toast('Los geht es! Knackt Protokoll 1.', 'info');
+  }, 2500);
 }
 
 /** Das erste noch nicht gelöste Protokoll (3, falls alles gelöst ist). */
@@ -734,6 +1008,7 @@ function aktuellesProtokoll() {
 
 function restzeit() {
   const s = Terminal.stand;
+  if (s.wartet || !s.endzeit) return SPIELDAUER_MINUTEN * 60000;
   if (s.override) return s.restBeiOverride;
   return s.endzeit - Date.now();
 }
@@ -762,7 +1037,7 @@ function tick() {
   uhr.classList.toggle('knapp', !s.override && rest <= 5 * 60000);
   uhr.classList.toggle('gestoppt', s.override);
 
-  if (s.override) return;
+  if (s.override || s.wartet) return;
 
   if (!Terminal.warnungFuenfMinuten && rest <= 5 * 60000 && rest > 4.9 * 60000) {
     Terminal.warnungFuenfMinuten = true;
@@ -1055,6 +1330,7 @@ function oeffneHelpDesk() {
 }
 
 function schliesseHelpDesk() {
+  Sprache.stopp();
   $('#helpdesk').classList.remove('offen');
   $('#helpdesk').setAttribute('aria-hidden', 'true');
   $('#helpdesk-hintergrund').hidden = true;
@@ -1127,6 +1403,7 @@ const Leitung = { stand: null, loesungenOffen: false };
 
 function initSpielleitung() {
   let stand = ladeJson(SPEICHER_LEITUNG) || { endzeit: null, gestoppt: null };
+  if (!stand.spielcode) stand.spielcode = Signal.neuerCode();
   const ende = endeAusUrl();
   if (ende) {
     stand.endzeit = ende.zeit;
@@ -1144,24 +1421,45 @@ function initSpielleitung() {
     k.addEventListener('click', function () { Ton.spiele('klick'); zeigeSzene(k.dataset.szene); });
   });
   zeigeSzene('intro');
+  $('#szene-vorlesen').appendChild(Sprache.knopf(function () {
+    return $('#szene-titel').textContent + '. ' + $('#szene-text').textContent;
+  }, 'normal', '🔊 Story vorlesen'));
+  if (!Sprache.verfuegbar) $('#auto-vorlesen-zeile').hidden = true;
 
-  $('#start-countdown').addEventListener('click', function () {
+  // Spielablauf: Intro (Video oder Botschaft), danach Aufgaben freigeben
+  $('#spiel-starten').addEventListener('click', function () {
     Ton.entsperren();
-    if (Leitung.stand.endzeit && Leitung.stand.endzeit > Date.now() && !Leitung.stand.gestoppt) {
-      toast('Der Countdown läuft bereits.', 'info');
+    if (Leitung.stand.freigegeben) {
+      toast('Das Spiel läuft bereits. Für eine neue Runde zuerst «Reset (PIN)».', 'info');
       return;
     }
-    Leitung.stand.endzeit = Date.now() + SPIELDAUER_MINUTEN * 60000;
-    Leitung.stand.gestoppt = null;
-    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    Leitung.ablauf = true;
+    setzeStatus('Intro läuft. Danach werden die Aufgaben automatisch freigegeben.', 'info');
+    zeigeVideo();
   });
+  $('#start-countdown').addEventListener('click', function () { Ton.entsperren(); freigeben(); });
+  $('#video-freigeben').addEventListener('click', function () { freigeben(); });
+  $('#signal-erneut').addEventListener('click', function () {
+    if (!Leitung.stand.freigegeben) { toast('Die Aufgaben sind noch nicht freigegeben.', 'info'); return; }
+    sendeStartsignal();
+  });
+  $('#neuer-code').addEventListener('click', function () {
+    if (Leitung.stand.freigegeben) { toast('Das Spiel läuft bereits. Für eine neue Runde zuerst «Reset (PIN)».', 'info'); return; }
+    Leitung.stand.spielcode = Signal.neuerCode();
+    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    zeigeSpielcode();
+  });
+  zeigeSpielcode();
+  if (Leitung.stand.freigegeben) setzeStatus('Aufgaben wurden freigegeben. Bei Problemen «Startsignal erneut senden».', 'ok');
 
   $('#reset-countdown').addEventListener('click', async function () {
     const pin = await fragePin('Countdown zurücksetzen');
     if (pin === null) return;
     if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
-    Leitung.stand = { endzeit: null, gestoppt: null };
+    Leitung.stand = { endzeit: null, gestoppt: null, spielcode: Signal.neuerCode(), freigegeben: false };
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    zeigeSpielcode();
+    setzeStatus('', '');
     $('#gerettet').hidden = true;
     zeigeSzene('intro');
     // Parameter entfernen, sonst setzt ein Neuladen die alte Endzeit
@@ -1170,7 +1468,20 @@ function initSpielleitung() {
   });
 
   $('#hackervideo').addEventListener('click', zeigeVideo);
-  $('#video-schliessen').addEventListener('click', schliesseVideo);
+  $('#video-schliessen').addEventListener('click', function () {
+    const warAblauf = Leitung.ablauf;
+    schliesseVideo();
+    if (warAblauf) setzeStatus('Intro abgebrochen. Mit «Aufgaben jetzt freigeben» startet das Spiel auf den Tablets.', 'warnung');
+  });
+  $('#nochmals-vorlesen').addEventListener('click', spieleNullbyteBotschaft);
+  $('#nur-botschaft').addEventListener('click', function () {
+    Ton.entsperren();
+    $('#video-box').hidden = false;
+    $('#hacker-video').pause();
+    $('#hacker-video').hidden = true;
+    $('#video-ersatz').hidden = false;
+    spieleNullbyteBotschaft();
+  });
   $('#system-gerettet').addEventListener('click', function () {
     Ton.entsperren();
     if (Leitung.stand.endzeit && !Leitung.stand.gestoppt) {
@@ -1231,7 +1542,58 @@ function tickLeitung() {
   uhr.classList.toggle('knapp', !!s.endzeit && !s.gestoppt && rest <= 5 * 60000);
   uhr.classList.toggle('abgelaufen', !!s.endzeit && !s.gestoppt && rest <= 0);
   uhr.classList.toggle('wartet', !s.endzeit);
+  $('#buehne-anmeldung').hidden = !!s.freigegeben;
   $('#gross-label').textContent = !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG'));
+}
+
+function zeigeSpielcode() {
+  const s = Leitung.stand;
+  $$('.spielcode-wert').forEach(function (e) { e.textContent = s.spielcode; });
+  const basis = location.href.replace(/[^/]*$/, '');
+  $('#anmelde-link').textContent = basis + 'index.html?spiel=' + s.spielcode;
+}
+
+function setzeStatus(text, art) {
+  const st = $('#ablauf-status');
+  st.textContent = text;
+  st.className = 'ablauf-status ' + (art || '');
+}
+
+/** Intro ist zu Ende: Aufgaben freigeben, wenn der Spielablauf läuft. */
+function introFertig() {
+  if (!Leitung.ablauf) return;
+  Leitung.ablauf = false;
+  setTimeout(freigeben, 1500);
+}
+
+/** Startet den Countdown und schickt das Startsignal an die Tablets. */
+async function freigeben() {
+  const s = Leitung.stand;
+  Leitung.ablauf = false;
+  if (!s.freigegeben) {
+    const ende = endeAusUrl();
+    s.endzeit = ende && ende.zeit > Date.now() ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000;
+    s.gestoppt = null;
+    s.freigegeben = true;
+    speichereJson(SPEICHER_LEITUNG, s);
+  }
+  if (!$('#video-box').hidden) schliesseVideo();
+  Ton.spiele('alarm');
+  zeigeSzene('auftrag');
+  await sendeStartsignal();
+}
+
+async function sendeStartsignal() {
+  const s = Leitung.stand;
+  setzeStatus('Startsignal wird gesendet …', 'info');
+  try {
+    await Signal.sende(s.spielcode, { typ: 'start', ende: s.endzeit, gesendet: Date.now() });
+    setzeStatus('Aufgaben freigegeben um ' + new Date().toLocaleTimeString('de-CH') + '. Die Tablets starten innerhalb weniger Sekunden.', 'ok');
+    toast('Startsignal gesendet.', 'info');
+  } catch (e) {
+    setzeStatus('Startsignal konnte nicht gesendet werden (Internet?). Erneut versuchen oder die Tablets manuell starten: auf dem Tablet «Spielleitung: manuell starten» und PIN.', 'fehler');
+    toast('Startsignal nicht gesendet.', 'warnung');
+  }
 }
 
 function zeigeSzene(name) {
@@ -1239,6 +1601,10 @@ function zeigeSzene(name) {
   if (!sz) return;
   $('#szene-titel').textContent = sz.titel;
   $('#szene-text').textContent = sz.text;
+  Sprache.stopp();
+  const auto = $('#auto-vorlesen');
+  if (auto && auto.checked && Leitung.szeneGezeigt) Sprache.sprich(sz.titel + '. ' + sz.text, 'normal');
+  Leitung.szeneGezeigt = true;
   $$('[data-szene]').forEach(function (k) { k.classList.toggle('aktiv', k.dataset.szene === name); });
 }
 
@@ -1254,6 +1620,7 @@ function zeigeVideo() {
   const p = video.play();
   if (p && p.catch) p.catch(function () { zeigeVideoErsatz(); });
   video.onerror = zeigeVideoErsatz;
+  video.onended = introFertig;
   if (video.error || video.networkState === 3) zeigeVideoErsatz();
 }
 
@@ -1264,22 +1631,59 @@ function zeigeVideoErsatz() {
   if (!ersatz.hidden) return;
   video.hidden = true;
   ersatz.hidden = false;
-  const text = '> VERBINDUNG HERGESTELLT\n> HIER SPRICHT NULLBYTE.\n> EUER SCHULNETZ GEHÖRT JETZT UNS.\n> ALLE DATEN SIND VERSCHLÜSSELT.\n> IN 45 MINUTEN WIRD ALLES GELÖSCHT.\n> VIEL GLÜCK. IHR WERDET ES BRAUCHEN.\n> NULLBYTE';
+  spieleNullbyteBotschaft();
+}
+
+/* Tippt die Botschaft Zeile für Zeile und liest jede Zeile mit Hackerstimme vor */
+function spieleNullbyteBotschaft() {
+  const ersatz = $('#video-ersatz');
   const ziel = $('#ersatz-text');
+  const zeilen = TEXTE.nullbyte;
+  const lauf = (ersatz._lauf || 0) + 1;   // bricht einen älteren Durchlauf ab
+  ersatz._lauf = lauf;
   ziel.textContent = '';
-  let i = 0;
-  Ton.spiele('alarm');
+  Sprache.stopp();
   clearInterval(ersatz._timer);
-  ersatz._timer = setInterval(function () {
-    ziel.textContent = text.slice(0, ++i);
-    if (i >= text.length) clearInterval(ersatz._timer);
-  }, 55);
+  Ton.spiele('alarm');
+  let z = 0;
+  function naechsteZeile() {
+    if (ersatz._lauf !== lauf) return;
+    if (z >= zeilen.length) { introFertig(); return; }
+    const zeile = '> ' + zeilen[z];
+    let i = 0;
+    let getippt = false;
+    let gesprochen = !Sprache.verfuegbar || !$('#hacker-stimme').checked;
+    const vorher = ziel.textContent;
+    function weiter() {
+      if (getippt && gesprochen && ersatz._lauf === lauf) {
+        z++;
+        setTimeout(naechsteZeile, 350);
+      }
+    }
+    if (!gesprochen) Sprache.sprich(zeilen[z], 'hacker').then(function () { gesprochen = true; weiter(); });
+    ersatz._timer = setInterval(function () {
+      ziel.textContent = vorher + zeile.slice(0, ++i);
+      if (i >= zeile.length) {
+        clearInterval(ersatz._timer);
+        ziel.textContent += '\n';
+        ziel.scrollTop = ziel.scrollHeight;
+        getippt = true;
+        // ohne Sprachausgabe: Lesezeit abhängig von der Länge
+        if (gesprochen) setTimeout(weiter, 400 + zeile.length * 25);
+        else weiter();
+      }
+    }, 38);
+  }
+  naechsteZeile();
 }
 
 function schliesseVideo() {
+  Leitung.ablauf = false;
   const video = $('#hacker-video');
   video.pause();
   clearInterval($('#video-ersatz')._timer);
+  $('#video-ersatz')._lauf = ($('#video-ersatz')._lauf || 0) + 1;
+  Sprache.stopp();
   $('#video-box').hidden = true;
 }
 

@@ -124,10 +124,25 @@
     </div>
     <h2 id="helpdesk-titel"></h2>
     <ol id="tipp-liste" class="tipp-liste"></ol>
+    <div id="helpdesk-vorlesen"></div>
     <p>Verbleibende Joker: <strong id="joker-rest"></strong></p>
     <button type="button" id="joker-knopf" class="knopf primaer"></button>
     <p id="joker-info" class="klein"></p>
   </aside>
+
+  <!-- Warten auf das Startsignal der Spielleitung -->
+  <div id="warten" class="overlay warten" hidden>
+    <div class="overlay-box">
+      <img src="img/maske.svg" alt="" class="maske warten-maske">
+      <h1 id="warten-titel">WARTEN AUF DIE SPIELLEITUNG</h1>
+      <p class="gross-text"><span id="warten-team"></span> ist angemeldet.</p>
+      <p>Spielcode <strong id="warten-code"></strong>. Schaut nach vorne zur Leinwand. Sobald die Spielleitung das Spiel startet, erscheinen hier eure Aufgaben.</p>
+      <p id="warten-status" class="warten-status">Verbindung wird aufgebaut …</p>
+      <button type="button" id="bereit-knopf" class="knopf primaer gross">Wir sind bereit</button>
+      <p id="bereit-info" class="ok" hidden>Bereit ✓ Ton ist eingeschaltet.</p>
+      <p><button type="button" id="manuell-start" class="knopf klein-knopf">Spielleitung: manuell starten (PIN)</button></p>
+    </div>
+  </div>
 
   <!-- Bei 00:00 -->
   <div id="geloescht" class="overlay geloescht" hidden>

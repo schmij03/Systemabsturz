@@ -38,14 +38,26 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 
 ## Ablauf in der Lektion
 
-1. **Vorbereitung:** Auf dem Laptop der Lehrperson `spielleitung.html` öffnen. Im Bereich «Countdown synchronisieren» das Spielende wählen, zum Beispiel 10:45.
-2. **Tablets:** Auf jedem Tablet den angezeigten Tablet-Link öffnen, zum Beispiel `index.html?ende=10:45`. Alle Geräte zählen dann auf dieselbe Uhrzeit herunter (die Uhren der Geräte sollten automatisch gestellt sein).
-3. **Beamer:** Mit «Beamer mit dieser Endzeit öffnen» läuft der grosse Countdown synchron. Mit «Vollbild» wird er bildschirmfüllend.
-4. **Einstieg:** «Hackervideo» abspielen, danach die Story-Texte «Alarm», «Auftrag» und «Regeln» zeigen.
-5. Die Teams geben ihren Namen ein und tippen auf **«Spiel starten»** (das entsperrt auch den Ton).
+1. **Vorbereitung:** Auf dem Laptop der Lehrperson (am Beamer) `spielleitung.html` öffnen und mit «Vollbild» bildschirmfüllend machen. Auf der Leinwand steht gross ein **Spielcode** aus fünf Buchstaben, zum Beispiel KXRTM.
+2. **Anmelden:** Die Teams öffnen auf ihrem Tablet die Startseite `index.html`, geben Teamname und Spielcode ein und tippen auf «Spiel starten». Das Tablet zeigt nun «Warten auf die Spielleitung». Mit «Wir sind bereit» schalten die Teams den Ton ein. Die Aufgaben sind noch gesperrt und nicht sichtbar.
+3. **Spiel starten:** Die Spielleitung drückt in der Steuerung auf **«▶ Spiel starten»**. Das Hackervideo läuft (oder, falls `videos/intro.mp4` fehlt, die Botschaft von NULLBYTE mit Maske und Hackerstimme).
+4. **Aufgaben erhalten:** Nach dem Intro startet automatisch der Countdown auf dem Beamer, die Story «Euer Auftrag» wird gezeigt und vorgelesen, und alle Tablets erhalten innerhalb weniger Sekunden das Startsignal: «Aufgaben empfangen», Protokoll 1 erscheint, der Countdown läuft synchron.
+5. Wer das Intro abkürzen will, drückt «Aufgaben jetzt freigeben ▶» (im Intro) oder «Aufgaben sofort freigeben (ohne Intro)».
 6. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
-Ohne den Parameter `?ende=HH:MM` startet der Countdown auf jedem Tablet beim Klick auf «Spiel starten» mit 45:00.
+Für die nächste Runde: «Reset (PIN)» in der Steuerung (erzeugt einen neuen Spielcode) und die Tablets zurücksetzen.
+
+### Wie kommt das Startsignal auf die Tablets?
+
+Das Spiel hat keinen eigenen Server. Das Startsignal läuft deshalb über den freien Benachrichtigungsdienst [ntfy.sh](https://ntfy.sh): Die Spielleitung sendet eine kurze Nachricht an einen Kanal, dessen Name den Spielcode enthält, und die wartenden Tablets fragen alle 3 Sekunden nach. Übertragen werden nur der Spielcode und die Endzeit, **keine Namen, keine Punkte, keine Personendaten**. Tablets, die sich erst nach dem Start anmelden oder neu laden, erhalten das Signal ebenfalls (es bleibt 6 Stunden abrufbar).
+
+* Voraussetzung: Beamer-Laptop und Tablets haben Internet, und das Schulnetz blockiert ntfy.sh nicht. Am besten vor der Lektion einmal testen.
+* **Ohne Internet:** Auf jedem Tablet «Spielleitung: manuell starten (PIN)» tippen. Der Countdown startet dann mit 45:00 (oder synchron, wenn der Tablet-Link `?ende=HH:MM` verwendet wurde).
+* Server und Kanalname stehen oben in `js/app.js` (`SIGNAL_SERVER`, `SIGNAL_PRAEFIX`). Wer will, kann einen eigenen ntfy-Server betreiben und dort eintragen.
+
+### Alternative: synchronisieren über die Uhrzeit
+
+Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: Im Bereich «Countdown synchronisieren» ein Spielende wählen und auf den Tablets den Link `index.html?ende=10:45` öffnen. Dann braucht es keinen Spielcode, und jedes Tablet startet beim Klick auf «Spiel starten» sofort mit dem Countdown bis 10:45 (die Uhren der Geräte sollten automatisch gestellt sein). Ohne Spielcode und ohne `?ende` lässt sich ein Tablet nur mit der PIN starten.
 
 ### Die drei Protokolle
 
@@ -55,10 +67,16 @@ Ohne den Parameter `?ende=HH:MM` startet der Countdown auf jedem Tablet beim Kli
 
 ### Help-Desk und Punkte
 
-* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 10 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage.
+* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage.
 * Jedes Team hat 3 Joker. Ein Joker zeigt die nächste Tippstufe (1, 2, 3) des aktuellen Protokolls.
 * Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll).
 * Punkte, Joker, Teamname und Countdown sind immer in der Kopfzeile sichtbar.
+
+### NULLBYTE und das Vorlesen
+
+* **Botschaft von NULLBYTE:** Fehlt `videos/intro.mp4`, erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
+* **Vorlesen (Text-to-Speech):** Die Botschaft wird mit tiefer Hackerstimme vorgelesen, die Story-Texte mit normaler Stimme. Im Terminal haben die Story-Texte und der Help-Desk einen Knopf 🔊. Verwendet wird die Sprachausgabe des Browsers (Web Speech API), bevorzugt eine Stimme für Deutsch (Schweiz), sonst Deutsch (Deutschland). Es braucht keine Internetverbindung, sofern das Gerät eine deutsche Stimme installiert hat. Tonhöhe und Tempo lassen sich in `js/app.js` unter `STIMMEN` anpassen.
+* Auf dem iPad gibt es Sprachausgabe nur nach einer Berührung und nur, wenn der Stummschalter aus ist. Weitere Stimmen lassen sich unter Einstellungen, Bedienungshilfen, Gesprochene Inhalte, Stimmen laden.
 
 ### Bei 00:00
 
@@ -72,7 +90,7 @@ Auf dem Tablet unten rechts auf «Spielleitung» tippen, PIN eingeben (Standard 
 
 Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 
-* `js/app.js`: PIN, Spieldauer, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
+* `js/app.js`: PIN, Spieldauer, Joker-Kosten (Standard 20 Punkte), Botschaft von NULLBYTE, Stimmen fürs Vorlesen, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
 * `js/maze.js`: Labyrinth, Zahlen auf den Feldern, Startrichtung, maximale Schrittzahl.
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 

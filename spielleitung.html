@@ -17,6 +17,10 @@
       <span class="label">SCHULNETZ: NOTFALL-MODUS</span>
       <span class="label rot blinkt-langsam">● NULLBYTE AKTIV</span>
     </div>
+    <div id="buehne-anmeldung" class="buehne-anmeldung">
+      <span class="label">ANMELDUNG FÜR NOTFALL-TEAMS: TEAMNAME UND SPIELCODE EINGEBEN</span>
+      <span class="spielcode-wert buehne-code"></span>
+    </div>
     <div id="gross-label" class="gross-label">BEREIT</div>
     <div id="gross-countdown" class="gross-countdown">45:00</div>
     <div class="szene">
@@ -31,15 +35,36 @@
     <h2>Steuerung</h2>
     <p id="sync-info" class="klein"></p>
 
+    <div class="karte ablauf">
+      <h3>Spielablauf</h3>
+      <ol>
+        <li>Teams öffnen auf den Tablets die Startseite und geben Teamname und Spielcode <strong class="spielcode-wert"></strong> ein. Die Tablets warten dann auf euch.<br><span class="klein">Direkter Link: <code id="anmelde-link"></code></span></li>
+        <li>«Spiel starten» zeigt das Hackervideo (oder die Botschaft von NULLBYTE mit Maske und Stimme).</li>
+        <li>Nach dem Intro startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben.</li>
+      </ol>
+      <div class="knopf-reihe">
+        <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
+        <button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben (ohne Intro)</button>
+        <button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button>
+        <button type="button" id="neuer-code" class="knopf">Neuer Spielcode</button>
+      </div>
+      <p id="ablauf-status" class="ablauf-status" role="status"></p>
+    </div>
+
     <div class="knopf-reihe">
       <button type="button" class="knopf" data-szene="intro">Story: Alarm</button>
       <button type="button" class="knopf" data-szene="auftrag">Story: Auftrag</button>
       <button type="button" class="knopf" data-szene="regeln">Story: Regeln</button>
       <button type="button" class="knopf" data-szene="gerettet">Story: Gerettet</button>
+      <span id="szene-vorlesen"></span>
     </div>
+    <p id="auto-vorlesen-zeile" class="schalter-zeile">
+      <label><input type="checkbox" id="auto-vorlesen" checked> Story beim Wechseln automatisch vorlesen</label>
+      <label><input type="checkbox" id="hacker-stimme" checked> Botschaft von NULLBYTE mit Hackerstimme vorlesen</label>
+    </p>
     <div class="knopf-reihe">
       <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
-      <button type="button" id="start-countdown" class="knopf primaer">Countdown starten (45:00)</button>
+      <button type="button" id="nur-botschaft" class="knopf gefahr">Botschaft von NULLBYTE</button>
       <button type="button" id="system-gerettet" class="knopf primaer">System gerettet</button>
       <button type="button" id="vollbild" class="knopf">Vollbild</button>
       <button type="button" id="reset-countdown" class="knopf">Reset (PIN)</button>
@@ -102,10 +127,17 @@
   <div id="video-box" class="overlay video-box" hidden>
     <video id="hacker-video" src="videos/intro.mp4" playsinline preload="none" controls></video>
     <div id="video-ersatz" class="video-ersatz" hidden>
-      <pre id="ersatz-text"></pre>
-      <p class="klein">Platzhalter: Legt eure Videodatei als <code>videos/intro.mp4</code> ab.</p>
+      <img src="img/maske.svg" alt="Maske von NULLBYTE" class="maske maske-gross">
+      <div class="ersatz-rechts">
+        <div class="label rot blinkt-langsam">● EINGEHENDE ÜBERTRAGUNG: NULLBYTE</div>
+        <pre id="ersatz-text"></pre>
+      </div>
     </div>
-    <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
+    <div class="video-knoepfe">
+      <button type="button" id="nochmals-vorlesen" class="knopf">Botschaft nochmals abspielen</button>
+      <button type="button" id="video-freigeben" class="knopf primaer">Aufgaben jetzt freigeben ▶</button>
+      <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
+    </div>
   </div>
 
   <!-- Schlussszene -->
