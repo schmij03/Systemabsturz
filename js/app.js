@@ -62,7 +62,7 @@ const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4a
 
 /* Startsignal der Spielleitung an die Tablets.
    Weil das Spiel keinen eigenen Server hat, läuft das Signal über den
-   freien Dienst ntfy.sh. Übertragen werden nur der Spielcode und die
+   freien Dienst ntfy.sh. Übertragen werden nur der Beitrittscode und die
    Endzeit, keine Teamnamen und keine Punkte. Ohne Internet startet die
    Spielleitung die Tablets manuell mit der PIN. */
 const SIGNAL_SERVER = 'https://ntfy.sh';
@@ -125,6 +125,19 @@ const TEXTE = {
         'Der Weg führt über Server C. Vergesst nicht, A und Z mitzuzählen.'
       ]
     }
+  },
+  /* Spielanweisung: erscheint nach dem Video auf dem Beamer, darüber der
+     Beitrittscode. Jeder Absatz wird einzeln vorgelesen und hervorgehoben.
+     Danach startet automatisch der Countdown. */
+  spielanweisung: {
+    titel: 'SPIELANWEISUNG',
+    absaetze: [
+      'Ihr seid die Notfall-Teams unserer Schule. Jedes Team erhält ein Tablet, einen Auftrag auf Papier, eine Chiffrierscheibe für Protokoll 1 und einen Netzwerkplan für Protokoll 3.',
+      'Öffnet auf dem Tablet das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht. Tippt danach auf «Wir sind bereit».',
+      'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jeder geknackte Code öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus.',
+      'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kisten dürfen nur mit dem richtigen Code geöffnet werden.',
+      'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf dem Tablet. Viel Erfolg!'
+    ]
   },
   /* Botschaft von NULLBYTE (Hackervideo-Ersatz auf dem Beamer, wird vorgelesen).
      Jede Zeile wird einzeln getippt. */
@@ -596,7 +609,7 @@ const Signal = (function () {
 
   function thema(code) { return SIGNAL_SERVER + '/' + SIGNAL_PRAEFIX + String(code).toLowerCase(); }
 
-  /** Sendet eine Nachricht an alle Tablets mit diesem Spielcode. */
+  /** Sendet eine Nachricht an alle Tablets mit diesem Beitrittscode. */
   async function sende(code, daten) {
     const r = await fetch(thema(code), { method: 'POST', body: JSON.stringify(daten) });
     if (!r.ok) throw new Error('Signal nicht gesendet: ' + r.status);
@@ -941,22 +954,22 @@ function initStartseite() {
     if (!name) return;
     const code = Signal.normiere($('#spielcode').value);
     if (!code && !ende) {
-      $('#start-meldung').textContent = 'Gebt den Spielcode ein, der auf der Leinwand steht.';
+      $('#start-meldung').textContent = 'Gebt den Beitrittscode ein, der auf der Leinwand steht.';
       $('#ohne-code').hidden = false;
       return;
     }
     if (code && code.length !== SPIELCODE_LAENGE) {
-      $('#start-meldung').textContent = 'Der Spielcode hat ' + SPIELCODE_LAENGE + ' Buchstaben. Schaut nochmals auf die Leinwand.';
+      $('#start-meldung').textContent = 'Der Beitrittscode hat ' + SPIELCODE_LAENGE + ' Buchstaben. Schaut nochmals auf die Leinwand.';
       return;
     }
     starte(name, code);
   });
 
-  // Notlösung: ohne Spielcode sofort starten (nur mit PIN)
+  // Notlösung: ohne Beitrittscode sofort starten (nur mit PIN)
   $('#ohne-code').addEventListener('click', async function () {
     const name = teamname();
     if (!name) return;
-    const pin = await fragePin('Ohne Spielcode starten');
+    const pin = await fragePin('Ohne Beitrittscode starten');
     if (pin === null) return;
     if (pin !== SPIELLEITUNG_PIN) { Ton.spiele('fehler'); toast('Falsche PIN.', 'warnung'); return; }
     starte(name, null);
@@ -1591,11 +1604,15 @@ function initSpielleitung() {
       return;
     }
     Leitung.ablauf = true;
-    setzeStatus('Intro läuft. Danach werden die Aufgaben automatisch freigegeben.', 'info');
+    setzeStatus('Intro läuft (Video, danach Spielanweisung mit Beitrittscode). Danach werden die Aufgaben automatisch freigegeben.', 'info');
+    vollbild(true);
+    window.scrollTo(0, 0);
     zeigeVideo();
   });
   $('#start-countdown').addEventListener('click', function () { Ton.entsperren(); freigeben(); });
-  $('#video-freigeben').addEventListener('click', function () { freigeben(); });
+  $('#video-freigeben').addEventListener('click', function () { Leitung.ablauf = true; introFertig(); });
+  $('#anweisung-freigeben').addEventListener('click', function () { freigeben(); });
+  $('#anweisung-nochmals').addEventListener('click', function () { Leitung.ablauf = true; zeigeAnweisung(); });
   $('#signal-erneut').addEventListener('click', function () {
     if (!Leitung.stand.freigegeben) { toast('Die Aufgaben sind noch nicht freigegeben.', 'info'); return; }
     sendeStartsignal();
@@ -1716,7 +1733,7 @@ function tickLeitung() {
   uhr.classList.toggle('knapp', !!s.endzeit && !s.gestoppt && rest <= 5 * 60000);
   uhr.classList.toggle('abgelaufen', !!s.endzeit && !s.gestoppt && rest <= 0);
   uhr.classList.toggle('wartet', !s.endzeit);
-  $('#buehne-anmeldung').hidden = !!s.freigegeben;
+  $('#buehne-anmeldung').classList.toggle('klein', !!s.freigegeben);
   $('#gross-label').textContent = !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG'));
 }
 
@@ -1725,6 +1742,8 @@ function zeigeSpielcode() {
   $$('.spielcode-wert').forEach(function (e) { e.textContent = s.spielcode; });
   const basis = location.href.replace(/[^/]*$/, '');
   $('#anmelde-link').textContent = basis + 'index.html?spiel=' + s.spielcode;
+  // kurze Adresse zum Abtippen (ohne https://)
+  $$('.anmelde-kurz').forEach(function (e) { e.textContent = basis.replace(/^https?:\/\//, '').replace(/\/$/, ''); });
   if (s.stufe && STUFEN[s.stufe]) $$('.stufe-wert').forEach(function (e) { e.textContent = STUFEN[s.stufe].name; });
 }
 
@@ -1737,8 +1756,62 @@ function setzeStatus(text, art) {
 /** Intro ist zu Ende: Aufgaben freigeben, wenn der Spielablauf läuft. */
 function introFertig() {
   if (!Leitung.ablauf) return;
-  Leitung.ablauf = false;
-  setTimeout(freigeben, 1500);
+  if (!$('#video-box').hidden) schliesseVideo();
+  Leitung.ablauf = true;
+  zeigeAnweisung();
+}
+
+/** Bildschirm füllen (nur nach einem Klick erlaubt) */
+function vollbild(an) {
+  const d = document.documentElement;
+  try {
+    if (an && !document.fullscreenElement && !document.webkitFullscreenElement) {
+      const p = d.requestFullscreen ? d.requestFullscreen() : (d.webkitRequestFullscreen ? d.webkitRequestFullscreen() : null);
+      if (p && p.catch) p.catch(function () { /* Browser erlaubt es nicht: egal */ });
+    } else if (!an && document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+  } catch (e) { /* egal */ }
+}
+
+/* Spielanweisung nach dem Video: Beitrittscode oben, Absätze werden
+   nacheinander vorgelesen und hervorgehoben. Danach Freigabe. */
+async function zeigeAnweisung() {
+  const box = $('#anweisung');
+  const liste = $('#anweisung-text');
+  const a = TEXTE.spielanweisung;
+  const lauf = (box._lauf || 0) + 1;
+  box._lauf = lauf;
+  zeigeSpielcode();
+  $('#anweisung-titel').textContent = a.titel;
+  liste.innerHTML = '';
+  const elemente = a.absaetze.map(function (t) {
+    const p = erstelle('p', 'anweisung-absatz', t);
+    liste.appendChild(p);
+    return p;
+  });
+  box.hidden = false;
+  setzeStatus('Spielanweisung läuft. Teams melden sich mit dem Beitrittscode an.', 'info');
+  for (let i = 0; i < elemente.length; i++) {
+    if (box._lauf !== lauf || box.hidden) return;
+    elemente.forEach(function (e, j) { e.classList.toggle('aktiv', j === i); e.classList.toggle('gelesen', j < i); });
+    if ($('#auto-vorlesen').checked) {
+      await Sprache.sprich(a.absaetze[i], 'normal');
+    } else {
+      await new Promise(function (ok) { setTimeout(ok, 2500 + a.absaetze[i].length * 45); });
+    }
+    if (box._lauf !== lauf || box.hidden) return;
+    await new Promise(function (ok) { setTimeout(ok, 500); });
+  }
+  elemente.forEach(function (e) { e.classList.remove('aktiv'); e.classList.add('gelesen'); });
+  if (Leitung.ablauf && box._lauf === lauf) setTimeout(function () { if (box._lauf === lauf) freigeben(); }, 1200);
+}
+
+function schliesseAnweisung() {
+  const box = $('#anweisung');
+  box._lauf = (box._lauf || 0) + 1;
+  box.hidden = true;
+  Sprache.stopp();
 }
 
 /** Startet den Countdown und schickt das Startsignal an die Tablets. */
@@ -1753,8 +1826,11 @@ async function freigeben() {
     speichereJson(SPEICHER_LEITUNG, s);
   }
   if (!$('#video-box').hidden) schliesseVideo();
+  const nachAnweisung = !$('#anweisung').hidden;
+  schliesseAnweisung();
+  window.scrollTo(0, 0);
   Ton.spiele('alarm');
-  zeigeSzene('auftrag');
+  zeigeSzene('auftrag', nachAnweisung);
   await sendeStartsignal();
 }
 
@@ -1771,14 +1847,14 @@ async function sendeStartsignal() {
   }
 }
 
-function zeigeSzene(name) {
+function zeigeSzene(name, ohneVorlesen) {
   const sz = TEXTE.szenen[name];
   if (!sz) return;
   $('#szene-titel').textContent = sz.titel;
   $('#szene-text').textContent = sz.text;
   Sprache.stopp();
   const auto = $('#auto-vorlesen');
-  if (auto && auto.checked && Leitung.szeneGezeigt) Sprache.sprich(sz.titel + '. ' + sz.text, 'normal');
+  if (auto && auto.checked && Leitung.szeneGezeigt && !ohneVorlesen) Sprache.sprich(sz.titel + '. ' + sz.text, 'normal');
   Leitung.szeneGezeigt = true;
   $$('[data-szene]').forEach(function (k) { k.classList.toggle('aktiv', k.dataset.szene === name); });
 }
@@ -1792,6 +1868,7 @@ function zeigeVideo() {
   ersatz.hidden = true;
   video.hidden = false;
   video.currentTime = 0;
+  video.controls = !Leitung.ablauf;   // im Spielablauf ohne Bedienleiste
   const p = video.play();
   if (p && p.catch) p.catch(function () { zeigeVideoErsatz(); });
   video.onerror = zeigeVideoErsatz;

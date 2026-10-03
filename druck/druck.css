@@ -1,0 +1,32 @@
+/* =====================================================================
+   Systemabsturz: Druckmaterial (A4)
+   Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
+   ===================================================================== */
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+html { background: #e8e8e8; }
+body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: #111; }
+.seite { width: 210mm; min-height: 297mm; margin: 10mm auto; padding: 12mm; background: #fff; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); position: relative; }
+.seite.quer { width: 297mm; min-height: 210mm; }
+h1 { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 20pt; margin: 0 0 2mm; letter-spacing: 0.05em; }
+h2 { font-size: 13pt; margin: 5mm 0 2mm; border-bottom: 1.5pt solid #111; padding-bottom: 1mm; }
+p { margin: 0 0 2.5mm; }
+.kopf { display: flex; justify-content: space-between; align-items: center; border-bottom: 3pt solid #111; padding-bottom: 3mm; margin-bottom: 4mm; }
+.kopf .stempel { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; border: 2pt solid #c00; color: #c00; padding: 1mm 3mm; transform: rotate(-4deg); }
+.mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
+.kasten { border: 1.2pt solid #111; border-radius: 3mm; padding: 3mm 4mm; margin: 3mm 0; }
+.kasten.grau { background: #f2f2f2; }
+.linien { border-bottom: 0.6pt solid #999; height: 9mm; }
+.fuss { position: absolute; left: 12mm; right: 12mm; bottom: 8mm; font-size: 7.5pt; color: #555; display: flex; justify-content: space-between; }
+.druckleiste { max-width: 210mm; margin: 6mm auto 0; display: flex; gap: 8px; align-items: center; font-family: sans-serif; }
+.druckleiste button { min-height: 44px; padding: 0 16px; font-size: 12pt; cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+td, th { border: 0.8pt solid #111; padding: 1.5mm 2mm; text-align: left; vertical-align: top; }
+@media print {
+  html { background: #fff; }
+  .seite { margin: 0; box-shadow: none; width: auto; min-height: 0; height: 265mm; padding: 0; overflow: hidden; }
+  .seite + .seite { page-break-before: always; }
+  .seite.quer { width: auto; min-height: 0; height: 172mm; }
+  .druckleiste { display: none; }
+  .fuss { left: 0; right: 0; bottom: 0; }
+}

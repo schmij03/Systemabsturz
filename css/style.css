@@ -575,3 +575,28 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 #energie-zaehler.leer { color: #fff; background: var(--rot-dunkel); border-color: var(--rot); }
 .stufe-wahl { min-height: 48px; font: inherit; padding: 0 10px; color: var(--gruen-hell); background: #000; border: 2px solid var(--rand); border-radius: 6px; }
 .loesungen-liste dd.programm { font-family: var(--sans); font-weight: 400; color: var(--text); }
+
+/* ===================== Spielanweisung (Beamer) ====================== */
+
+.anweisung { background: radial-gradient(circle at 50% 20%, #0b2214, #020604 70%); z-index: 260; align-items: flex-start; overflow-y: auto; }
+.anweisung-box { width: min(1300px, 100%); margin: 0 auto; padding: 2vh 2vw; text-align: center; }
+.anweisung-code { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; padding: 1.5vh 3vw; margin-bottom: 3vh; border: 3px solid var(--gelb); border-radius: 12px; background: rgba(255, 213, 79, 0.06); box-shadow: 0 0 40px rgba(255, 213, 79, 0.2); }
+.anweisung-code .label { color: var(--gelb); font-size: clamp(0.9rem, 1.6vw, 1.4rem); }
+.anweisung-codewert { font-size: clamp(3rem, min(10vw, 15vh), 9rem); line-height: 1.05; font-weight: 700; letter-spacing: 0.25em; padding-left: 0.25em; color: var(--gelb); text-shadow: 0 0 24px rgba(255, 213, 79, 0.6); }
+.anweisung-url { font-size: clamp(0.9rem, 1.6vw, 1.4rem); color: var(--text); }
+.anweisung-url strong { color: var(--gruen-hell); }
+.anweisung h1 { font-size: clamp(1.6rem, 3.4vw, 3rem); color: var(--rot); margin-bottom: 2vh; }
+.anweisung-text { text-align: left; display: flex; flex-direction: column; gap: 1.4vh; }
+.anweisung-absatz { margin: 0; padding: 1vh 1.4vw; font-family: var(--sans); font-size: clamp(1rem, min(2vw, 3.4vh), 1.85rem); line-height: 1.4; color: var(--text-schwach); border-left: 6px solid transparent; border-radius: 0 8px 8px 0; transition: all 0.3s; }
+.anweisung-absatz.aktiv { color: #fff; background: rgba(61, 220, 132, 0.12); border-left-color: var(--gruen); }
+.anweisung-absatz.gelesen { color: var(--text); }
+.anweisung-knoepfe { display: flex; justify-content: flex-end; gap: 10px; margin-top: 2vh; opacity: 0.45; }
+.anweisung-knoepfe:hover { opacity: 1; }
+.buehne-anmeldung.klein { padding: 4px 18px; margin-bottom: 1vh; border-style: solid; }
+.buehne-anmeldung.klein .buehne-code { font-size: clamp(1.6rem, 3.5vw, 3rem); }
+.buehne-anmeldung.klein .label::after { content: " (Nachzügler)"; }
+.link-knopf { display: inline-flex; align-items: center; text-decoration: none; }
+/* Video im Spielablauf bildschirmfüllend */
+.video-box video { width: 100vw; height: 82vh; object-fit: contain; background: #000; }
+.video-knoepfe { opacity: 0.4; }
+.video-knoepfe:hover { opacity: 1; }
