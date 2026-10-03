@@ -6,25 +6,10 @@
   <title>Systemabsturz: Protokoll 1</title>
   <link rel="stylesheet" href="druck.css">
   <style>
-    .oberzeile { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em; color: #5f6670; border-bottom: 1.2pt solid #111; padding-bottom: 1mm; margin-bottom: 3mm; }
-    .titelzeile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
-    .titelzeile h1 { font-family: Arial, Helvetica, sans-serif; font-size: 19pt; letter-spacing: 0; margin: 0; }
-    .stufe { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 9pt; color: #fff; background: #111418; padding: 1mm 3mm; border-radius: 1mm; white-space: nowrap; }
-    .wissen { border-left: 3pt solid #c62828; background: #fbeaea; padding: 2.5mm 4mm; margin: 3mm 0 4mm; }
-    .wissen .label { display: block; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; color: #c62828; letter-spacing: 0.08em; margin-bottom: 1mm; }
-    .feld { margin: 3mm 0 1mm; font-weight: 700; }
     .linie { border-bottom: 0.6pt solid #888; height: 8.5mm; }
     .geheimtext { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12pt; letter-spacing: 0.1em; word-spacing: 0.3em; line-height: 8.5mm; }
-    .codefelder { display: flex; gap: 3mm; margin-top: 1mm; }
-    .codefelder span { width: 13mm; height: 15mm; border: 1.5pt solid #111; border-radius: 1.5mm; }
-    .bonus { border: 1.2pt dashed #111; border-radius: 2mm; padding: 2.5mm 4mm; margin-top: 5mm; }
-    .bonus strong { display: block; margin-bottom: 1mm; }
     .scheibe { display: flex; justify-content: center; margin-top: 3mm; }
     .schere { text-align: center; font-size: 9pt; color: #5f6670; margin-top: 1mm; }
-    .bau ol { margin: 2mm 0 0; padding-left: 6mm; }
-    .bau li { margin-bottom: 1mm; }
-    .druckleiste select { min-height: 44px; font-size: 12pt; }
-    .druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
   </style>
 </head>
 <body>
@@ -36,60 +21,63 @@
   </div>
 
   <!-- Seite 1: Auftrag -->
-  <div class="seite">
+  <div class="seite protokoll">
     <div class="oberzeile">SICHERHEITSPROTOKOLL 1 &nbsp;·&nbsp; KRYPTOGRAFIE</div>
     <div class="titelzeile"><h1>Die Nachricht von NULLBYTE</h1><span class="stufe stufe-text"></span></div>
     <p>Um 08:13 Uhr erschien auf allen Bildschirmen der Schule eine verschlüsselte Nachricht. Ihr findet sie im Notfall-Terminal unter Protokoll 1. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code, der darin versteckt ist, im Terminal ein.</p>
-    <div class="wissen">
+    <div class="hinweis-kasten">
       <span class="label">WAS WIR ÜBER DIE HACKER WISSEN</span>
       Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen. Vergleicht die Unterschrift mit dem Namen, dann wisst ihr, wie die Buchstaben verschoben wurden.
     </div>
 
-    <div class="feld">Geheimtext (aus dem Terminal abschreiben):</div>
+    <h2>So geht ihr vor</h2>
+    <ol class="schritte">
+      <li>Schreibt den Geheimtext aus dem Terminal ab.</li>
+      <li>Vergleicht die Unterschrift mit NULLBYTE und stellt die Chiffrierscheibe richtig ein.</li>
+      <li>Entschlüsselt die Nachricht Buchstabe für Buchstabe und gebt den Code im Terminal ein.</li>
+    </ol>
+
+    <h2>Geheimtext</h2>
     <div id="geheimtext-feld"><div class="linie"></div><div class="linie"></div><div class="linie"></div></div>
+    <p class="feldname">Verschiebung: Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</p>
 
-    <div class="feld">Verschiebung: Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</div>
-
-    <div class="feld">Entschlüsselte Nachricht (Klartext):</div>
+    <h2>Entschlüsselte Nachricht (Klartext)</h2>
     <div class="linie"></div><div class="linie"></div><div class="linie"></div><div class="linie"></div>
 
-    <div class="feld">Code für das Terminal:</div>
-    <div class="codefelder"><span></span><span></span><span></span></div>
+    <div class="eingabefelder">Code für das Terminal: <span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
 
-    <div class="bonus">
-      <strong>Bonusfrage im Terminal (ein Versuch, plus 10 Punkte)</strong>
-      Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich? Überlegt hier, bevor ihr antwortet:
+    <h2>Bonusfrage im Terminal</h2>
+    <div class="hinweis-kasten">
+      Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich? Ihr habt einen Versuch, richtig gibt plus 10 Punkte. Überlegt hier, bevor ihr antwortet:
       <div class="linie"></div><div class="linie"></div>
     </div>
-    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset <span class="stufe-name"></span> · Protokoll 1</span></div>
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span class="fuss-stufe"></span></div>
   </div>
 
   <!-- Seite 2: grosse Scheibe -->
-  <div class="seite">
+  <div class="seite protokoll">
     <div class="oberzeile">SICHERHEITSPROTOKOLL 1 &nbsp;·&nbsp; BASTELVORLAGE 1 VON 2</div>
     <div class="titelzeile"><h1>Chiffrierscheibe: grosse Scheibe</h1><span class="stufe stufe-text"></span></div>
     <p>Entlang des äusseren Kreises ausschneiden. Die schwarzen Buchstaben sind der Klartext. Am besten auf festes Papier und in tatsächlicher Grösse (100 %) drucken.</p>
     <div class="scheibe" id="scheibe-gross"></div>
     <div class="schere">✂ &nbsp;hier ausschneiden</div>
-    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset <span class="stufe-name"></span> · Protokoll 1</span></div>
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span class="fuss-stufe"></span></div>
   </div>
 
   <!-- Seite 3: kleine Scheibe und Bauanleitung -->
-  <div class="seite">
+  <div class="seite protokoll">
     <div class="oberzeile">SICHERHEITSPROTOKOLL 1 &nbsp;·&nbsp; BASTELVORLAGE 2 VON 2</div>
     <div class="titelzeile"><h1>Chiffrierscheibe: kleine Scheibe</h1><span class="stufe stufe-text"></span></div>
     <p>Entlang des äusseren Kreises ausschneiden. Die roten Buchstaben sind der Geheimtext.</p>
     <div class="scheibe" id="scheibe-klein"></div>
-    <div class="kasten bau">
-      <strong>So baut ihr die Scheibe zusammen</strong>
-      <ol>
-        <li>Schneidet beide Scheiben aus (grosse Scheibe auf der vorherigen Seite).</li>
-        <li>Legt die kleine rote Scheibe auf die grosse, Mittelpunkt auf Mittelpunkt.</li>
-        <li>Stecht mit einem Bleistift durch beide Mittelpunkte und steckt eine Musterklammer durch.</li>
-        <li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li>
-      </ol>
-    </div>
-    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset <span class="stufe-name"></span> · Protokoll 1</span></div>
+    <h2>So baut ihr die Scheibe zusammen</h2>
+    <ol class="schritte">
+      <li>Schneidet beide Scheiben aus (grosse Scheibe auf der vorherigen Seite).</li>
+      <li>Legt die kleine rote Scheibe auf die grosse, Mittelpunkt auf Mittelpunkt.</li>
+      <li>Stecht mit einem Bleistift durch beide Mittelpunkte und steckt eine Musterklammer durch.</li>
+      <li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li>
+    </ol>
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span class="fuss-stufe"></span></div>
   </div>
 
   <script src="../js/maze.js"></script>
@@ -135,8 +123,8 @@
       wahl.value = stufeAusUrl() || leitung.stufe || STANDARD_STUFE;
       function zeige() {
         var name = STUFEN[wahl.value].name;
-        Array.prototype.forEach.call(document.querySelectorAll('.stufe-text'), function (e) { e.textContent = 'STUFE ' + name.toUpperCase(); });
-        Array.prototype.forEach.call(document.querySelectorAll('.stufe-name'), function (e) { e.textContent = 'Stufe ' + name; });
+        Array.prototype.forEach.call(document.querySelectorAll('.stufe-text'), function (e) { e.textContent = 'STUFE ' + name.toUpperCase(); e.className = 'stufe stufe-text ' + wahl.value; });
+        Array.prototype.forEach.call(document.querySelectorAll('.fuss-stufe'), function (e) { e.textContent = 'Teamset Stufe ' + name + ' · Protokoll 1'; });
         var feld = document.getElementById('geheimtext-feld');
         if (mit.checked) {
           var p1 = leitung.p1;

@@ -6,11 +6,10 @@
   <title>Systemabsturz: Netzwerkplan</title>
   <link rel="stylesheet" href="druck.css">
   <style>
-    .plan { display: flex; justify-content: center; margin: 3mm 0; }
-    .plan svg { width: 100%; max-height: 150mm; }
-    .zeilen { display: flex; gap: 6mm; }
-    .zeilen > div { flex: 1; }
-    .druckleiste select { min-height: 44px; font-size: 12pt; }
+    .plan { display: flex; justify-content: center; margin: 2mm 0 0; }
+    .plan svg { width: 100%; max-height: 108mm; }
+    .wegfelder { display: flex; gap: 2mm; flex-wrap: wrap; margin-top: 2mm; }
+    .wegfelder span { width: 11mm; height: 11mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
   </style>
 </head>
 <body>
@@ -19,19 +18,31 @@
     <label>Stufe <select id="stufe"><option value="leicht">Leicht</option><option value="mittel">Mittel</option><option value="schwer">Schwer</option></select></label>
     <span>A4 hoch, farbig drucken (rote Server müssen erkennbar sein).</span>
   </div>
-  <div class="seite">
-    <div class="kopf">
-      <div><h1>PROTOKOLL 3: NETZWERKE</h1><div class="mono">Netzwerkplan des Schulnetzes, <span id="stufe-name"></span></div></div>
-      <div class="stempel">ROUTING GESTÖRT</div>
-    </div>
-    <p><strong>Auftrag:</strong> Die Daten müssen von <strong>Server A</strong> zu <strong>Server Z</strong> fliessen. Findet den <strong>kürzesten Weg</strong> (am wenigsten Verbindungen), der über <strong>keinen infizierten (roten) Server</strong> führt. Addiert die <strong>Kennzahlen aller Server auf dem Weg</strong>, auch von A und Z. Die Summe ist der Override-Code (dreistellig eingeben).</p>
+
+  <div class="seite protokoll">
+    <div class="oberzeile">SICHERHEITSPROTOKOLL 3 &nbsp;·&nbsp; NETZWERKE</div>
+    <div class="titelzeile"><h1>Den sauberen Weg finden</h1><span class="stufe" id="stufe-text"></span></div>
+    <p>NULLBYTE hat Server im Schulnetz infiziert. Die Daten müssen von <strong>Server A</strong> zu <strong>Server Z</strong> fliessen, ohne einen infizierten Server zu berühren. Mit dem richtigen Weg erhaltet ihr den Override-Code und rettet das System.</p>
+
+    <h2>So geht ihr vor</h2>
+    <ol class="schritte">
+      <li>Streicht alle Verbindungen zu den roten (infizierten) Servern durch.</li>
+      <li>Sucht den <strong>kürzesten sauberen Weg</strong> von A nach Z, also den mit den wenigsten Verbindungen.</li>
+      <li>Addiert die <strong>Kennzahlen aller Server auf dem Weg</strong>, auch von A und Z. Die Summe ist der dreistellige Override-Code.</li>
+    </ol>
+
+    <h2>Netzwerkplan</h2>
     <div class="plan" id="plan"></div>
-    <p style="font-size: 9pt">Legende: blaue Server = Start und Ziel, weisse Server = sauber, rote Server = von NULLBYTE infiziert. Die Zahl rechts unten ist die Kennzahl des Servers. Linie = Verbindung.</p>
-    <div class="zeilen">
-      <div class="kasten">Unser Weg: ______________________________</div>
-      <div class="kasten">Summe der Kennzahlen: ________</div>
+    <div class="hinweis-kasten">
+      <strong>Blau</strong> = Start und Ziel, <strong>weiss</strong> = sauber, <strong>rot</strong> = von NULLBYTE infiziert. Die Zahl rechts unten ist die Kennzahl des Servers, jede Linie ist eine Verbindung.
     </div>
-    <div class="fuss"><span>«Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, CC BY-SA 4.0</span><span>Protokoll 3</span></div>
+
+    <h2>Eure Lösung</h2>
+    <p class="feldname">Unser Weg (Server der Reihe nach eintragen):</p>
+    <div class="wegfelder"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="eingabefelder">Override-Code: <span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
+
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span id="fuss-stufe"></span></div>
   </div>
   <script src="../js/maze.js"></script>
   <script src="../js/netzwerke.js"></script>
@@ -43,8 +54,13 @@
       var leitung = ladeJson(SPEICHER_LEITUNG) || {};
       var stufe = stufeAusUrl() || leitung.stufe || STANDARD_STUFE;
       function zeige() {
-        document.getElementById('plan').innerHTML = netzwerkSvg(wahl.value);
-        document.getElementById('stufe-name').textContent = 'Stufe ' + STUFEN[wahl.value].name;
+        var key = wahl.value;
+        var name = STUFEN[key].name;
+        document.getElementById('plan').innerHTML = netzwerkSvg(key);
+        var badge = document.getElementById('stufe-text');
+        badge.textContent = 'STUFE ' + name.toUpperCase();
+        badge.className = 'stufe ' + key;
+        document.getElementById('fuss-stufe').textContent = 'Teamset Stufe ' + name + ' · Protokoll 3';
       }
       wahl.value = stufe;
       wahl.addEventListener('change', zeige);
