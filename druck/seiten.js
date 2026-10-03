@@ -34,7 +34,7 @@ var Druck = (function () {
       '<div class="oberzeile">' + esc(o.ober) + '</div>' +
       '<div class="titelzeile"><h1>' + esc(o.titel) + '</h1><span class="stufe ' + st + '">STUFE ' + name.toUpperCase() + '</span></div>' +
       o.inhalt +
-      '<div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset Stufe ' + name + ' · ' + o.teil + '</span></div>' +
+      '<div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>' + (o.fuss || 'Teamset Stufe ' + name + ' · ' + o.teil) + '</span></div>' +
       '</section>';
   }
 
@@ -269,5 +269,5 @@ var Druck = (function () {
     zeige();
   }
 
-  return { start: start, html: html, eigenstaendig: eigenstaendig, adresse: adresse };
+  return { start: start, html: html, eigenstaendig: eigenstaendig, adresse: adresse, seite: seite, esc: esc, linien: linien, herunterladen: herunterladen };
 })();

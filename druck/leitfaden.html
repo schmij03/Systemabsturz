@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Systemabsturz: Leitfaden Spielleitung</title>
+  <link rel="stylesheet" href="druck.css">
+</head>
+<body>
+  <div class="druckleiste">
+    <button type="button" class="primaer" onclick="window.print()">Drucken</button>
+    <button type="button" id="als-html">Als HTML herunterladen</button>
+    <label>Stufe <select id="stufe"><option value="leicht">Leicht</option><option value="mittel">Mittel</option><option value="schwer">Schwer</option></select></label>
+    <label>PIN <input type="password" id="pin" inputmode="numeric" autocomplete="off" size="6"></label>
+    <button type="button" id="pin-knopf">Lösungen einfügen</button>
+    <span id="pin-status" class="hinweis" role="status"></span>
+    <span class="hinweis">Nur für Lehrpersonen. A4, «Tatsächliche Grösse».</span>
+  </div>
+
+  <main id="seiten"></main>
+
+  <script src="../js/maze.js"></script>
+  <script src="../js/netzwerke.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/unterrichtsinfo.js"></script>
+  <script src="seiten.js"></script>
+  <script src="leitfaden.js"></script>
+  <script>Leitfaden.start();</script>
+</body>
+</html>

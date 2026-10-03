@@ -2,6 +2,14 @@
 
 Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
 
+## Leitfaden Spielleitung
+
+1. Kachel «Leitfaden Spielleitung» öffnen. Erwartung: 9 Seiten im Dossier-Layout, Stufe der Spielleitung vorgewählt, auf Seite 4 der Hinweis «Geschützt» statt der Lösungen, nirgends die PIN.
+2. Falsche PIN eingeben, «Lösungen einfügen». Erwartung: «Falsche PIN.».
+3. PIN 4711. Erwartung: Seite 4 zeigt Codes (Kiste 1, Kiste 2, Override), Schlüssel, Klartext und Fallen der gewählten Stufe. Bei eigenem Code der Spielleitung steht dieser Code.
+4. Stufe umstellen: Lösungen, Tipps und Abzeichen passen sich an. Drucken: 9 A4-Seiten, nichts abgeschnitten.
+5. «Als HTML herunterladen»: Datei öffnet ohne Internet, mit Lösungen nur, wenn sie vorher eingefügt waren.
+
 ## Uhrzeit und Geräte
 
 1. Spielleitung frisch öffnen. Erwartung: Stufe «Mittel» ist vorgewählt, Szene «Alarm» zeigt «Soeben, um HH:MM Uhr, ist das Schulnetz zusammengebrochen» mit der aktuellen Uhrzeit.
