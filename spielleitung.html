@@ -63,7 +63,7 @@
         <div class="karte einstellungen">
           <h3><span class="schritt">A</span> Schwierigkeit wählen</h3>
           <label class="zeile">Stufe <select id="stufe-wahl" class="stufe-wahl gross-wahl"></select></label>
-          <p class="klein">Gilt für Protokoll 2 (Labyrinth) und Protokoll 3 (Netzwerkplan). Druckt danach das Material derselben Stufe.</p>
+          <p class="klein">Gilt für Protokoll 1 (Verschiebung der Chiffrierscheibe), Protokoll 2 (Labyrinth) und Protokoll 3 (Netzwerkplan). Druckt danach das Material derselben Stufe.</p>
           <table id="stufen-uebersicht" class="stufen-tabelle"></table>
         </div>
 
@@ -72,10 +72,10 @@
           <p class="klein">Zahlenschloss eurer ersten Kiste. Die geheime Nachricht wird automatisch neu verschlüsselt.</p>
           <div class="p1-einstellung">
             <label>Code <input id="p1-code" class="pin-klein" inputmode="numeric" maxlength="3" placeholder="z. B. 418" autocomplete="off"></label>
-            <label>Verschiebung <select id="p1-verschiebung" class="stufe-wahl"></select></label>
             <button type="button" id="p1-uebernehmen" class="knopf primaer">Übernehmen (PIN)</button>
             <button type="button" id="p1-standard" class="knopf">Standard</button>
           </div>
+          <p id="p1-verschiebung-info" class="p1-verschiebung-info"></p>
           <p id="p1-status" class="klein"></p>
           <details class="mehr">
             <summary>Geheimtext anzeigen</summary>

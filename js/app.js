@@ -150,7 +150,10 @@ const HASHES = {
 const P1_VORLAGE = 'ACHTUNG SCHULE. WIR HABEN EUER SYSTEM GESPERRT. OHNE CODE SIND ALLE DATEN WEG. DER ERSTE CODE LAUTET {CODE}. NULLBYTE';
 /** Verschiebung der Chiffrierscheibe (1 bis 25), bei 4 wird aus A ein E */
 const P1_VERSCHIEBUNG = 4;
-/** Geheimtext zum Standardcode (passt zu HASHES.protokoll1) */
+/** Verschiebung je Schwierigkeitsstufe (leicht 4: A wird zu E, mittel 6: A wird zu G, schwer 8: A wird zu I) */
+const P1_VERSCHIEBUNG_STUFEN = { leicht: 4, mittel: 6, schwer: 8 };
+/** Geheimtext zum Standardcode mit P1_VERSCHIEBUNG (passt zu HASHES.protokoll1).
+    Für die anderen Stufen wird er automatisch umgeschlüsselt. */
 const P1_GEHEIMTEXT = 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI';
 
 /** Code für Sicherheitskiste 2, verschlüsselt mit den Signaturen als Schlüssel */
@@ -800,6 +803,16 @@ function p1Nachricht(code, verschiebung) {
   return { klartext: klartext, geheimtext: caesar(klartext, verschiebung) };
 }
 
+/** Verschiebung der Chiffrierscheibe für eine Stufe */
+function p1Verschiebung(stufe) {
+  return P1_VERSCHIEBUNG_STUFEN[stufe] || P1_VERSCHIEBUNG;
+}
+
+/** Standard-Geheimtext mit einer anderen Verschiebung (entschlüsseln, neu verschlüsseln) */
+function p1StandardGeheimtext(verschiebung) {
+  return caesar(caesar(P1_GEHEIMTEXT, -P1_VERSCHIEBUNG), verschiebung);
+}
+
 /** Setzt {SIGNATUR} und {INNEN_A} in einen Tipp ein */
 function fuelleTipp(text, verschiebung) {
   return String(text).replace('{SIGNATUR}', caesar('NULLBYTE', verschiebung)).replace('{INNEN_A}', caesar('A', verschiebung));
@@ -1280,10 +1293,9 @@ function starteNachSignal(endzeit, stufe, p1) {
   const s = Terminal.stand;
   if (!s.wartet) return;
   if (stufe && STUFEN[stufe]) s.stufe = stufe;
-  if (p1 && p1.geheimtext && p1.hash) {
-    s.p1 = { geheimtext: p1.geheimtext, hash: p1.hash, verschiebung: p1.verschiebung };
-    $('#protokoll-1 .geheimnachricht').textContent = p1.geheimtext;
-  }
+  if (p1 && p1.geheimtext && p1.hash) s.p1 = { geheimtext: p1.geheimtext, hash: p1.hash, verschiebung: p1.verschiebung };
+  // Geheimtext passend zu Stufe und Code dieser Runde
+  $('#protokoll-1 .geheimnachricht').textContent = aktiveP1().geheimtext;
   clearInterval(Terminal.signalTimer);
   const jetzt = Date.now();
   s.wartet = false;
@@ -1321,7 +1333,8 @@ function tippsFuer(p) {
 function aktiveP1() {
   const p1 = Terminal.stand && Terminal.stand.p1;
   if (p1 && p1.geheimtext && p1.hash) return p1;
-  return { geheimtext: P1_GEHEIMTEXT, hash: HASHES.protokoll1, verschiebung: P1_VERSCHIEBUNG };
+  const v = p1Verschiebung((Terminal.stand && Terminal.stand.stufe) || STANDARD_STUFE);
+  return { geheimtext: p1StandardGeheimtext(v), hash: HASHES.protokoll1, verschiebung: v };
 }
 
 /** Das erste noch nicht gelöste Protokoll (3, falls alles gelöst ist). */
@@ -1815,13 +1828,6 @@ function initSpielleitung() {
     zeigeSpielcode();
   });
   // Protokoll 1: eigener Code
-  const vs = $('#p1-verschiebung');
-  for (let i = 1; i <= 25; i++) {
-    const o = erstelle('option', '', i + ' (A wird zu ' + caesar('A', i) + ')');
-    o.value = i;
-    vs.appendChild(o);
-  }
-  vs.value = (Leitung.stand.p1 && Leitung.stand.p1.verschiebung) || P1_VERSCHIEBUNG;
   zeigeP1Einstellung();
   $('#p1-uebernehmen').addEventListener('click', uebernehmeP1);
   $('#p1-standard').addEventListener('click', async function () {
@@ -1830,7 +1836,6 @@ function initSpielleitung() {
     if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
     delete Leitung.stand.p1;
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
-    vs.value = P1_VERSCHIEBUNG;
     $('#p1-code').value = '';
     zeigeP1Einstellung();
     hinweisNachStart();
@@ -1849,20 +1854,25 @@ function initSpielleitung() {
   const zeigeStufen = function () {
     const t = $('#stufen-uebersicht');
     if (!t) return;
-    t.innerHTML = '<tr><th></th><th>Protokoll 2</th><th>Protokoll 3</th></tr>';
+    t.innerHTML = '<tr><th></th><th>Protokoll 1</th><th>Protokoll 2</th><th>Protokoll 3</th></tr>';
     Object.keys(STUFEN).forEach(function (k) {
       const z = erstelle('tr', k === wahl.value ? 'gewaehlt' : '');
       const netz = typeof NETZWERKE !== 'undefined' && NETZWERKE[k];
       z.appendChild(erstelle('td', '', STUFEN[k].name));
+      z.appendChild(erstelle('td', '', 'A wird zu ' + caesar('A', p1Verschiebung(k))));
       z.appendChild(erstelle('td', '', 'max. ' + STUFEN[k].maxBloecke + ' Blöcke'));
       z.appendChild(erstelle('td', '', netz ? Object.keys(netz.server).length + ' Server' : ''));
       t.appendChild(z);
     });
   };
   zeigeStufen();
+  p1AnStufeAnpassen();
+  zeigeP1Einstellung();
   wahl.addEventListener('change', function () {
     zeigeStufen();
     Leitung.stand.stufe = wahl.value;
+    p1AnStufeAnpassen();
+    zeigeP1Einstellung();
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
     hinweisNachStart();
     aktualisiereLinks();
@@ -2021,7 +2031,7 @@ function hinweisNachStart() {
 /** Übernimmt einen eigenen Code für Protokoll 1 (nur mit PIN). */
 async function uebernehmeP1() {
   const code = $('#p1-code').value.trim();
-  const v = parseInt($('#p1-verschiebung').value, 10);
+  const v = p1Verschiebung(Leitung.stand.stufe || STANDARD_STUFE);
   if (!/^\d{3}$/.test(code)) { toast('Bitte einen dreistelligen Code eingeben.', 'warnung'); return; }
   const pin = await fragePin('Code für Protokoll 1');
   if (pin === null) return;
@@ -2035,14 +2045,28 @@ async function uebernehmeP1() {
   hinweisNachStart();
 }
 
+/* Eigener Code: Verschiebung und Geheimtext an die gewählte Stufe anpassen */
+function p1AnStufeAnpassen() {
+  const p1 = Leitung.stand.p1;
+  if (!p1 || !p1.code) return;
+  const v = p1Verschiebung(Leitung.stand.stufe || STANDARD_STUFE);
+  if (p1.verschiebung === v) return;
+  p1.verschiebung = v;
+  p1.geheimtext = p1Nachricht(p1.code, v).geheimtext;
+  speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+}
+
 /* Zeigt, welche Nachricht die Tablets in Protokoll 1 erhalten (ohne den Code). */
 function zeigeP1Einstellung() {
   const p1 = Leitung.stand.p1;
-  const v = p1 ? p1.verschiebung : P1_VERSCHIEBUNG;
-  const text = p1 ? p1.geheimtext : P1_GEHEIMTEXT;
+  const stufe = Leitung.stand.stufe || STANDARD_STUFE;
+  const v = p1 ? p1.verschiebung : p1Verschiebung(stufe);
+  const text = p1 ? p1.geheimtext : p1StandardGeheimtext(v);
+  const info = $('#p1-verschiebung-info');
+  if (info) info.textContent = 'Verschiebung ' + v + ' (A wird zu ' + caesar('A', v) + '), festgelegt durch die Stufe ' + STUFEN[stufe].name + '.';
   $('#p1-status').textContent = p1
-    ? 'Eigener Code ist eingestellt (Verschiebung ' + v + '). Den Code seht ihr unter «Lösungen».'
-    : 'Standard: Code und Nachricht aus js/app.js (Verschiebung ' + v + ').';
+    ? 'Eigener Code ist eingestellt. Den Code seht ihr unter «Lösungen».'
+    : 'Standard: Code aus js/app.js.';
   const box = $('#p1-vorschau');
   box.innerHTML = '';
   box.appendChild(erstelle('span', 'label', 'Geheimtext auf den Tablets'));
@@ -2304,6 +2328,9 @@ async function zeigeLoesungen() {
   } else {
     // Protokoll 1: eingestellter Code dieser Runde ersetzt den Standard
     const p1 = Leitung.stand.p1;
+    const v1 = p1Verschiebung(Leitung.stand.stufe || STANDARD_STUFE);
+    l.p1info = 'Cäsar-Verschiebung ' + v1 + ' (innen ' + caesar('A', v1) + ' unter dem äusseren A, Unterschrift ' +
+      caesar('NULLBYTE', v1) + '). Klartext: ' + caesar(P1_GEHEIMTEXT, -P1_VERSCHIEBUNG);
     if (p1) {
       l.p1 = p1.code + ' (für diese Runde eingestellt)';
       l.p1info = 'Cäsar-Verschiebung ' + p1.verschiebung + ' (innen ' + caesar('A', p1.verschiebung) + ' unter dem äusseren A, Unterschrift ' +

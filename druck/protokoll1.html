@@ -143,7 +143,8 @@
           feld.innerHTML = '';
           var d = document.createElement('div');
           d.className = 'geheimtext';
-          d.textContent = p1 && p1.geheimtext ? p1.geheimtext : P1_GEHEIMTEXT;
+          var v = p1Verschiebung(wahl.value);
+          d.textContent = p1 && p1.code ? p1Nachricht(p1.code, v).geheimtext : p1StandardGeheimtext(v);
           feld.appendChild(d);
         } else {
           feld.innerHTML = '<div class="linie"></div><div class="linie"></div><div class="linie"></div>';

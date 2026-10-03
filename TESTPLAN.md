@@ -17,11 +17,12 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 Die Steuerung zeigt oben immer Phase, Beitrittscode, Stufe und Restzeit. Der passende Reiter öffnet sich automatisch: vor dem Start «1 Vorbereiten», nach der Freigabe «2 Spiel durchführen», nach «System gerettet» oder Zeitablauf «3 Nach dem Spiel».
 
-1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 und Verschiebung 7 eingeben, «Übernehmen (PIN)». Erwartung: Vorschau zeigt den neuen Geheimtext, Unterschrift UBSSIFAL.
+1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 eingeben, «Übernehmen (PIN)». Erwartung: «Verschiebung 4 (A wird zu E)», Vorschau zeigt den neuen Geheimtext, Unterschrift RYPPFCXI. Stufe auf «Mittel» stellen: Verschiebung 6, Unterschrift TARRHEZK. Auf «Schwer»: Verschiebung 8, Unterschrift VCTTJGBM. Danach wieder «Leicht».
 2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
 3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
 4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
-5. «Standard» stellt Code 729 mit Verschiebung 4 wieder her.
+5. «Standard» stellt Code 729 wieder her (Verschiebung weiterhin nach Stufe).
+6. Ohne Spielleitung: `index.html?stufe=mittel` öffnen und manuell starten. Erwartung: Geheimtext endet auf TARRHEZK, 729 öffnet Protokoll 1, Tipp 3 nennt «innen G».
 
 ## Netzwerkpläne (Protokoll 3) prüfen
 
