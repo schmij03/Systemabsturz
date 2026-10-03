@@ -80,7 +80,7 @@
           <div id="blockly-sperre" hidden>Programm läuft. Zum Ändern zuerst «Pause» drücken.</div>
         </div>
         <div class="p2-labyrinth">
-          <div class="signatur-leiste">Signaturen: <span id="signaturen"></span></div>
+          <div class="signatur-leiste">Signaturen: <span id="signaturen"></span><span class="p2-zaehler"><span id="stufe-info" class="zaehler"></span><span id="block-zaehler" class="zaehler"></span><span id="energie-zaehler" class="zaehler"></span></span></div>
           <div class="svg-box"><svg id="labyrinth" xmlns="http://www.w3.org/2000/svg"></svg></div>
           <div class="algo-knoepfe">
             <button type="button" id="algo-start" class="knopf primaer">▶ Programm starten</button>
@@ -163,6 +163,7 @@
         <dt>Team</dt><dd id="sieg-team"></dd>
         <dt>Restzeit</dt><dd id="sieg-zeit"></dd>
         <dt>Zeitbonus</dt><dd><span id="sieg-bonus"></span> Punkte</dd>
+        <dt>Effizienzbonus</dt><dd id="sieg-blockbonus"></dd>
         <dt>Endpunktestand</dt><dd id="sieg-punkte" class="gross-zahl"></dd>
       </dl>
       <button type="button" class="knopf klein-knopf reset-knopf">Spielleitung</button>

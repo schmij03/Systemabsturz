@@ -51,6 +51,7 @@ const Algorithmen = (function () {
   let tempo = TEMPO_STANDARD;
   let schritte = 0;
   let ignoriereAenderung = false;
+  let verwendeteBloecke = 0;
 
   /* ------------------------ Blockly laden ------------------------- */
 
@@ -248,6 +249,50 @@ const Algorithmen = (function () {
     ]
   };
 
+  /** Toolbox der aktuellen Stufe (nur erlaubte Blöcke, leere Kategorien weg). */
+  function toolboxFuerStufe() {
+    const erlaubt = Maze.stufe().toolbox;
+    if (!erlaubt) return TOOLBOX;
+    return {
+      kind: 'categoryToolbox',
+      contents: TOOLBOX.contents.map(function (k) {
+        return Object.assign({}, k, { contents: k.contents.filter(function (b) { return erlaubt.indexOf(b.type) >= 0; }) });
+      }).filter(function (k) { return k.contents.length > 0; })
+    };
+  }
+
+  /* ------------------------- Blöcke zählen ------------------------- */
+
+  /** Blöcke im Programm (unter «wenn Programm startet», ohne den Startblock). */
+  function programmBloecke() {
+    const start = startBlock();
+    if (!start) return [];
+    return start.getDescendants(false).filter(function (b) { return b !== start && b.isEnabled(); });
+  }
+
+  /** Alle Blöcke im Arbeitsbereich ohne Startblock (auch lose). */
+  function alleBloecke() {
+    return ws ? ws.getAllBlocks(false).filter(function (b) { return b.type !== 'antiv_start'; }).length : 0;
+  }
+
+  function zeigeZaehler() {
+    const max = Maze.stufe().maxBloecke;
+    const n = alleBloecke();
+    const el = document.getElementById('block-zaehler');
+    if (!el) return;
+    el.textContent = 'Blöcke ' + n + ' / ' + max;
+    el.classList.toggle('voll', n >= max);
+    el.title = n >= max ? 'Keine Blöcke mehr übrig. Löscht Blöcke, um andere zu verwenden.' : 'Noch ' + (max - n) + ' Blöcke übrig';
+  }
+
+  function zeigeEnergie() {
+    const el = document.getElementById('energie-zaehler');
+    if (!el) return;
+    const max = Maze.stufe().energie;
+    el.textContent = 'Energie ' + (max - zustand.felder) + ' / ' + max;
+    el.classList.toggle('leer', zustand.felder >= max && zustand.status !== 'ziel');
+  }
+
   /* ------------------------- Interpreter -------------------------- */
 
   /* Wertet eine Bedingung aus. Leere Felder gelten als «falsch». */
@@ -321,6 +366,7 @@ const Algorithmen = (function () {
       s.textContent = i < zustand.gesammelt.length ? zustand.gesammelt[i] : '_';
       leiste.appendChild(s);
     }
+    zeigeEnergie();
   }
 
   function setzeKnoepfe() {
@@ -369,6 +415,19 @@ const Algorithmen = (function () {
         rueckrufe.ton('fehler');
         return false;
       }
+      const bloecke = programmBloecke();
+      const max = Maze.stufe().maxBloecke;
+      if (bloecke.length > max || alleBloecke() > max) {
+        meldung('Zu viele Blöcke! Erlaubt sind höchstens ' + max + '. Löscht überflüssige Blöcke.', 'warnung');
+        rueckrufe.ton('fehler');
+        return false;
+      }
+      if (!bloecke.some(function (b) { return b.type === 'antiv_wiederhole'; })) {
+        meldung('Ihr müsst mit der Schleife «wiederhole bis Ziel erreicht» arbeiten.', 'warnung');
+        rueckrufe.ton('fehler');
+        return false;
+      }
+      verwendeteBloecke = bloecke.length;
       ablauf = kette(start.getNextBlock());
       schritte = 0;
       zustand.status = 'laeuft';
@@ -387,7 +446,7 @@ const Algorithmen = (function () {
       return -1;
     }
     schritte++;
-    if (schritte > Maze.MAX_SCHRITTE) {
+    if (schritte > Maze.stufe().maxSchritte) {
       beende('Endlosschleife? ANTI-V dreht sich im Kreis.', 'warnung');
       rueckrufe.ton('fehler');
       return -1;
@@ -403,8 +462,15 @@ const Algorithmen = (function () {
       return tempo;
     }
 
-    // gehe 1 Feld vor
+    // gehe 1 Feld vor, aber nur mit genug Energie
+    if (zustand.felder >= Maze.stufe().energie) {
+      Maze.animiereMauer(zustand);
+      rueckrufe.ton('fehler');
+      beende('Energie leer! ANTI-V darf höchstens ' + Maze.stufe().energie + ' Felder gehen. Sucht den richtigen Weg ohne Umwege.', 'fehler');
+      return -1;
+    }
     const ev = Maze.vor(zustand);
+    zeigeEnergie();
     if (ev.typ === 'mauer') {
       Maze.animiereMauer(zustand);
       rueckrufe.ton('fehler');
@@ -431,7 +497,7 @@ const Algorithmen = (function () {
       beende('Ziel erreicht. Signaturen werden geprüft …', 'info');
       setTimeout(function () {
         Maze.animiereZiel();
-        rueckrufe.zielErreicht(gesammelt).then(function (antwort) {
+        rueckrufe.zielErreicht(gesammelt, { bloecke: verwendeteBloecke, maxBloecke: Maze.stufe().maxBloecke }).then(function (antwort) {
           meldung(antwort.text, antwort.ok ? 'ok' : 'warnung');
         });
       }, tempo * 0.8);
@@ -479,6 +545,9 @@ const Algorithmen = (function () {
   async function init(optionen) {
     rueckrufe = optionen;
     const svg = document.getElementById('labyrinth');
+    Maze.setzeStufe(optionen.stufe);
+    const info = document.getElementById('stufe-info');
+    if (info) info.textContent = 'Stufe ' + Maze.stufe().name;
     Maze.zeichne(svg);
     zustand = Maze.neu();
     Maze.zuruecksetzen(zustand);
@@ -526,8 +595,10 @@ const Algorithmen = (function () {
     });
 
     const container = document.getElementById('blockly');
+
     ws = Blockly.inject(container, {
-      toolbox: TOOLBOX,
+      toolbox: toolboxFuerStufe(),
+      maxBlocks: Maze.stufe().maxBloecke + 1,   // +1 für «wenn Programm startet»
       renderer: 'zelos',
       theme: thema,
       media: medien,
@@ -560,6 +631,7 @@ const Algorithmen = (function () {
     ws.addChangeListener(Blockly.Events.disableOrphans);
     ws.addChangeListener(function (e) {
       if (e.isUiEvent || ignoriereAenderung) return;
+      zeigeZaehler();
       // Programm geändert: laufenden Durchlauf abbrechen
       if (modus === 'schritt' || modus === 'fertig') zuruecksetzen();
       clearTimeout(ws._speicherTimer);
@@ -574,6 +646,7 @@ const Algorithmen = (function () {
     }
     window.addEventListener('resize', function () { Blockly.svgResize(ws); });
     zuruecksetzen();
+    zeigeZaehler();
   }
 
   /** Wird bei 00:00 aufgerufen. */

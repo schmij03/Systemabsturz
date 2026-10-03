@@ -9,38 +9,100 @@
 
 /* ---------------------------- KONSTANTEN ---------------------------- */
 
-/* Labyrinth, Zeile 0 oben, Spalte 0 links.
-   # = Mauer, . = frei, S = Start, Z = Ziel, X = infiziert (rotes Feld) */
-const LABYRINTH = [
-  '##########',
-  '#S##..####',
-  '#..#..##.#',
-  '#...###..#',
-  '#...#.##.#',
-  '#.....#.X#',
-  '#.#.....##',
-  '#......###',
-  '#..##X..Z#',
-  '##########'
-];
+/* Schwierigkeitsstufen. Die Spielleitung wählt die Stufe auf
+   spielleitung.html, sie wird mit dem Startsignal an die Tablets
+   geschickt (oder per Link: index.html?stufe=leicht).
 
-/* Zahlen (Viren-Signaturen und Ablenkungen) auf freien Feldern.
-   Schlüssel: "zeile,spalte". Auf dem richtigen Weg liegen 3, 8, 5.
-   Hinweis: Die richtige Reihenfolge wird nur als Hash in app.js geprüft. */
-const SIGNATUR_FELDER = {
-  '4,1': 3,
-  '7,3': 8,
-  '7,6': 5,
-  '5,3': 1,
-  '6,5': 2,
-  '3,8': 6
+   Pro Stufe:
+   labyrinth    Zeile 0 oben, Spalte 0 links.
+                # = Mauer, . = frei, S = Start, Z = Ziel, X = infiziert
+   signaturen   Zahlen auf freien Feldern ("zeile,spalte": Zahl).
+                Auf dem richtigen Weg müssen 3, 8, 5 in dieser
+                Reihenfolge liegen (geprüft wird nur als Hash in app.js).
+   startRichtung  0 = Norden, 1 = Osten, 2 = Süden, 3 = Westen
+   maxBloecke   so viele Blöcke dürfen höchstens verwendet werden
+                (ohne «wenn Programm startet»). Damit ist ein Programm
+                ohne Schleife zu lang und die Musterlösung passt genau.
+   energie      so viele Felder darf ANTI-V höchstens gehen
+                (genau die Länge des richtigen Weges)
+   maxSchritte  Abbruch wegen Endlosschleife nach so vielen Schritten
+   toolbox      welche Blöcke zur Verfügung stehen
+   musterloesung  nur für die Spielleitung (Lösungsansicht)
+
+   Wer ein Labyrinth ändert, prüft mit der Musterlösung, ob 3, 8, 5
+   eingesammelt werden, und passt energie und maxBloecke an. */
+const STUFEN = {
+  leicht: {
+    name: 'Leicht',
+    labyrinth: [
+      '##########',
+      '#S.......#',
+      '########.#',
+      '#......#.#',
+      '#.####.#.#',
+      '#.#Z##.#.#',
+      '#.#....#.#',
+      '#.######.#',
+      '#........#',
+      '##########'
+    ],
+    signaturen: { '1,5': 3, '8,4': 8, '3,4': 5 },
+    startRichtung: 1,
+    maxBloecke: 5,
+    energie: 38,
+    maxSchritte: 300,
+    toolbox: ['antiv_wiederhole', 'antiv_falls', 'antiv_falls_sonst', 'antiv_vor', 'antiv_rechts', 'antiv_links',
+      'antiv_rechts_frei', 'antiv_vorne_frei', 'antiv_links_frei'],
+    musterloesung: 'wiederhole bis Ziel erreicht { falls vorne frei? dann gehe 1 Feld vor, sonst drehe dich nach rechts } (5 Blöcke)'
+  },
+  mittel: {
+    name: 'Mittel',
+    labyrinth: [
+      '##########',
+      '#S##..####',
+      '#..#..##.#',
+      '#...###..#',
+      '#...#.##.#',
+      '#.....#.X#',
+      '#.#.....##',
+      '#......###',
+      '#..###..Z#',
+      '##########'
+    ],
+    signaturen: { '4,1': 3, '7,3': 8, '7,6': 5, '5,3': 1, '6,5': 2, '3,8': 6 },
+    startRichtung: 2,
+    maxBloecke: 9,
+    energie: 16,
+    maxSchritte: 200,
+    toolbox: null,   // null = alle Blöcke
+    musterloesung: 'wiederhole bis Ziel erreicht { falls rechts frei? dann (drehe rechts, gehe vor) sonst { falls vorne frei? dann gehe vor, sonst drehe links } } (9 Blöcke, kürzer mit 8 Blöcken möglich)'
+  },
+  schwer: {
+    name: 'Schwer',
+    labyrinth: [
+      '##########',
+      '#S##..####',
+      '#..#..##.#',
+      '#...###..#',
+      '#...#.##.#',
+      '#.....#.X#',
+      '#.#.....##',
+      '#......###',
+      '#..##X..Z#',
+      '##########'
+    ],
+    signaturen: { '4,1': 3, '7,3': 8, '7,6': 5, '5,3': 1, '6,5': 2, '3,8': 6 },
+    startRichtung: 2,
+    maxBloecke: 15,
+    energie: 16,
+    maxSchritte: 200,
+    toolbox: null,
+    musterloesung: 'wiederhole bis Ziel erreicht { falls (rechts frei? und nicht rechts infiziert?) dann (drehe rechts, gehe vor) sonst { falls (vorne frei? und nicht vorne infiziert?) dann gehe vor, sonst drehe links } } (15 Blöcke, kürzer mit 11 Blöcken möglich)'
+  }
 };
 
-/* Startrichtung von ANTI-V: 0 = Norden, 1 = Osten, 2 = Süden, 3 = Westen */
-const START_RICHTUNG = 2;
-
-/* Maximale Anzahl Programmschritte, bevor eine Endlosschleife gemeldet wird */
-const MAX_SCHRITTE = 200;
+/* Stufe, wenn die Spielleitung nichts anderes wählt */
+const STANDARD_STUFE = 'schwer';
 
 /* ------------------------------ LOGIK ------------------------------- */
 
@@ -53,18 +115,30 @@ const Maze = (function () {
   const ZELLE = 40; // Grösse eines Feldes im SVG (ViewBox-Einheiten)
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  const zeilen = LABYRINTH.length;
-  const spalten = LABYRINTH[0].length;
-
-  // Start und Ziel aus dem Labyrinth lesen
+  let stufeName = STANDARD_STUFE;
+  let stufe = STUFEN[stufeName];
+  let LABYRINTH, SIGNATUR_FELDER, START_RICHTUNG, zeilen, spalten;
   let start = { zeile: 1, spalte: 1 };
   let ziel = { zeile: 1, spalte: 1 };
-  LABYRINTH.forEach(function (zeile, z) {
-    for (let s = 0; s < zeile.length; s++) {
-      if (zeile[s] === 'S') start = { zeile: z, spalte: s };
-      if (zeile[s] === 'Z') ziel = { zeile: z, spalte: s };
-    }
-  });
+
+  /** Wählt die Schwierigkeitsstufe (leicht, mittel, schwer). */
+  function setzeStufe(name) {
+    stufeName = STUFEN[name] ? name : STANDARD_STUFE;
+    stufe = STUFEN[stufeName];
+    LABYRINTH = stufe.labyrinth;
+    SIGNATUR_FELDER = stufe.signaturen;
+    START_RICHTUNG = stufe.startRichtung;
+    zeilen = LABYRINTH.length;
+    spalten = LABYRINTH[0].length;
+    // Start und Ziel aus dem Labyrinth lesen
+    LABYRINTH.forEach(function (zeile, z) {
+      for (let s = 0; s < zeile.length; s++) {
+        if (zeile[s] === 'S') start = { zeile: z, spalte: s };
+        if (zeile[s] === 'Z') ziel = { zeile: z, spalte: s };
+      }
+    });
+  }
+  setzeStufe(STANDARD_STUFE);
 
   /** Liefert das Zeichen eines Feldes, ausserhalb gilt als Mauer. */
   function feld(z, s) {
@@ -79,6 +153,7 @@ const Maze = (function () {
       spalte: start.spalte,
       richtung: START_RICHTUNG,
       gesammelt: [],          // eingesammelte Zahlen in Reihenfolge
+      felder: 0,              // verbrauchte Energie (gegangene Felder)
       eingesammelt: {},       // bereits eingesammelte Felder
       schritte: 0,
       status: 'bereit'        // bereit | laeuft | ziel | mauer | infiziert | ende | endlos
@@ -129,6 +204,7 @@ const Maze = (function () {
     }
     zustand.zeile = n.zeile;
     zustand.spalte = n.spalte;
+    zustand.felder++;
     if (f === 'X') {
       zustand.status = 'infiziert';
       return { typ: 'infiziert' };
@@ -167,6 +243,7 @@ const Maze = (function () {
   function zeichne(svgElement) {
     svg = svgElement;
     while (svg.firstChild) svg.removeChild(svg.firstChild);
+    for (const k in zahlElemente) delete zahlElemente[k];
     svg.setAttribute('viewBox', '0 0 ' + spalten * ZELLE + ' ' + zeilen * ZELLE);
     svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label', 'Labyrinth mit ANTI-V');
@@ -286,6 +363,8 @@ const Maze = (function () {
     animiereMauer: animiereMauer,
     animiereInfiziert: animiereInfiziert,
     animiereZiel: animiereZiel,
-    MAX_SCHRITTE: MAX_SCHRITTE
+    setzeStufe: setzeStufe,
+    stufe: function () { return stufe; },
+    stufeName: function () { return stufeName; }
   };
 })();

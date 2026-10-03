@@ -42,6 +42,8 @@
         <li>«Spiel starten» zeigt das Hackervideo (oder die Botschaft von NULLBYTE mit Maske und Stimme).</li>
         <li>Nach dem Intro startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben.</li>
       </ol>
+      <label class="zeile">Schwierigkeit Labyrinth (Protokoll 2) <select id="stufe-wahl" class="stufe-wahl"></select></label>
+      <p class="klein">Leicht: Gang mit Ecken, nur «vorne frei?», 5 Blöcke. Mittel: Rechte-Hand-Regel, 9 Blöcke. Schwer: Rechte-Hand-Regel mit infizierten Feldern, «und» und «nicht», 15 Blöcke. Die Stufe wird mit dem Startsignal an die Tablets geschickt.</p>
       <div class="knopf-reihe">
         <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
         <button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben (ohne Intro)</button>
@@ -149,6 +151,7 @@
     </div>
   </div>
 
+  <script src="js/maze.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

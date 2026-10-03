@@ -565,3 +565,13 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .warten-status.fehler { color: var(--rot); }
 .warten #bereit-knopf { max-width: 360px; }
 .warten.empfangen h1 { color: var(--gelb); animation: puls 0.5s infinite; }
+
+/* Protokoll 2: Stufe, Blockzähler und Energie */
+.p2-zaehler { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.zaehler { padding: 4px 8px; border: 1px solid var(--rand); border-radius: 6px; font-size: 0.8rem; white-space: nowrap; color: var(--text); background: var(--flaeche); }
+#stufe-info { color: var(--text-schwach); }
+#block-zaehler.voll { color: var(--gelb); border-color: var(--gelb); }
+#energie-zaehler { color: #9ec9ff; border-color: #2a4a66; }
+#energie-zaehler.leer { color: #fff; background: var(--rot-dunkel); border-color: var(--rot); }
+.stufe-wahl { min-height: 48px; font: inherit; padding: 0 10px; color: var(--gruen-hell); background: #000; border: 2px solid var(--rand); border-radius: 6px; }
+.loesungen-liste dd.programm { font-family: var(--sans); font-weight: 400; color: var(--text); }
