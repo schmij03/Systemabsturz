@@ -74,18 +74,18 @@ Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: I
 
 Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 
-* **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Bereich «Material herunterladen und drucken», die gewählte Stufe ist markiert). Der Override-Code ist auf allen Stufen 109.
+* **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt die **Verschiebung der Chiffrierscheibe in Protokoll 1** (Leicht 4, Mittel 6, Schwer 8), das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Bereich «Material herunterladen und drucken», die gewählte Stufe ist markiert). Der Override-Code ist auf allen Stufen 109.
 
-| Stufe | Netzwerk Protokoll 3 | Richtiger Weg (Summe 109) | Schwierigkeit |
-|---|---|---|---|
-| Leicht | 14 Server, 4 infiziert, 25 Verbindungen | A, F, G, C, D, E, Z (6 Verbindungen) | Der direkte Weg durch die Mitte ist infiziert, der saubere Weg macht einen Bogen nach oben |
-| Mittel | 18 Server, 5 infiziert, 32 Verbindungen | A, B, G, H, L, P, Q, Z (7 Verbindungen) | Alle kurzen Wege sind infiziert, der saubere Weg führt im Zickzack von oben nach unten |
-| Schwer | 22 Server, 7 infiziert, 38 Verbindungen | A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen) | Viele verlockende Abkürzungen, der saubere Weg beginnt ganz unten und steigt quer durchs Netz |
+| Stufe | Protokoll 1 | Netzwerk Protokoll 3 | Richtiger Weg (Summe 109) | Schwierigkeit |
+|---|---|---|---|---|
+| Leicht | Verschiebung 4 (A wird zu E, Unterschrift RYPPFCXI) | 14 Server, 4 infiziert, 25 Verbindungen | A, F, G, C, D, E, Z (6 Verbindungen) | Der direkte Weg durch die Mitte ist infiziert, der saubere Weg macht einen Bogen nach oben |
+| Mittel | Verschiebung 6 (A wird zu G, Unterschrift TARRHEZK) | 18 Server, 5 infiziert, 32 Verbindungen | A, B, G, H, L, P, Q, Z (7 Verbindungen) | Alle kurzen Wege sind infiziert, der saubere Weg führt im Zickzack von oben nach unten |
+| Schwer | Verschiebung 8 (A wird zu I, Unterschrift VCTTJGBM) | 22 Server, 7 infiziert, 38 Verbindungen | A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen) | Viele verlockende Abkürzungen, der saubere Weg beginnt ganz unten und steigt quer durchs Netz |
 
 Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Die Netzwerkbilder in den Teamsets müssen dann ebenfalls ersetzt werden.
 
-* **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) und die Verschiebung der Chiffrierscheibe eingeben, «Übernehmen (PIN)». Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
-* Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code und die Verschiebung eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`.
+* **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) eingeben, «Übernehmen (PIN)». Die Verschiebung ergibt sich aus der Stufe und passt sich bei einem Stufenwechsel automatisch an. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
+* Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`. Der Geheimtext für die anderen Stufen wird daraus automatisch umgeschlüsselt. Die Verschiebungen je Stufe stehen in `P1_VERSCHIEBUNG_STUFEN`.
 
 ### Die drei Protokolle
 
@@ -103,7 +103,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 | Stufe | Labyrinth | Nötige Idee | Blocklimit | Energie | Kürzeste bekannte Lösung |
 |---|---|---|---|---|---|
 | Leicht | Gang mit Ecken, keine roten Felder, Toolbox ohne Operatoren | falls vorne frei, dann vor, sonst rechts drehen | 5 | 38 | 5 Blöcke |
-| Mittel | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
+| Mittel | Verschiebung 6 (A wird zu G, Unterschrift TARRHEZK) | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
 | Schwer (Standard) | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
 
 Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also gleich. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
