@@ -2,6 +2,13 @@
 
 Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
 
+## Uhrzeit und Geräte
+
+1. Spielleitung frisch öffnen. Erwartung: Stufe «Mittel» ist vorgewählt, Szene «Alarm» zeigt «Soeben, um HH:MM Uhr, ist das Schulnetz zusammengebrochen» mit der aktuellen Uhrzeit.
+2. «▶ Spiel starten» drücken und die Uhrzeit notieren. Erwartung: Die Botschaft von NULLBYTE nennt dieselbe Uhrzeit («Soeben, um HH:MM Uhr, haben wir euch eine Nachricht geschickt»). Vorgelesen wird ohne Uhrzeit.
+3. Nach der Freigabe auf dem Gerät eines Teams Protokoll 1 öffnen. Erwartung: «EINGEHENDE NACHRICHT, HH:MM UHR» und «Diese Nachricht erschien soeben, um HH:MM Uhr, …» mit der Startzeit.
+4. Ein Team spielt auf einem Laptop mit Maus. Erwartung: Alles lässt sich mit Klicks bedienen, die Blöcke in Protokoll 2 lassen sich ziehen.
+
 ## Unterrichtsinfo
 
 1. `spielleitung.html` mit leerem Spielstand öffnen. Erwartung: Fenster «Einsatz im Unterricht» mit Hinweis «Nur für die Lehrperson», Abschnitt A offen, B bis E zu. Steuerung dahinter nicht bedienbar, Hintergrund scrollt nicht, kein Ton, kein Vollbild.
@@ -54,6 +61,8 @@ Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn de
 ## Protokoll 2 (wichtigster Test)
 
 ### Test A: Musterlösung von Hand bauen
+
+Auf Stufe Schwer (Spielleitung «Schwer» wählen oder `index.html?stufe=schwer`). Standard ist Mittel.
 
 Das Programm mit dem Finger aus der Toolbox ziehen (Touch-Drag testen!) und unter «wenn Programm startet» anhängen:
 

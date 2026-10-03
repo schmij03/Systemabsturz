@@ -14,7 +14,7 @@ const vm = require('vm');
 const wurzel = path.join(__dirname, '..');
 const quelltext = ['js/maze.js', 'js/app.js']
   .map(function (d) { return fs.readFileSync(path.join(wurzel, d), 'utf8'); })
-  .join('\n;\n') + '\n;globalThis.__export = { TEXTE: TEXTE, STUFEN: STUFEN, JOKER_ANZAHL: JOKER_ANZAHL, fuelleTipp: fuelleTipp, P1_VERSCHIEBUNG_STUFEN: P1_VERSCHIEBUNG_STUFEN };';
+  .join('\n;\n') + '\n;globalThis.__export = { TEXTE: TEXTE, STUFEN: STUFEN, JOKER_ANZAHL: JOKER_ANZAHL, fuelleTipp: fuelleTipp, P1_VERSCHIEBUNG_STUFEN: P1_VERSCHIEBUNG_STUFEN, ohneZeit: ohneZeit };';
 
 // Minimale Browser-Attrappe, damit app.js ohne Fehler geladen werden kann
 const leer = function () { return null; };
@@ -30,7 +30,7 @@ kontext.window = kontext;
 kontext.globalThis = kontext;
 vm.createContext(kontext);
 vm.runInContext(quelltext, kontext);
-const { TEXTE, JOKER_ANZAHL, fuelleTipp, P1_VERSCHIEBUNG_STUFEN } = kontext.__export;
+const { TEXTE, JOKER_ANZAHL, fuelleTipp, P1_VERSCHIEBUNG_STUFEN, ohneZeit } = kontext.__export;
 
 const texte = [];
 function dazu(art, text) {
@@ -41,7 +41,7 @@ function dazu(art, text) {
 // Story-Texte der Protokolle (Knopf 🔊 im Terminal)
 [1, 2, 3].forEach(function (p) {
   const t = TEXTE.protokolle[p];
-  dazu('normal', t.story + (t.hinweis ? ' Hinweis: ' + t.hinweis : ''));
+  dazu('normal', ohneZeit(t.story) + (t.hinweis ? ' Hinweis: ' + t.hinweis : ''));
   // Tipps (alle Stufen, in Protokoll 1 für jede Verschiebung)
   const listen = [t.tipps].concat(t.tippsStufen ? Object.keys(t.tippsStufen).map(function (k) { return t.tippsStufen[k]; }) : []);
   listen.forEach(function (liste) {
@@ -57,13 +57,13 @@ for (let n = 0; n <= JOKER_ANZAHL; n++) dazu('normal', 'Noch kein Tipp freigesch
 // Story-Szenen auf dem Beamer
 Object.keys(TEXTE.szenen).forEach(function (k) {
   const sz = TEXTE.szenen[k];
-  dazu('normal', sz.titel + '. ' + sz.text);
+  dazu('normal', sz.titel + '. ' + ohneZeit(sz.text));
 });
 
 // Spielanweisung nach der Botschaft (Absatz für Absatz)
 TEXTE.spielanweisung.absaetze.forEach(function (absatz) { dazu('normal', absatz); });
 
 // Botschaft von NULLBYTE (Hackerstimme)
-TEXTE.nullbyte.forEach(function (zeile) { dazu('hacker', zeile); });
+TEXTE.nullbyte.forEach(function (zeile) { dazu('hacker', ohneZeit(zeile)); });
 
 process.stdout.write(JSON.stringify(texte, null, 2));

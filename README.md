@@ -2,7 +2,7 @@
 
 Ein digitales Escape Game für die Sekundarstufe I (12 bis 15 Jahre) zu Kryptografie, Algorithmen und Netzwerken.
 
-**Story:** Die fiktive Hackergruppe NULLBYTE hat das Schulnetz gesperrt. Vier Teams spielen parallel, jedes Team hat ein Tablet mit dem «Notfall-Terminal» der Schule. In 45 Minuten knacken die Teams drei Sicherheitsprotokolle und lösen den Override aus, bevor NULLBYTE alle Daten löscht.
+**Story:** Die fiktive Hackergruppe NULLBYTE hat das Schulnetz gesperrt. Vier Teams spielen parallel, jedes Team hat ein Tablet oder einen Laptop mit dem «Notfall-Terminal» der Schule (im Folgenden «Tablet» für beide Geräte). In 45 Minuten knacken die Teams drei Sicherheitsprotokolle und lösen den Override aus, bevor NULLBYTE alle Daten löscht.
 
 Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht keinen Server, keine Datenbank und keinen Build-Schritt und läuft direkt auf GitHub Pages.
 
@@ -119,6 +119,10 @@ Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also 
 * Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll).
 * Punkte, Joker, Teamname und Countdown sind immer in der Kopfzeile sichtbar.
 
+### Uhrzeit des Absturzes
+
+Die Story nennt die Uhrzeit, zu der die Spielleitung «▶ Spiel starten» gedrückt hat: «Soeben, um 10:42 Uhr, ist das Schulnetz zusammengebrochen». So steht es in der Szene «Alarm» auf dem Beamer, in der Botschaft von NULLBYTE und in Protokoll 1 auf den Geräten der Teams (die Uhrzeit kommt mit dem Startsignal). Vor dem Start zeigt der Beamer die aktuelle Uhrzeit. In den Texten in `js/app.js` steht dafür der Platzhalter `{UM_ZEIT}`; beim Vorlesen wird die Uhrzeit weggelassen, damit die fertigen Sprachaufnahmen passen. Auf den gedruckten Teamsets steht «Soeben» ohne Uhrzeit, da sie vor dem Spiel gedruckt werden.
+
 ### NULLBYTE und das Vorlesen
 
 * **Botschaft von NULLBYTE:** Beim Spielstart (oder mit dem Knopf «Botschaft von NULLBYTE») erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
@@ -160,14 +164,14 @@ Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im
 Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 
 * `js/app.js`: PIN, Spieldauer, Joker-Kosten (Standard 20 Punkte), Botschaft von NULLBYTE, Stimmen fürs Vorlesen, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
-* `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
+* `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`, voreingestellt «mittel»). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 
 **Codes ändern:** Die Codes stehen nicht im Klartext im Quellcode, sondern nur als SHA-256-Hash (mit Salz). So finden die Schülerinnen und Schüler die Lösungen nicht über «Quelltext anzeigen». Neue Hashes erzeugt ihr auf `spielleitung.html` im Reiter «Lösungen und Extras», Abschnitt «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
 
 ## Technik
 
-* Läuft in aktuellen Versionen von Safari (iPad) und Chrome (Android). Optimiert für Tablets im Querformat, alle Touch-Ziele mindestens 48 px.
+* Läuft in aktuellen Versionen von Safari (iPad, Mac), Chrome, Edge und Firefox, also auf Tablets und Laptops. Optimiert für Tablets im Querformat, alle Touch-Ziele mindestens 48 px, Bedienung auch mit Maus und Tastatur.
 * Blockly wird zuerst lokal aus `lib/blockly/` geladen, bei Bedarf als Ersatz vom CDN unpkg.com. Renderer «zelos», damit die Blöcke wie in Scratch aussehen.
 * Protokoll 2 läuft über einen eigenen Interpreter über den Blockbaum, ohne `eval`.
 * Nach dem ersten Laden funktioniert alles offline (Service Worker). Nach Änderungen am Spiel in `sw.js` die Zahl in `CACHE_NAME` erhöhen.

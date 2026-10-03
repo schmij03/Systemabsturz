@@ -102,7 +102,7 @@ const STUFEN = {
 };
 
 /* Stufe, wenn die Spielleitung nichts anderes wählt */
-const STANDARD_STUFE = 'schwer';
+const STANDARD_STUFE = 'mittel';
 
 /* ------------------------------ LOGIK ------------------------------- */
 

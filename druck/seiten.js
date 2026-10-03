@@ -43,17 +43,17 @@ var Druck = (function () {
     return seite({
       ober: 'NOTFALL-TEAM  |  STRENG GEHEIM', titel: 'Systemabsturz: euer Auftrag', teil: 'Auftrag',
       inhalt:
-        '<p><strong>Lage:</strong> Heute Morgen um 08:13 Uhr hat die Hackergruppe NULLBYTE das Schulnetz gesperrt. Sie will beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. In 45 Minuten löscht NULLBYTE alle Daten: Noten, Stundenpläne, Fotos. Ihr seid ein Notfall-Team und müsst das System retten.</p>' +
+        '<p><strong>Lage:</strong> Soeben hat die Hackergruppe NULLBYTE das Schulnetz gesperrt. Sie will beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. In 45 Minuten löscht NULLBYTE alle Daten: Noten, Stundenpläne, Fotos. Ihr seid ein Notfall-Team und müsst das System retten.</p>' +
         '<div class="kasten"><p class="zeile"><strong>Teamname:</strong> ________________________________________</p>' +
         '<p class="zeile"><strong>Beitrittscode</strong> (steht auf der Leinwand): __________</p></div>' +
         '<h2>So startet ihr</h2><ol>' +
-        '<li>Öffnet auf eurem Tablet das <strong>Notfall-Terminal</strong>: ' + esc(adresse()) + '</li>' +
-        '<li>Gebt euren <strong>Teamnamen</strong> und den <strong>Beitrittscode</strong> ein und tippt auf «Spiel starten».</li>' +
-        '<li>Tippt auf «Wir sind bereit». Sobald die Spielleitung startet, erscheinen eure Aufgaben und der Countdown läuft.</li></ol>' +
+        '<li>Öffnet auf eurem Tablet oder Laptop das <strong>Notfall-Terminal</strong>: ' + esc(adresse()) + '</li>' +
+        '<li>Gebt euren <strong>Teamnamen</strong> und den <strong>Beitrittscode</strong> ein und tippt oder klickt auf «Spiel starten».</li>' +
+        '<li>Tippt oder klickt auf «Wir sind bereit». Sobald die Spielleitung startet, erscheinen eure Aufgaben und der Countdown läuft.</li></ol>' +
         '<h2>Eure Mission: drei Sicherheitsprotokolle</h2>' +
         '<table class="mission"><tr><th>Protokoll</th><th>Was ihr tut</th><th>Wo</th></tr>' +
         '<tr><td>1  Kryptografie</td><td>Entschlüsselt die Nachricht aus dem Terminal mit der Chiffrierscheibe und gebt den Code ein.</td><td>Papier</td></tr>' +
-        '<tr><td>2  Algorithmen</td><td>Programmiert den Antiviren-Roboter ANTI-V mit Blöcken, bis er die drei Viren-Signaturen einsammelt.</td><td>Tablet</td></tr>' +
+        '<tr><td>2  Algorithmen</td><td>Programmiert den Antiviren-Roboter ANTI-V mit Blöcken, bis er die drei Viren-Signaturen einsammelt.</td><td>Tablet oder Laptop</td></tr>' +
         '<tr><td>3  Netzwerke</td><td>Findet auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server. Die Summe ist der Override-Code.</td><td>Papier</td></tr></table>' +
         '<h2>Regeln</h2><ul>' +
         '<li>Löst die Protokolle der Reihe nach. Jedes gelöste Protokoll schaltet das nächste frei.</li>' +
@@ -96,7 +96,7 @@ var Druck = (function () {
     var s1 = seite({
       ober: 'SICHERHEITSPROTOKOLL 1  ·  KRYPTOGRAFIE', titel: 'Die Nachricht von NULLBYTE', teil: 'Protokoll 1',
       inhalt:
-        '<p>Um 08:13 Uhr erschien auf allen Bildschirmen der Schule eine verschlüsselte Nachricht. Ihr findet sie im <strong>Notfall-Terminal</strong> unter Protokoll 1. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code, der darin versteckt ist, im Terminal ein.</p>' +
+        '<p>Soeben erschien auf allen Bildschirmen der Schule eine verschlüsselte Nachricht. Ihr findet sie im <strong>Notfall-Terminal</strong> unter Protokoll 1. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code, der darin versteckt ist, im Terminal ein.</p>' +
         '<div class="kasten wissen"><span class="label">WAS WIR ÜBER DIE HACKER WISSEN</span>Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen. Vergleicht die Unterschrift mit dem Namen, dann wisst ihr, wie die Buchstaben verschoben wurden.</div>' +
         '<p class="feldname">Geheimtext (aus dem Terminal abschreiben):</p>' + geheim +
         '<p class="feldname" style="margin-top: 7mm"><strong>Verschiebung:</strong> <span style="font-weight: 400">Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</span></p>' +

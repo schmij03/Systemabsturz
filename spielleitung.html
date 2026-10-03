@@ -81,7 +81,7 @@
           <details class="mehr">
             <summary>Geheimtext anzeigen</summary>
             <div id="p1-vorschau" class="p1-vorschau" hidden></div>
-            <p class="klein">Der Code selbst wird nicht an die Tablets übertragen, nur der Geheimtext und ein Hash.</p>
+            <p class="klein">Der Code selbst wird nicht an die Geräte der Teams übertragen, nur der Geheimtext und ein Hash.</p>
           </details>
         </div>
       </div>
@@ -110,7 +110,7 @@
         <ol class="zeitstrahl">
           <li><strong>Botschaft</strong><span>Vollbild, NULLBYTE meldet sich mit Maske und Stimme</span></li>
           <li><strong>Spielanweisung</strong><span>wird vorgelesen, Beitrittscode gross darüber. Jetzt Material verteilen, Teams melden sich an.</span></li>
-          <li><strong>Aufgaben frei</strong><span>Countdown startet, alle Tablets beginnen gleichzeitig</span></li>
+          <li><strong>Aufgaben frei</strong><span>Countdown startet, alle Teams beginnen gleichzeitig</span></li>
         </ol>
         <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
         <p class="tasten klein">Tastatur im Vollbild: <kbd>→</kbd> nächster Schritt, <kbd>R</kbd> Anweisung nochmals vorlesen, <kbd>Esc</kbd> Botschaft abbrechen.</p>
@@ -145,11 +145,11 @@
       <details class="karte hilfe-karte">
         <summary><h3>Probleme? Hilfe für Notfälle</h3></summary>
         <ul class="hilfe-liste">
-          <li><button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button><span>Ein Tablet wartet noch, obwohl das Spiel läuft.</span></li>
+          <li><button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button><span>Ein Gerät wartet noch, obwohl das Spiel läuft.</span></li>
           <li><button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben</button><span>Ohne Botschaft und Anweisung direkt starten.</span></li>
           <li><button type="button" id="neuer-code" class="knopf">Neuer Beitrittscode</button><span>Nur vor dem Start möglich.</span></li>
         </ul>
-        <p class="klein">Kein Internet? Auf dem Tablet «Spielleitung: manuell starten» und PIN wählen.<br>Direkter Link für die Tablets: <code id="anmelde-link"></code></p>
+        <p class="klein">Kein Internet? Auf dem Gerät des Teams «Spielleitung: manuell starten» und PIN wählen.<br>Direkter Link für die Teams: <code id="anmelde-link"></code></p>
         <p id="sync-info" class="klein"></p>
       </details>
     </div>
@@ -163,12 +163,12 @@
           <button type="button" id="reset-countdown" class="knopf gefahr">Spiel zurücksetzen (PIN)</button>
         </div>
         <div class="karte">
-          <h3>Team-Tablets zurücksetzen</h3>
+          <h3>Geräte der Teams zurücksetzen</h3>
           <ol>
-            <li>Auf dem Tablet unten rechts auf «Spielleitung» tippen.</li>
+            <li>Auf dem Tablet oder Laptop des Teams unten rechts auf «Spielleitung» tippen oder klicken.</li>
             <li>PIN eingeben, «Spiel zurücksetzen» wählen und «Löschen» bestätigen.</li>
           </ol>
-          <p class="klein">Der Spielstand liegt nur auf dem jeweiligen Tablet. Die Teams melden ihren Endpunktestand mündlich.</p>
+          <p class="klein">Der Spielstand liegt nur auf dem jeweiligen Gerät. Die Teams melden ihren Endpunktestand mündlich.</p>
         </div>
       </div>
     </div>
@@ -188,7 +188,7 @@
         <summary><h3>Countdown ohne Internet synchronisieren</h3></summary>
         <p>Nur nötig, wenn das Startsignal nicht funktioniert. Alle Geräte zählen dann auf dieselbe Uhrzeit herunter.</p>
         <label class="zeile">Spielende <input type="time" id="link-zeit" step="60"></label>
-        <p class="link-zeile"><span class="label">Tablets:</span> <code id="link-tablet"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-tablet">Kopieren</button></p>
+        <p class="link-zeile"><span class="label">Teams:</span> <code id="link-tablet"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-tablet">Kopieren</button></p>
         <p class="link-zeile"><span class="label">Beamer:</span> <code id="link-beamer"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-beamer">Kopieren</button></p>
         <button type="button" id="link-oeffnen" class="knopf">Beamer mit dieser Endzeit öffnen</button>
       </details>
@@ -240,7 +240,7 @@
   <div id="anweisung" class="overlay anweisung" hidden>
     <div class="anweisung-box">
       <div class="anweisung-code">
-        <span class="label">BEITRITTSCODE FÜR DIE TABLETS</span>
+        <span class="label">BEITRITTSCODE FÜR DIE TEAMS</span>
         <span class="spielcode-wert anweisung-codewert"></span>
         <span class="anweisung-url">Notfall-Terminal: <strong class="anmelde-kurz"></strong></span>
       </div>
