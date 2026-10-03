@@ -224,7 +224,7 @@ const Unterrichtsinfo = (function () {
     );
   }
 
-  function offen() { return !$('#unterrichtsinfo').hidden; }
+  function offen() { const f = $('#unterrichtsinfo'); return !!f && !f.hidden; }
 
   function oeffne(von) {
     baue();

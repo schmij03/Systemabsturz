@@ -854,3 +854,5 @@ html.info-offen, html.info-offen body { overflow: hidden; }
 @page { size: A4; margin: 15mm; }
 .dossier-kachel { border-color: var(--gruen); background: rgba(61, 220, 132, 0.08); }
 .dossier-kachel strong { color: var(--gruen-hell); }
+.leitfaden-kachel { border-color: var(--gelb); background: rgba(255, 213, 79, 0.06); }
+.leitfaden-kachel strong { color: var(--gelb); }

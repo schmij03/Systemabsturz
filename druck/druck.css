@@ -85,6 +85,29 @@ table.bloecke td.kategorie { width: 23%; color: #fff; font-weight: 700; font-siz
 .legende .muster { display: inline-block; min-width: 5mm; padding: 0 1mm; margin-right: 1.5mm; text-align: center; font-weight: 700; font-size: 9pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .legende .grau { color: var(--grau); }
 
+/* ---------- Leitfaden Spielleitung ---------- */
+table.lf td:first-child { white-space: normal; }
+table.lf td:last-child { width: auto; }
+table.lf.ablauf td:first-child { width: 16%; }
+table.lf.ablauf td:last-child { width: 32%; }
+table.lf.notfall td:first-child { width: 34%; }
+ul.haken { list-style: none; padding-left: 0; }
+ul.haken li { position: relative; padding-left: 7mm; margin-bottom: 1.5mm; }
+ul.haken li::before { content: ""; position: absolute; left: 0; top: 0.6mm; width: 3.4mm; height: 3.4mm; border: 1pt solid var(--schwarz); }
+table.mission.kompakt td { padding: 1mm 3mm; }
+table.mission.kompakt td:first-child { width: 28%; }
+table.mission.loesung tr:first-child { display: none; }
+table.mission.loesung td { border-bottom: 0.75pt solid #c9ced6; }
+table.mission.loesung td:first-child { width: 24%; white-space: normal; }
+table.mission.lehrplan td, table.mission.lehrplan th { font-size: 8.5pt; padding: 1.2mm 2mm; }
+table.mission.lehrplan td:first-child { width: 17%; }
+table.mission.lehrplan td:last-child { width: 38%; }
+.gross { font-size: 13pt; letter-spacing: 0.08em; }
+.mono-klein { font-family: "Courier New", Courier, monospace; font-size: 8.5pt; font-weight: 700; }
+h3.zwischentitel { font-size: 11pt; margin: 3mm 0 1mm; }
+code { font-family: "Courier New", Courier, monospace; font-size: 0.92em; background: var(--flaeche); padding: 0 1mm; }
+.druckleiste input { min-height: 44px; font-size: 12pt; padding: 0 8px; }
+
 /* ---------- Fusszeile ---------- */
 .fuss { position: absolute; left: 21mm; right: 21mm; bottom: 9mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--grau); }
 .seite.quer .fuss { left: 15mm; right: 15mm; }
