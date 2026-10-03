@@ -6,28 +6,13 @@
   <title>Systemabsturz: Protokoll 2</title>
   <link rel="stylesheet" href="druck.css">
   <style>
-    .oberzeile { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em; color: #5f6670; border-bottom: 1.2pt solid #111; padding-bottom: 1mm; margin-bottom: 3mm; }
-    .titelzeile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
-    .titelzeile h1 { font-family: Arial, Helvetica, sans-serif; font-size: 19pt; letter-spacing: 0; margin: 0; }
-    .stufe { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 9pt; color: #fff; padding: 1mm 3mm; border-radius: 1mm; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .stufe.leicht { background: #2e7d32; }
-    .stufe.mittel { background: #ef6c00; }
-    .stufe.schwer { background: #c62828; }
-    h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; border-bottom: 1pt solid #111; margin: 4mm 0 2mm; }
-    ol.schritte { margin: 0; padding-left: 6mm; }
-    ol.schritte li { margin-bottom: 1mm; }
     table.bloecke { border-collapse: separate; border-spacing: 0 1.2mm; width: 100%; }
     table.bloecke td { border: none; padding: 1.5mm 3mm; vertical-align: middle; }
     table.bloecke td.kategorie { width: 30mm; color: #fff; font-weight: 700; border-radius: 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .hinweis-kasten { background: #eef0f2; padding: 2.5mm 4mm; border-radius: 1.5mm; margin-top: 2mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     ul.regeln { margin: 0; padding-left: 5mm; }
     ul.regeln li { margin-bottom: 1mm; }
     .plan { border: 1pt solid #c9ced6; background: #e7f0fb; border-radius: 2mm; padding: 2.5mm 3mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .hut { display: inline-block; background: #ffbf00; color: #111418; font-weight: 700; padding: 1.5mm 4mm; border-radius: 4mm 4mm 1.5mm 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .signaturen { display: flex; align-items: center; gap: 4mm; margin-top: 4mm; font-weight: 700; }
-    .signaturen span.feld { width: 12mm; height: 12mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
-    .druckleiste select { min-height: 44px; font-size: 12pt; }
-    .druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
   </style>
 </head>
 <body>
@@ -37,7 +22,7 @@
     <span>A4 hoch, farbig drucken.</span>
   </div>
 
-  <div class="seite">
+  <div class="seite protokoll">
     <div class="oberzeile">SICHERHEITSPROTOKOLL 2 &nbsp;·&nbsp; ALGORITHMEN</div>
     <div class="titelzeile"><h1>Virenscanner programmieren</h1><span class="stufe" id="stufe-text"></span></div>
     <p id="einleitung"></p>
@@ -59,7 +44,7 @@
     <h2>Plant euer Programm</h2>
     <div class="plan" id="plan"><span class="hut">wenn Programm startet</span></div>
 
-    <div class="signaturen">Eingesammelte Signaturen: <span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
+    <div class="eingabefelder">Eingesammelte Signaturen: <span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
 
     <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span id="fuss-stufe"></span></div>
   </div>

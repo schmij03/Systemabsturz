@@ -22,6 +22,25 @@ p { margin: 0 0 2.5mm; }
 .druckleiste button { min-height: 44px; padding: 0 16px; font-size: 12pt; cursor: pointer; }
 table { border-collapse: collapse; width: 100%; }
 td, th { border: 0.8pt solid #111; padding: 1.5mm 2mm; text-align: left; vertical-align: top; }
+/* ---------- Gemeinsames Design der Protokollblätter (Vorbild: Protokoll 2) ---------- */
+.oberzeile { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em; color: #5f6670; border-bottom: 1.2pt solid #111; padding-bottom: 1mm; margin-bottom: 3mm; }
+.titelzeile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
+.titelzeile h1 { font-family: Arial, Helvetica, sans-serif; font-size: 19pt; letter-spacing: 0; margin: 0; }
+.stufe { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 9pt; color: #fff; background: #111418; padding: 1mm 3mm; border-radius: 1mm; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.stufe.leicht { background: #2e7d32; }
+.stufe.mittel { background: #ef6c00; }
+.stufe.schwer { background: #c62828; }
+.protokoll h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; border-bottom: 1pt solid #111; margin: 4mm 0 2mm; padding-bottom: 0; }
+ol.schritte { margin: 0; padding-left: 6mm; }
+ol.schritte li { margin-bottom: 1mm; }
+.hinweis-kasten { background: #eef0f2; padding: 2.5mm 4mm; border-radius: 1.5mm; margin-top: 2mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.hinweis-kasten .label { display: block; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; color: #5f6670; letter-spacing: 0.08em; margin-bottom: 1mm; }
+.eingabefelder { display: flex; align-items: center; gap: 4mm; margin-top: 3mm; font-weight: 700; }
+.feldname { margin: 3mm 0 0; font-weight: 700; }
+.eingabefelder span.feld { width: 12mm; height: 12mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
+.druckleiste select { min-height: 44px; font-size: 12pt; }
+.druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
+
 @media print {
   html { background: #fff; }
   .seite { margin: 0; box-shadow: none; width: auto; min-height: 0; height: 265mm; padding: 0; overflow: hidden; }
