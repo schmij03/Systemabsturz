@@ -46,13 +46,39 @@ const HASHES = {
   bonus: '2a3cb8ba6b05f0675283ce45ffb61056a32e67c7a6eef8b467f31702a8a766aa',
   signaturen: '671033ca39e74b17f33a3621a5fd01f96fa8ea3683cd4bcf8754d0e196e40626',
   protokoll3: '6c01916c12bd0a1a72370b81ad09dd6c13eca4a371cc8facd0864f4108c34c96',
-  /* Falsche Wege über infizierte Server */
-  protokoll3Fallen: [
-    'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
-    'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c',
-    '2d72ee4079defc942a592b9d6c33a36de2f695b3b457f35506880e24b8eab090'
-  ]
+  /* Falsche Wege über infizierte Server, je nach Netzwerkplan der Stufe
+     (siehe js/netzwerke.js): 065 und 079, bei mittel und schwer auch 111 */
+  protokoll3Fallen: {
+    leicht: [
+      'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
+      'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c'
+    ],
+    mittel: [
+      'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
+      'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c',
+      '2d72ee4079defc942a592b9d6c33a36de2f695b3b457f35506880e24b8eab090'
+    ],
+    schwer: [
+      'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
+      'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c',
+      '2d72ee4079defc942a592b9d6c33a36de2f695b3b457f35506880e24b8eab090'
+    ]
+  }
 };
+
+/* ------------------------- Protokoll 1 ------------------------------
+   Die Nachricht wird aus dem Code erzeugt: {CODE} in der Vorlage wird
+   durch den Code in Worten ersetzt (729 wird zu SIEBEN ZWEI NEUN) und
+   alles mit der Verschiebung verschlüsselt (Cäsar). Den Code ändert ihr
+   auf spielleitung.html unter «Spiel einstellen» (gilt für die Runde)
+   oder dauerhaft mit «Konfiguration erzeugen» (P1_GEHEIMTEXT und
+   HASHES.protokoll1 hier ersetzen). Der Code selbst steht nirgends im
+   Klartext, nur der Geheimtext und der Hash. */
+const P1_VORLAGE = 'ACHTUNG SCHULE. WIR HABEN EUER SYSTEM GESPERRT. OHNE CODE SIND ALLE DATEN WEG. DER ERSTE CODE LAUTET {CODE}. NULLBYTE';
+/** Verschiebung der Chiffrierscheibe (1 bis 25), bei 4 wird aus A ein E */
+const P1_VERSCHIEBUNG = 4;
+/** Geheimtext zum Standardcode (passt zu HASHES.protokoll1) */
+const P1_GEHEIMTEXT = 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI';
 
 /** Code für Sicherheitskiste 2, verschlüsselt mit den Signaturen als Schlüssel */
 const KISTE2_VERSCHLUESSELT = '813e87';
@@ -84,12 +110,12 @@ const TEXTE = {
       titel: 'Protokoll 1: Kryptografie',
       kurz: 'Kryptografie',
       story: 'Diese Nachricht erschien um 08:13 Uhr auf allen Bildschirmen. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code ein.',
-      nachricht: 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI',
       hinweis: 'Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen.',
       tipps: [
         'Lest den Hinweis zu den Hackern noch einmal. Welches Wort kennt ihr bereits?',
-        'Das letzte Wort RYPPFCXI bedeutet NULLBYTE. Welcher Buchstabe wird zu welchem?',
-        'Dreht die Scheibe so, dass innen E unter dem äusseren A steht.'
+        /* {SIGNATUR} und {INNEN_A} passen sich der Verschiebung an */
+        'Das letzte Wort {SIGNATUR} bedeutet NULLBYTE. Welcher Buchstabe wird zu welchem?',
+        'Dreht die Scheibe so, dass innen {INNEN_A} unter dem äusseren A steht.'
       ]
     },
     2: {
@@ -119,6 +145,19 @@ const TEXTE = {
       titel: 'Protokoll 3: Netzwerke',
       kurz: 'Netzwerke',
       story: 'Virus gefunden, Kiste 2 ist offen! Repariert das Routing auf eurem Netzwerkplan und gebt die Summe als Override-Code ein.',
+      /* Tipps passend zum Netzwerkplan der Stufe (mittel: «tipps» darunter) */
+      tippsStufen: {
+        leicht: [
+          'Streicht zuerst alle Verbindungen zu den roten Servern durch.',
+          'Zählt die Verbindungen. Der beste Weg braucht genau vier.',
+          'Der Weg führt oben herum über Server C. Vergesst nicht, A und Z mitzuzählen.'
+        ],
+        schwer: [
+          'Streicht zuerst alle Verbindungen zu den roten Servern durch. Es sind drei rote Server.',
+          'Zählt die Verbindungen. Der beste Weg braucht genau vier, ein Weg mit fünf ist zu lang.',
+          'Der Weg führt unten herum über Server C und Server K. Vergesst nicht, A und Z mitzuzählen.'
+        ]
+      },
       tipps: [
         'Streicht zuerst alle Verbindungen zu den roten Servern durch.',
         'Zählt die Verbindungen. Der beste Weg braucht genau vier.',
@@ -660,6 +699,34 @@ function erstelle(tag, klasse, text) {
   return e;
 }
 
+/* --------------------- Protokoll 1: Cäsar-Nachricht ----------------- */
+
+const ZIFFERN_WORTE = ['NULL', 'EINS', 'ZWEI', 'DREI', 'VIER', 'FUENF', 'SECHS', 'SIEBEN', 'ACHT', 'NEUN'];
+
+/** Verschiebt alle Buchstaben A bis Z um n Stellen (Cäsar). */
+function caesar(text, n) {
+  n = ((n % 26) + 26) % 26;
+  return String(text).toUpperCase().replace(/[A-Z]/g, function (b) {
+    return String.fromCharCode((b.charCodeAt(0) - 65 + n) % 26 + 65);
+  });
+}
+
+/** 729 wird zu SIEBEN ZWEI NEUN */
+function codeInWorten(code) {
+  return String(code).split('').map(function (z) { return ZIFFERN_WORTE[parseInt(z, 10)]; }).join(' ');
+}
+
+/** Klartext und Geheimtext zu einem Code */
+function p1Nachricht(code, verschiebung) {
+  const klartext = P1_VORLAGE.replace('{CODE}', codeInWorten(code));
+  return { klartext: klartext, geheimtext: caesar(klartext, verschiebung) };
+}
+
+/** Setzt {SIGNATUR} und {INNEN_A} in einen Tipp ein */
+function fuelleTipp(text, verschiebung) {
+  return String(text).replace('{SIGNATUR}', caesar('NULLBYTE', verschiebung)).replace('{INNEN_A}', caesar('A', verschiebung));
+}
+
 /** Liest ?ende=HH:MM und liefert den Zeitpunkt (heute) in ms oder null. */
 function endeAusUrl() {
   const p = new URLSearchParams(location.search).get('ende');
@@ -1102,7 +1169,7 @@ async function frageStartsignal() {
     const start = await Signal.letzte(s.spielcode, 'start');
     const zeit = new Date().toLocaleTimeString('de-CH');
     if (start && start.ende && s.wartet) {
-      starteNachSignal(start.ende, start.stufe);
+      starteNachSignal(start.ende, start.stufe, start.p1);
       return;
     }
     status.textContent = 'Verbunden. Warte auf das Startsignal … (geprüft ' + zeit + ')';
@@ -1114,10 +1181,14 @@ async function frageStartsignal() {
 }
 
 /** Startsignal erhalten: Countdown setzen, Aufgaben freischalten. */
-function starteNachSignal(endzeit, stufe) {
+function starteNachSignal(endzeit, stufe, p1) {
   const s = Terminal.stand;
   if (!s.wartet) return;
   if (stufe && STUFEN[stufe]) s.stufe = stufe;
+  if (p1 && p1.geheimtext && p1.hash) {
+    s.p1 = { geheimtext: p1.geheimtext, hash: p1.hash, verschiebung: p1.verschiebung };
+    $('#protokoll-1 .geheimnachricht').textContent = p1.geheimtext;
+  }
   clearInterval(Terminal.signalTimer);
   const jetzt = Date.now();
   s.wartet = false;
@@ -1146,7 +1217,16 @@ function starteNachSignal(endzeit, stufe) {
 function tippsFuer(p) {
   const t = TEXTE.protokolle[p];
   const stufe = Terminal.stand && Terminal.stand.stufe;
-  return (t.tippsStufen && t.tippsStufen[stufe]) || t.tipps;
+  const liste = (t.tippsStufen && t.tippsStufen[stufe]) || t.tipps;
+  const v = aktiveP1().verschiebung;
+  return liste.map(function (tipp) { return fuelleTipp(tipp, v); });
+}
+
+/** Protokoll 1 dieser Runde: von der Spielleitung gesendet oder Standard */
+function aktiveP1() {
+  const p1 = Terminal.stand && Terminal.stand.p1;
+  if (p1 && p1.geheimtext && p1.hash) return p1;
+  return { geheimtext: P1_GEHEIMTEXT, hash: HASHES.protokoll1, verschiebung: P1_VERSCHIEBUNG };
 }
 
 /** Das erste noch nicht gelöste Protokoll (3, falls alles gelöst ist). */
@@ -1287,7 +1367,7 @@ function baueProtokoll1() {
   const t = TEXTE.protokolle[1];
   const wurzel = $('#protokoll-1');
   $('.story', wurzel).textContent = t.story;
-  $('.geheimnachricht', wurzel).textContent = t.nachricht;
+  $('.geheimnachricht', wurzel).textContent = aktiveP1().geheimtext;
   $('.hinweis', wurzel).textContent = t.hinweis;
 
   const feld = erstelleZiffernfeld($('.eingabe', wurzel), {
@@ -1295,7 +1375,7 @@ function baueProtokoll1() {
     beschriftung: 'Code eingeben',
     beiBestaetigen: async function (code) {
       if (spielGesperrt()) return 'fertig';
-      if (await Krypto.pruefe(code, HASHES.protokoll1)) {
+      if (await Krypto.pruefe(code, aktiveP1().hash)) {
         Ton.spiele('erfolg');
         Terminal.stand.kiste1 = code;
         protokollGeloest(1);
@@ -1439,7 +1519,9 @@ function baueProtokoll3() {
         return 'fertig';
       }
       const hash = await Krypto.hashCode(code);
-      if (HASHES.protokoll3Fallen.indexOf(hash) >= 0) {
+      const f = HASHES.protokoll3Fallen;
+      const fallen = Array.isArray(f) ? f : (f[Terminal.stand.stufe] || f.mittel || []);
+      if (fallen.indexOf(hash) >= 0) {
         Ton.spiele('alarm');
         feld.setzeMeldung('ACHTUNG: Euer Weg führt über einen infizierten Server!', 'fehler');
       } else {
@@ -1623,7 +1705,30 @@ function initSpielleitung() {
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
     zeigeSpielcode();
   });
-  // Schwierigkeit des Labyrinths
+  // Protokoll 1: eigener Code
+  const vs = $('#p1-verschiebung');
+  for (let i = 1; i <= 25; i++) {
+    const o = erstelle('option', '', i + ' (A wird zu ' + caesar('A', i) + ')');
+    o.value = i;
+    vs.appendChild(o);
+  }
+  vs.value = (Leitung.stand.p1 && Leitung.stand.p1.verschiebung) || P1_VERSCHIEBUNG;
+  zeigeP1Einstellung();
+  $('#p1-uebernehmen').addEventListener('click', uebernehmeP1);
+  $('#p1-standard').addEventListener('click', async function () {
+    const pin = await fragePin('Standard für Protokoll 1');
+    if (pin === null) return;
+    if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
+    delete Leitung.stand.p1;
+    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    vs.value = P1_VERSCHIEBUNG;
+    $('#p1-code').value = '';
+    zeigeP1Einstellung();
+    hinweisNachStart();
+  });
+  zeigeMaterial();
+
+  // Schwierigkeit (Labyrinth Protokoll 2 und Netzwerkplan Protokoll 3)
   const wahl = $('#stufe-wahl');
   Object.keys(STUFEN).forEach(function (k) {
     const o = erstelle('option', '', STUFEN[k].name + ' (max. ' + STUFEN[k].maxBloecke + ' Blöcke)');
@@ -1635,8 +1740,9 @@ function initSpielleitung() {
   wahl.addEventListener('change', function () {
     Leitung.stand.stufe = wahl.value;
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
-    if (Leitung.stand.freigegeben) toast('Gilt nur für Tablets, die noch nicht gestartet sind. Startsignal erneut senden.', 'info');
+    hinweisNachStart();
     aktualisiereLinks();
+    zeigeMaterial();
   });
 
   zeigeSpielcode();
@@ -1735,6 +1841,66 @@ function tickLeitung() {
   uhr.classList.toggle('wartet', !s.endzeit);
   $('#buehne-anmeldung').classList.toggle('klein', !!s.freigegeben);
   $('#gross-label').textContent = !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG'));
+}
+
+function hinweisNachStart() {
+  if (Leitung.stand.freigegeben) toast('Gilt nur für Tablets, die noch nicht gestartet sind. Startsignal erneut senden.', 'info');
+}
+
+/** Übernimmt einen eigenen Code für Protokoll 1 (nur mit PIN). */
+async function uebernehmeP1() {
+  const code = $('#p1-code').value.trim();
+  const v = parseInt($('#p1-verschiebung').value, 10);
+  if (!/^\d{3}$/.test(code)) { toast('Bitte einen dreistelligen Code eingeben.', 'warnung'); return; }
+  const pin = await fragePin('Code für Protokoll 1');
+  if (pin === null) return;
+  if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
+  const n = p1Nachricht(code, v);
+  Leitung.stand.p1 = { code: code, verschiebung: v, geheimtext: n.geheimtext, hash: await Krypto.hashCode(code) };
+  speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+  $('#p1-code').value = '';
+  zeigeP1Einstellung();
+  toast('Protokoll 1 eingestellt.', 'info');
+  hinweisNachStart();
+}
+
+/* Zeigt, welche Nachricht die Tablets in Protokoll 1 erhalten (ohne den Code). */
+function zeigeP1Einstellung() {
+  const p1 = Leitung.stand.p1;
+  const v = p1 ? p1.verschiebung : P1_VERSCHIEBUNG;
+  const text = p1 ? p1.geheimtext : P1_GEHEIMTEXT;
+  $('#p1-status').textContent = p1
+    ? 'Eigener Code ist eingestellt (Verschiebung ' + v + '). Den Code seht ihr unter «Lösungen».'
+    : 'Standard: Code und Nachricht aus js/app.js (Verschiebung ' + v + ').';
+  const box = $('#p1-vorschau');
+  box.innerHTML = '';
+  box.appendChild(erstelle('span', 'label', 'Geheimtext auf den Tablets'));
+  box.appendChild(erstelle('p', 'mono', text));
+  box.appendChild(erstelle('p', 'klein', 'Unterschrift: ' + caesar('NULLBYTE', v) + '. Tipp 3 im Help-Desk: innen ' + caesar('A', v) + ' unter dem äusseren A.'));
+  box.hidden = false;
+}
+
+/* Material: PDF-Teamsets anzeigen, sobald sie im Ordner material/ liegen */
+function zeigeMaterial() {
+  $$('[data-material]').forEach(function (zeile) {
+    const stufe = zeile.dataset.material;
+    const datei = 'material/Systemabsturz_Teamset_' + stufe + '.pdf';
+    const zelle = $('.pdf-zelle', zeile);
+    zelle.textContent = 'PDF folgt';
+    zelle.className = 'pdf-zelle klein';
+    fetch(datei, { method: 'HEAD', cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) return;
+      zelle.innerHTML = '';
+      const a = erstelle('a', '', 'Teamset ' + stufe + ' (PDF)');
+      a.href = datei;
+      a.setAttribute('download', '');
+      zelle.appendChild(a);
+      zelle.className = 'pdf-zelle';
+    }).catch(function () { /* offline */ });
+    zeile.classList.toggle('gewaehlt', (Leitung.stand.stufe || STANDARD_STUFE) === stufe.toLowerCase());
+  });
+  const link = $('#link-netzwerk');
+  if (link) link.href = 'druck/protokoll3.html?stufe=' + (Leitung.stand.stufe || STANDARD_STUFE);
 }
 
 function zeigeSpielcode() {
@@ -1840,7 +2006,10 @@ async function sendeStartsignal() {
   const s = Leitung.stand;
   setzeStatus('Startsignal wird gesendet …', 'info');
   try {
-    await Signal.sende(s.spielcode, { typ: 'start', ende: s.endzeit, stufe: s.stufe || STANDARD_STUFE, gesendet: Date.now() });
+    const nachricht = { typ: 'start', ende: s.endzeit, stufe: s.stufe || STANDARD_STUFE, gesendet: Date.now() };
+    // eigener Code für Protokoll 1: nur Geheimtext und Hash, nie der Code
+    if (s.p1) nachricht.p1 = { geheimtext: s.p1.geheimtext, hash: s.p1.hash, verschiebung: s.p1.verschiebung };
+    await Signal.sende(s.spielcode, nachricht);
     setzeStatus('Aufgaben freigegeben um ' + new Date().toLocaleTimeString('de-CH') + '. Die Tablets starten innerhalb weniger Sekunden.', 'ok');
     toast('Startsignal gesendet.', 'info');
   } catch (e) {
@@ -1974,6 +2143,19 @@ async function zeigeLoesungen() {
       liste.appendChild(erstelle('dt', '', z[0]));
       liste.appendChild(erstelle('dd', '', z[1]));
     });
+    // Eigener Code für Protokoll 1 (Einstellung dieser Runde)
+    if (Leitung.stand.p1) {
+      const p1 = Leitung.stand.p1;
+      liste.appendChild(erstelle('dt', '', 'Protokoll 1, eingestellt für diese Runde'));
+      liste.appendChild(erstelle('dd', '', p1.code + ' (Verschiebung ' + p1.verschiebung + '). Klartext: ' + p1Nachricht(p1.code, p1.verschiebung).klartext));
+    }
+    // Netzwerkpläne Protokoll 3 pro Stufe (aus js/netzwerke.js)
+    if (typeof NETZWERKE !== 'undefined') {
+      Object.keys(NETZWERKE).forEach(function (k) {
+        liste.appendChild(erstelle('dt', '', 'Protokoll 3, Stufe ' + (STUFEN[k] ? STUFEN[k].name : k)));
+        liste.appendChild(erstelle('dd', 'programm', NETZWERKE[k].loesung + '. Fallen: ' + NETZWERKE[k].fallen + '.'));
+      });
+    }
     // Musterlösungen Protokoll 2 pro Stufe (aus js/maze.js)
     Object.keys(STUFEN).forEach(function (k) {
       const st = STUFEN[k];
@@ -1995,6 +2177,16 @@ async function erzeugeKonfiguration() {
   const neuePin = w('pin') || SPIELLEITUNG_PIN;
   const sig = w('signaturen').split(/[^0-9]+/).filter(Boolean).join(',');
   const fallen = w('fallen').split(/[^0-9]+/).filter(Boolean);
+  const fallenStufen = {
+    leicht: (w('fallen-leicht') || '065, 079').split(/[^0-9]+/).filter(Boolean),
+    mittel: fallen,
+    schwer: (w('fallen-schwer') || fallen.join(',')).split(/[^0-9]+/).filter(Boolean)
+  };
+  const verschiebung = parseInt(w('verschiebung') || P1_VERSCHIEBUNG, 10);
+  if (!/^\d{3}$/.test(w('p1')) || !(verschiebung >= 1 && verschiebung <= 25)) {
+    toast('Code Protokoll 1 muss dreistellig sein, Verschiebung zwischen 1 und 25.', 'warnung');
+    return;
+  }
   const loesungen = {
     p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
     signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
@@ -2008,13 +2200,20 @@ async function erzeugeKonfiguration() {
   zeilen.push("  bonus: '" + await Krypto.hashCode(loesungen.bonus) + "',");
   zeilen.push("  signaturen: '" + await Krypto.hashCode(sig) + "',");
   zeilen.push("  protokoll3: '" + await Krypto.hashCode(loesungen.p3) + "',");
-  zeilen.push('  /* Falsche Wege über infizierte Server */');
-  zeilen.push('  protokoll3Fallen: [');
-  const fh = [];
-  for (const f of fallen) fh.push("    '" + await Krypto.hashCode(f) + "'");
-  zeilen.push(fh.join(',\n'));
-  zeilen.push('  ]');
+  zeilen.push('  /* Falsche Wege über infizierte Server, je nach Netzwerkplan der Stufe */');
+  zeilen.push('  protokoll3Fallen: {');
+  const stufenZeilen = [];
+  for (const st of ['leicht', 'mittel', 'schwer']) {
+    const fh = [];
+    for (const f of fallenStufen[st]) fh.push("      '" + await Krypto.hashCode(f) + "'");
+    stufenZeilen.push('    ' + st + ': [\n' + fh.join(',\n') + '\n    ]');
+  }
+  zeilen.push(stufenZeilen.join(',\n'));
+  zeilen.push('  }');
   zeilen.push('};');
+  zeilen.push('');
+  zeilen.push('const P1_VERSCHIEBUNG = ' + verschiebung + ';');
+  zeilen.push("const P1_GEHEIMTEXT = '" + p1Nachricht(w('p1'), verschiebung).geheimtext + "';");
   zeilen.push('');
   zeilen.push("const KISTE2_VERSCHLUESSELT = '" + await Krypto.verschluessle(loesungen.kiste2, sig) + "';");
   zeilen.push('');

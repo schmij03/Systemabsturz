@@ -23,6 +23,8 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
 | `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
+| `material/` | Teamsets pro Stufe (Word, PDF folgen), Download auf der Spielleitungsseite |
+| `js/netzwerke.js` | Netzwerkpläne für Protokoll 3 pro Stufe mit Lösung |
 | `druck/` | Druckmaterial: Auftragsblatt, Chiffrierscheibe (Protokoll 1), Netzwerkplan (Protokoll 3) |
 | `sw.js` | Service Worker: speichert alles für den Offline-Betrieb |
 | `TESTPLAN.md` | Kurzer Testplan vor dem Einsatz |
@@ -66,6 +68,21 @@ Das Spiel hat keinen eigenen Server. Das Startsignal läuft deshalb über den fr
 ### Alternative: synchronisieren über die Uhrzeit
 
 Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: Im Bereich «Countdown synchronisieren» ein Spielende wählen und auf den Tablets den Link `index.html?ende=10:45` öffnen. Dann braucht es keinen Beitrittscode, und jedes Tablet startet beim Klick auf «Spiel starten» sofort mit dem Countdown bis 10:45 (die Uhren der Geräte sollten automatisch gestellt sein). Ohne Beitrittscode und ohne `?ende` lässt sich ein Tablet nur mit der PIN starten.
+
+### Spiel einstellen (vor dem Start)
+
+Auf `spielleitung.html` im Bereich **«1. Spiel einstellen»**:
+
+* **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Bereich «Material herunterladen und drucken», die gewählte Stufe ist markiert). Der Override-Code ist auf allen Stufen 109.
+
+| Stufe | Netzwerk Protokoll 3 | Richtiger Weg | Fallen |
+|---|---|---|---|
+| Leicht | 8 Server, 2 infiziert | A, B, C, D, Z = 109 | 065, 079 |
+| Mittel | 9 Server, 2 infiziert | A, B, C, E, Z = 109 | 065, 079, 111 |
+| Schwer | 12 Server, 3 infiziert | A, D, C, K, Z = 109 | 065, 079, 111 |
+
+* **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) und die Verschiebung der Chiffrierscheibe eingeben, «Übernehmen (PIN)». Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
+* Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code und die Verschiebung eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`.
 
 ### Die drei Protokolle
 

@@ -13,9 +13,19 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 7. Notfall ohne Internet: WLAN auf einem Tablet ausschalten, anmelden. Erwartung: rote Meldung «Keine Verbindung». «Spielleitung: manuell starten (PIN)» startet das Tablet.
 8. Lautstärke prüfen: Beim Tippen auf das Ziffernfeld ist ein Klick zu hören.
 
-## Netzwerkplan (Protokoll 3) prüfen
+## Spiel einstellen
 
-Kürzester Weg ohne rote Server: A, B, C, E, Z (vier Verbindungen), Summe 12 + 23 + 31 + 19 + 24 = **109**. Die Fallen: A, G, Z ergibt 065; A, B, H, Z ergibt 079; A, F, G, Z ergibt 111.
+1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 und Verschiebung 7 eingeben, «Übernehmen (PIN)». Erwartung: Vorschau zeigt den neuen Geheimtext, Unterschrift UBSSIFAL.
+2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
+3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
+4. Protokoll 3 auf Stufe Leicht: 079 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «oben herum über Server C».
+5. «Standard» stellt Code 729 mit Verschiebung 4 wieder her.
+
+## Netzwerkpläne (Protokoll 3) prüfen
+
+* Leicht: A, B, C, D, Z = 12 + 18 + 34 + 21 + 24 = **109**. Fallen: A, H, Z = 065; A, E, G, Z = 079.
+* Mittel: A, B, C, E, Z = 12 + 23 + 31 + 19 + 24 = **109**. Fallen: A, G, Z = 065; A, B, H, Z = 079; A, F, G, Z = 111.
+* Schwer: A, D, C, K, Z = 12 + 15 + 22 + 36 + 24 = **109**. Fallen: A, H, Z = 065; A, D, G, Z = 079; A, B, J, I, Z = 111.
 
 ## Protokoll 1
 
