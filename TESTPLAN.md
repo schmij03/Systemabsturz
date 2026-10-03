@@ -74,9 +74,18 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 
 | Schritt | Erwartung |
 |---|---|
-| Help-Desk öffnen, Joker einlösen | Bestätigungsdialog, danach Tipp Stufe 1 sichtbar, minus 10 Punkte, ein Joker weniger in der Kopfzeile |
+| Help-Desk öffnen, Joker einlösen | Bestätigungsdialog, danach Tipp Stufe 1 sichtbar, minus 20 Punkte, ein Joker weniger in der Kopfzeile |
 | 5 Minuten in einem Protokoll nichts lösen | Hinweis «Gratis-Tipp freigeschaltet», Stufe 1 ist mit «(gratis)» markiert, kein Joker verbraucht |
 | Alle 3 Joker verbrauchen | «Keine Joker mehr. Wendet euch an die Spielleitung.» |
+
+## Vorlesen und NULLBYTE
+
+| Schritt | Erwartung |
+|---|---|
+| Im Terminal auf 🔊 neben dem Story-Text tippen | Der Text wird auf Deutsch vorgelesen, nochmals tippen stoppt |
+| Help-Desk, «Tipps vorlesen» | Die freigeschalteten Tipps werden vorgelesen |
+| Spielleitung: «Botschaft von NULLBYTE» | Maske erscheint, Botschaft mit Motiv tippt sich Zeile für Zeile und wird mit tiefer Stimme vorgelesen |
+| Spielleitung: Story-Knopf wechseln | Story wird automatisch vorgelesen (abschaltbar) |
 
 ## Zeitablauf und Reset
 

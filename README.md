@@ -41,7 +41,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 1. **Vorbereitung:** Auf dem Laptop der Lehrperson `spielleitung.html` öffnen. Im Bereich «Countdown synchronisieren» das Spielende wählen, zum Beispiel 10:45.
 2. **Tablets:** Auf jedem Tablet den angezeigten Tablet-Link öffnen, zum Beispiel `index.html?ende=10:45`. Alle Geräte zählen dann auf dieselbe Uhrzeit herunter (die Uhren der Geräte sollten automatisch gestellt sein).
 3. **Beamer:** Mit «Beamer mit dieser Endzeit öffnen» läuft der grosse Countdown synchron. Mit «Vollbild» wird er bildschirmfüllend.
-4. **Einstieg:** «Hackervideo» abspielen, danach die Story-Texte «Alarm», «Auftrag» und «Regeln» zeigen.
+4. **Einstieg:** «Hackervideo» abspielen (oder «Botschaft von NULLBYTE»), danach die Story-Texte «Alarm», «Auftrag» und «Regeln» zeigen. Die Story wird auf Wunsch automatisch vorgelesen.
 5. Die Teams geben ihren Namen ein und tippen auf **«Spiel starten»** (das entsperrt auch den Ton).
 6. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
@@ -55,10 +55,16 @@ Ohne den Parameter `?ende=HH:MM` startet der Countdown auf jedem Tablet beim Kli
 
 ### Help-Desk und Punkte
 
-* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 10 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage.
+* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage.
 * Jedes Team hat 3 Joker. Ein Joker zeigt die nächste Tippstufe (1, 2, 3) des aktuellen Protokolls.
 * Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll).
 * Punkte, Joker, Teamname und Countdown sind immer in der Kopfzeile sichtbar.
+
+### NULLBYTE und das Vorlesen
+
+* **Botschaft von NULLBYTE:** Fehlt `videos/intro.mp4`, erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
+* **Vorlesen (Text-to-Speech):** Die Botschaft wird mit tiefer Hackerstimme vorgelesen, die Story-Texte mit normaler Stimme. Im Terminal haben die Story-Texte und der Help-Desk einen Knopf 🔊. Verwendet wird die Sprachausgabe des Browsers (Web Speech API), bevorzugt eine Stimme für Deutsch (Schweiz), sonst Deutsch (Deutschland). Es braucht keine Internetverbindung, sofern das Gerät eine deutsche Stimme installiert hat. Tonhöhe und Tempo lassen sich in `js/app.js` unter `STIMMEN` anpassen.
+* Auf dem iPad gibt es Sprachausgabe nur nach einer Berührung und nur, wenn der Stummschalter aus ist. Weitere Stimmen lassen sich unter Einstellungen, Bedienungshilfen, Gesprochene Inhalte, Stimmen laden.
 
 ### Bei 00:00
 
@@ -72,7 +78,7 @@ Auf dem Tablet unten rechts auf «Spielleitung» tippen, PIN eingeben (Standard 
 
 Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 
-* `js/app.js`: PIN, Spieldauer, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
+* `js/app.js`: PIN, Spieldauer, Joker-Kosten (Standard 20 Punkte), Botschaft von NULLBYTE, Stimmen fürs Vorlesen, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
 * `js/maze.js`: Labyrinth, Zahlen auf den Feldern, Startrichtung, maximale Schrittzahl.
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 

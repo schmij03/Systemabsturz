@@ -22,7 +22,7 @@ const SPIELDAUER_MINUTEN = 45;
 const START_PUNKTE = 100;
 const PUNKTE_PRO_PROTOKOLL = 20;
 const JOKER_ANZAHL = 3;
-const JOKER_KOSTEN = 10;
+const JOKER_KOSTEN = 20;
 const BONUS_PUNKTE = 10;
 const PUNKTE_PRO_RESTMINUTE = 1;
 
@@ -96,12 +96,31 @@ const TEXTE = {
       ]
     }
   },
+  /* Botschaft von NULLBYTE (Hackervideo-Ersatz auf dem Beamer, wird vorgelesen).
+     Jede Zeile wird einzeln getippt. */
+  nullbyte: [
+    'VERBINDUNG HERGESTELLT.',
+    'Hier spricht NULLBYTE.',
+    'Wir sind viele. Wir sind überall. Und jetzt sind wir in eurem Schulnetz.',
+    'Seit Wochen beobachten wir euch.',
+    'Eure Passwörter heissen 123456, Passwort oder wie euer Haustier.',
+    'Ihr klickt auf jeden Link, der euch ein Gratis-Handy verspricht.',
+    'Ihr lasst Computer entsperrt stehen und schreibt Codes auf Zettel unter die Tastatur.',
+    'Warum wir das tun? Ganz einfach: Wir wollen beweisen, dass niemand eure Daten schützt.',
+    'Euch ist Sicherheit egal. Also nehmen wir uns, was ungeschützt herumliegt.',
+    'Noten, Stundenpläne, Fotos, alle Dateien: Wir haben alles verschlüsselt.',
+    'Um 08:13 Uhr haben wir euch eine Nachricht geschickt. Niemand hat sie verstanden.',
+    'Drei Sicherheitsprotokolle schützen den Override. Kryptografie. Algorithmen. Netzwerke.',
+    'Ihr glaubt, ihr könnt sie knacken? Ihr habt 45 Minuten.',
+    'Danach löschen wir alles. Für immer.',
+    'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
+  ],
   bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
   /* Texte für die Beamer-Ansicht der Spielleitung */
   szenen: {
     intro: {
       titel: 'ALARM: SCHULNETZ GESPERRT',
-      text: 'Heute Morgen um 08:13 Uhr ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Sie hat das Netz gesperrt und droht, in 45 Minuten alle Daten der Schule zu löschen.'
+      text: 'Heute Morgen um 08:13 Uhr ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Ihr Ziel: Sie wollen beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. Schwache Passwörter, offene Computer, unvorsichtige Klicks. Darum haben sie das Netz gesperrt und drohen, in 45 Minuten alle Daten der Schule zu löschen.'
     },
     auftrag: {
       titel: 'EUER AUFTRAG',
@@ -109,7 +128,7 @@ const TEXTE = {
     },
     regeln: {
       titel: 'REGELN',
-      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet 10 Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
+      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
     },
     gerettet: {
       titel: 'SYSTEM WIEDERHERGESTELLT',
@@ -359,6 +378,82 @@ const Ton = (function () {
   });
 
   return { entsperren: entsperren, spiele: spiele, setzeStumm: setzeStumm };
+})();
+
+/* ===================================================================
+   VORLESEN (Text-to-Speech über die Web Speech API des Browsers)
+   =================================================================== */
+
+/** Stimmen: «hacker» klingt tief und langsam, «normal» für Story und Tipps */
+const STIMMEN = {
+  hacker: { tonhoehe: 0.2, tempo: 0.82 },
+  normal: { tonhoehe: 1, tempo: 0.95 }
+};
+
+const Sprache = (function () {
+  'use strict';
+
+  const verfuegbar = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  let stimme = null;
+
+  /* Beste deutsche Stimme wählen: zuerst Schweiz, dann Deutschland, dann jede deutsche */
+  function waehleStimme() {
+    if (!verfuegbar) return;
+    const alle = window.speechSynthesis.getVoices();
+    stimme = alle.find(function (v) { return /^de[-_]CH/i.test(v.lang); }) ||
+      alle.find(function (v) { return /^de[-_]DE/i.test(v.lang); }) ||
+      alle.find(function (v) { return /^de/i.test(v.lang); }) || null;
+  }
+
+  if (verfuegbar) {
+    waehleStimme();
+    window.speechSynthesis.addEventListener('voiceschanged', waehleStimme);
+  }
+
+  /** Liest einen Text vor. Liefert ein Promise, das am Ende erfüllt wird. */
+  function sprich(text, art) {
+    return new Promise(function (fertig) {
+      if (!verfuegbar || !text) { fertig(); return; }
+      stopp();
+      if (!stimme) waehleStimme();
+      const e = STIMMEN[art] || STIMMEN.normal;
+      // Zeichen, die schlecht klingen, entfernen
+      const sauber = String(text).replace(/[«»>]/g, '').replace(/ANTI-V/g, 'Anti V')
+        // Wörter in GROSSBUCHSTABEN normal schreiben, sonst buchstabieren manche Stimmen
+        .replace(/[A-ZÄÖÜ]{3,}/g, function (w) { return w[0] + w.slice(1).toLowerCase(); }).replace(/\s+/g, ' ');
+      const a = new SpeechSynthesisUtterance(sauber);
+      a.lang = stimme ? stimme.lang : 'de-DE';
+      if (stimme) a.voice = stimme;
+      a.pitch = e.tonhoehe;
+      a.rate = e.tempo;
+      // Sicherheitsnetz: manche Browser melden das Ende nicht zuverlässig
+      let erledigt = false;
+      const ende = function () { if (!erledigt) { erledigt = true; fertig(); } };
+      a.onend = ende;
+      a.onerror = ende;
+      setTimeout(ende, 3000 + sauber.length * 140);
+      window.speechSynthesis.speak(a);
+    });
+  }
+
+  function stopp() {
+    if (verfuegbar) window.speechSynthesis.cancel();
+  }
+
+  /** Erstellt einen Vorlese-Knopf. text kann eine Funktion sein. */
+  function knopf(text, art, beschriftung) {
+    const b = erstelle('button', 'knopf vorlesen-knopf', beschriftung || '🔊 Vorlesen');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Text vorlesen');
+    if (!verfuegbar) b.hidden = true;
+    b.addEventListener('click', function () {
+      if (window.speechSynthesis.speaking) { stopp(); return; }
+      sprich(typeof text === 'function' ? text() : text, art);
+    });
+    return b;
+  }
+
+  return { verfuegbar: verfuegbar, sprich: sprich, stopp: stopp, knopf: knopf };
 })();
 
 /* ===================================================================
@@ -715,6 +810,20 @@ function initTerminal() {
   baueProtokoll1();
   baueProtokoll2();
   baueProtokoll3();
+  // Vorlese-Knöpfe neben den Story-Texten
+  [1, 2, 3].forEach(function (p) {
+    const story = $('#protokoll-' + p + ' .story');
+    story.insertBefore(Sprache.knopf(function () {
+      return TEXTE.protokolle[p].story + (TEXTE.protokolle[p].hinweis ? ' Hinweis: ' + TEXTE.protokolle[p].hinweis : '');
+    }, 'normal', '🔊'), story.firstChild);
+  });
+  $('#helpdesk-vorlesen').appendChild(Sprache.knopf(function () {
+    const s = Terminal.stand;
+    const p = aktuellesProtokoll();
+    const frei = TEXTE.protokolle[p].tipps.slice(0, s.tippStufe[p]);
+    if (!frei.length) return 'Noch kein Tipp freigeschaltet. Ihr habt ' + (JOKER_ANZAHL - s.jokerEingeloest) + ' Joker.';
+    return frei.map(function (t, i) { return 'Tipp ' + (i + 1) + ': ' + t; }).join(' ');
+  }, 'normal', '🔊 Tipps vorlesen'));
   aktualisiereKopf();
   aktualisiereTabs();
   zeigeTab(aktuellesProtokoll());
@@ -1055,6 +1164,7 @@ function oeffneHelpDesk() {
 }
 
 function schliesseHelpDesk() {
+  Sprache.stopp();
   $('#helpdesk').classList.remove('offen');
   $('#helpdesk').setAttribute('aria-hidden', 'true');
   $('#helpdesk-hintergrund').hidden = true;
@@ -1144,6 +1254,10 @@ function initSpielleitung() {
     k.addEventListener('click', function () { Ton.spiele('klick'); zeigeSzene(k.dataset.szene); });
   });
   zeigeSzene('intro');
+  $('#szene-vorlesen').appendChild(Sprache.knopf(function () {
+    return $('#szene-titel').textContent + '. ' + $('#szene-text').textContent;
+  }, 'normal', '🔊 Story vorlesen'));
+  if (!Sprache.verfuegbar) $('#auto-vorlesen-zeile').hidden = true;
 
   $('#start-countdown').addEventListener('click', function () {
     Ton.entsperren();
@@ -1171,6 +1285,15 @@ function initSpielleitung() {
 
   $('#hackervideo').addEventListener('click', zeigeVideo);
   $('#video-schliessen').addEventListener('click', schliesseVideo);
+  $('#nochmals-vorlesen').addEventListener('click', spieleNullbyteBotschaft);
+  $('#nur-botschaft').addEventListener('click', function () {
+    Ton.entsperren();
+    $('#video-box').hidden = false;
+    $('#hacker-video').pause();
+    $('#hacker-video').hidden = true;
+    $('#video-ersatz').hidden = false;
+    spieleNullbyteBotschaft();
+  });
   $('#system-gerettet').addEventListener('click', function () {
     Ton.entsperren();
     if (Leitung.stand.endzeit && !Leitung.stand.gestoppt) {
@@ -1239,6 +1362,10 @@ function zeigeSzene(name) {
   if (!sz) return;
   $('#szene-titel').textContent = sz.titel;
   $('#szene-text').textContent = sz.text;
+  Sprache.stopp();
+  const auto = $('#auto-vorlesen');
+  if (auto && auto.checked && Leitung.szeneGezeigt) Sprache.sprich(sz.titel + '. ' + sz.text, 'normal');
+  Leitung.szeneGezeigt = true;
   $$('[data-szene]').forEach(function (k) { k.classList.toggle('aktiv', k.dataset.szene === name); });
 }
 
@@ -1264,22 +1391,57 @@ function zeigeVideoErsatz() {
   if (!ersatz.hidden) return;
   video.hidden = true;
   ersatz.hidden = false;
-  const text = '> VERBINDUNG HERGESTELLT\n> HIER SPRICHT NULLBYTE.\n> EUER SCHULNETZ GEHÖRT JETZT UNS.\n> ALLE DATEN SIND VERSCHLÜSSELT.\n> IN 45 MINUTEN WIRD ALLES GELÖSCHT.\n> VIEL GLÜCK. IHR WERDET ES BRAUCHEN.\n> NULLBYTE';
+  spieleNullbyteBotschaft();
+}
+
+/* Tippt die Botschaft Zeile für Zeile und liest jede Zeile mit Hackerstimme vor */
+function spieleNullbyteBotschaft() {
+  const ersatz = $('#video-ersatz');
   const ziel = $('#ersatz-text');
+  const zeilen = TEXTE.nullbyte;
+  const lauf = (ersatz._lauf || 0) + 1;   // bricht einen älteren Durchlauf ab
+  ersatz._lauf = lauf;
   ziel.textContent = '';
-  let i = 0;
-  Ton.spiele('alarm');
+  Sprache.stopp();
   clearInterval(ersatz._timer);
-  ersatz._timer = setInterval(function () {
-    ziel.textContent = text.slice(0, ++i);
-    if (i >= text.length) clearInterval(ersatz._timer);
-  }, 55);
+  Ton.spiele('alarm');
+  let z = 0;
+  function naechsteZeile() {
+    if (ersatz._lauf !== lauf || z >= zeilen.length) return;
+    const zeile = '> ' + zeilen[z];
+    let i = 0;
+    let getippt = false;
+    let gesprochen = !Sprache.verfuegbar || !$('#hacker-stimme').checked;
+    const vorher = ziel.textContent;
+    function weiter() {
+      if (getippt && gesprochen && ersatz._lauf === lauf) {
+        z++;
+        setTimeout(naechsteZeile, 350);
+      }
+    }
+    if (!gesprochen) Sprache.sprich(zeilen[z], 'hacker').then(function () { gesprochen = true; weiter(); });
+    ersatz._timer = setInterval(function () {
+      ziel.textContent = vorher + zeile.slice(0, ++i);
+      if (i >= zeile.length) {
+        clearInterval(ersatz._timer);
+        ziel.textContent += '\n';
+        ziel.scrollTop = ziel.scrollHeight;
+        getippt = true;
+        // ohne Sprachausgabe: Lesezeit abhängig von der Länge
+        if (gesprochen) setTimeout(weiter, 400 + zeile.length * 25);
+        else weiter();
+      }
+    }, 38);
+  }
+  naechsteZeile();
 }
 
 function schliesseVideo() {
   const video = $('#hacker-video');
   video.pause();
   clearInterval($('#video-ersatz')._timer);
+  $('#video-ersatz')._lauf = ($('#video-ersatz')._lauf || 0) + 1;
+  Sprache.stopp();
   $('#video-box').hidden = true;
 }
 

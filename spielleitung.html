@@ -36,9 +36,15 @@
       <button type="button" class="knopf" data-szene="auftrag">Story: Auftrag</button>
       <button type="button" class="knopf" data-szene="regeln">Story: Regeln</button>
       <button type="button" class="knopf" data-szene="gerettet">Story: Gerettet</button>
+      <span id="szene-vorlesen"></span>
     </div>
+    <p id="auto-vorlesen-zeile" class="schalter-zeile">
+      <label><input type="checkbox" id="auto-vorlesen" checked> Story beim Wechseln automatisch vorlesen</label>
+      <label><input type="checkbox" id="hacker-stimme" checked> Botschaft von NULLBYTE mit Hackerstimme vorlesen</label>
+    </p>
     <div class="knopf-reihe">
       <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
+      <button type="button" id="nur-botschaft" class="knopf gefahr">Botschaft von NULLBYTE</button>
       <button type="button" id="start-countdown" class="knopf primaer">Countdown starten (45:00)</button>
       <button type="button" id="system-gerettet" class="knopf primaer">System gerettet</button>
       <button type="button" id="vollbild" class="knopf">Vollbild</button>
@@ -102,10 +108,16 @@
   <div id="video-box" class="overlay video-box" hidden>
     <video id="hacker-video" src="videos/intro.mp4" playsinline preload="none" controls></video>
     <div id="video-ersatz" class="video-ersatz" hidden>
-      <pre id="ersatz-text"></pre>
-      <p class="klein">Platzhalter: Legt eure Videodatei als <code>videos/intro.mp4</code> ab.</p>
+      <img src="img/maske.svg" alt="Maske von NULLBYTE" class="maske maske-gross">
+      <div class="ersatz-rechts">
+        <div class="label rot blinkt-langsam">● EINGEHENDE ÜBERTRAGUNG: NULLBYTE</div>
+        <pre id="ersatz-text"></pre>
+      </div>
     </div>
-    <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
+    <div class="video-knoepfe">
+      <button type="button" id="nochmals-vorlesen" class="knopf">Botschaft nochmals abspielen</button>
+      <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
+    </div>
   </div>
 
   <!-- Schlussszene -->
