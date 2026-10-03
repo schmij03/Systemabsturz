@@ -12,7 +12,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 |---|---|
 | `index.html` | Startseite: Teamname eingeben, Spiel starten |
 | `terminal.html` | Spielansicht der Teams mit den drei Protokollen, Countdown, Help-Desk und Punkten |
-| `spielleitung.html` | Beamer-Ansicht: grosser Countdown, Story-Texte, Hackervideo, Schlussszene, Lösungen (PIN), Reset |
+| `spielleitung.html` | Beamer-Ansicht oben (grosser Countdown, Story-Texte, Hackervideo, Schlussszene), darunter die Steuerung mit Kopfleiste und vier Reitern: «1 Vorbereiten», «2 Spiel durchführen», «3 Nach dem Spiel», «Lösungen und Extras» |
 | `css/style.css` | Gestaltung im Terminal-Look |
 | `js/app.js` | Hauptlogik, **alle Einstellungen oben in der Datei** (PIN, Spieldauer, Punkte, Hashes, Texte, Tipps) |
 | `js/blocks.js` | Protokoll 2: Scratch-Blöcke mit Blockly und eigener Interpreter |
@@ -44,7 +44,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 
 ## Ablauf in der Lektion
 
-1. **Material drucken** (auf `spielleitung.html` unter «Material drucken», pro Team je ein Exemplar):
+1. **Material drucken** (auf `spielleitung.html` im Reiter «1 Vorbereiten», Abschnitt «Material drucken», pro Team je ein Exemplar):
    * **Auftragsblatt** (`druck/auftrag.html`): Lage, Anmeldung, die drei Protokolle, Regeln, Platz für Notizen.
    * **Protokoll 1** (`druck/protokoll1.html`, 3 Seiten wie im Teamset): Auftragsblatt «Die Nachricht von NULLBYTE» mit Feldern für Geheimtext, Verschiebung, Klartext, Code und Bonusfrage, dann die grosse Scheibe (172 mm, Klartext) und die kleine Scheibe (142 mm, Geheimtext) mit Bauanleitung. Stufe wählbar, Geheimtext optional eindruckbar. In «Tatsächlicher Grösse» drucken, am besten auf festes Papier.
    * **Protokoll 2** (`druck/protokoll2.html`, 1 Seite wie im Teamset): Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Feld zum Planen des Programms und für die Signaturen. Werte und Blöcke kommen direkt aus `js/maze.js`, passen also immer zur gewählten Stufe.
@@ -56,7 +56,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 6. Abkürzen: Während des Videos sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. Danach in der Anweisung «Aufgaben jetzt freigeben ▶», in der Steuerung «Aufgaben sofort freigeben (ohne Intro)».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
-Für die nächste Runde: «Reset (PIN)» in der Steuerung (erzeugt einen neuen Beitrittscode) und die Tablets zurücksetzen.
+Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode) und die Tablets zurücksetzen.
 
 ### Wie kommt das Startsignal auf die Tablets?
 
@@ -72,7 +72,7 @@ Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: I
 
 ### Spiel einstellen (vor dem Start)
 
-Auf `spielleitung.html` im Bereich **«1. Spiel einstellen»**:
+Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 
 * **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Bereich «Material herunterladen und drucken», die gewählte Stufe ist markiert). Der Override-Code ist auf allen Stufen 109.
 
@@ -98,7 +98,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 * **Blocklimit:** Pro Stufe darf das Programm höchstens so viele Blöcke haben, wie die Musterlösung braucht (ohne «wenn Programm startet»). Ist das Limit erreicht, werden die Blöcke in der Toolbox grau. Ein Programm ohne Schleife wäre viel zu lang und passt deshalb nie ins Limit. Die Anzeige «Blöcke 7 / 15» zeigt den Stand.
 * **Energie:** ANTI-V darf nur so viele Felder gehen, wie der richtige Weg lang ist («Energie 16 / 16»). Umwege und Hin-und-her-Laufen enden mit «Energie leer!».
 * **Effizienzbonus:** Wer Protokoll 2 löst, erhält 10 Punkte plus 5 Punkte für jeden Block unter dem Limit. Die Musterlösung gibt also 10 Punkte, eine kürzere Lösung mehr. Teams dürfen nach dem Lösen weiter optimieren: Ein neuer Rekord bringt die Differenz als Zusatzpunkte.
-* **Schwierigkeitsstufen** (Auswahl auf `spielleitung.html` im Bereich «Spielablauf», wird mit dem Startsignal an die Tablets geschickt; alternativ per Link `index.html?stufe=leicht`):
+* **Schwierigkeitsstufen** (Auswahl auf `spielleitung.html` im Reiter «1 Vorbereiten», wird mit dem Startsignal an die Tablets geschickt; alternativ per Link `index.html?stufe=leicht`):
 
 | Stufe | Labyrinth | Nötige Idee | Blocklimit | Energie | Kürzeste bekannte Lösung |
 |---|---|---|---|---|---|
@@ -150,7 +150,7 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 * `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 
-**Codes ändern:** Die Codes stehen nicht im Klartext im Quellcode, sondern nur als SHA-256-Hash (mit Salz). So finden die Schülerinnen und Schüler die Lösungen nicht über «Quelltext anzeigen». Neue Hashes erzeugt ihr auf `spielleitung.html` im Bereich «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
+**Codes ändern:** Die Codes stehen nicht im Klartext im Quellcode, sondern nur als SHA-256-Hash (mit Salz). So finden die Schülerinnen und Schüler die Lösungen nicht über «Quelltext anzeigen». Neue Hashes erzeugt ihr auf `spielleitung.html` im Reiter «Lösungen und Extras», Abschnitt «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
 
 ## Technik
 
