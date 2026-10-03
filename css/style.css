@@ -46,6 +46,8 @@ body::after {
   pointer-events: none;
   background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 3px);
   z-index: 9999;
+  transform: translateZ(0);   /* eigene Grafikebene: wird nicht bei jedem Bild neu gezeichnet */
+  contain: strict;
 }
 
 [hidden] { display: none !important; }
@@ -171,7 +173,7 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 .kopf-team { flex: 1; min-width: 0; }
 .kopf-team .wert { overflow: hidden; text-overflow: ellipsis; }
 .kopf-uhr .wert { font-size: 2rem; line-height: 1.1; letter-spacing: 0.06em; color: var(--gruen); font-variant-numeric: tabular-nums; }
-#countdown.knapp { color: var(--rot); animation: puls 1s infinite; }
+#countdown.knapp { color: var(--rot); animation: puls 1s infinite; will-change: opacity; }
 #countdown.gestoppt { color: var(--gelb); }
 .joker { letter-spacing: 0.15em; }
 .joker-punkt { color: var(--text-schwach); }
@@ -180,7 +182,7 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 .helpdesk-knopf.blinkt { animation: blinken 1s infinite; }
 
 @keyframes puls { 50% { opacity: 0.45; } }
-@keyframes blinken { 50% { background: var(--blau); } }
+@keyframes blinken { 50% { opacity: 0.55; } }
 .blinkt-langsam { animation: puls 2s infinite; }
 
 .tabs { display: flex; gap: 6px; padding: 6px 12px 0; background: var(--hintergrund); border-bottom: 2px solid var(--rand); }
@@ -304,8 +306,7 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 .roboter-koerper.stoss { animation: stoss 0.35s 2; }
 .signatur.eingesammelt { opacity: 0.18; transition: opacity 0.3s; }
 .maze-meldung { paint-order: stroke; stroke: #000; stroke-width: 4px; }
-.feld-infiziert { animation: pulsrot 1.6s infinite; }
-@keyframes pulsrot { 50% { fill: #ff1744; } }
+.feld-infiziert { fill: #d32f2f; }
 @keyframes stoss { 50% { transform: translateY(-7px); } }
 @keyframes absturz {
   0% { transform: rotate(0) scale(1); }
@@ -324,7 +325,7 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 .blocklyToolbox, .blocklyToolboxDiv { border-right: 1px solid var(--rand); }
 .blocklyMainBackground { stroke: none; }
 /* Aktuell ausgeführter Block: gelber Rahmen */
-.blocklyHighlighted > .blocklyPath { stroke: #fff200 !important; stroke-width: 5px !important; filter: drop-shadow(0 0 6px #fff200); }
+.blocklyHighlighted > .blocklyPath { stroke: #fff200 !important; stroke-width: 6px !important; }
 
 /* ------------------------------ Buzzer ------------------------------ */
 
@@ -343,10 +344,11 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
   text-shadow: 0 2px 4px #000;
   cursor: pointer;
   touch-action: manipulation;
-  animation: buzzerpuls 1.4s infinite;
+  animation: buzzerpuls 1.4s ease-in-out infinite;
+  will-change: transform;
 }
 .buzzer:active { transform: translateY(10px); box-shadow: 0 2px 0 #3a0000, 0 8px 20px rgba(255, 0, 0, 0.6); }
-@keyframes buzzerpuls { 50% { box-shadow: 0 12px 0 #3a0000, 0 18px 70px rgba(255, 40, 40, 0.9); } }
+@keyframes buzzerpuls { 50% { transform: scale(1.04); } }
 
 /* ----------------------------- Help-Desk ---------------------------- */
 
@@ -489,14 +491,15 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .video-knoepfe { display: flex; gap: 10px; }
 
 /* Maske von NULLBYTE */
-.maske { display: block; filter: drop-shadow(0 0 18px rgba(61, 220, 132, 0.45)); }
+.maske { display: block; filter: drop-shadow(0 0 18px rgba(61, 220, 132, 0.45)); will-change: transform; }
 .maske-gross { width: min(30vw, 420px); height: auto; animation: maskeschweben 4s ease-in-out infinite, maskeglitch 5s steps(1) infinite; }
 .maske-start { width: 110px; height: auto; float: right; margin: 0 0 10px 16px; opacity: 0.9; animation: maskeglitch 6s steps(1) infinite; }
 @keyframes maskeschweben { 50% { transform: translateY(-10px); } }
+/* Glitch nur über transform und opacity: der Grafikchip erledigt das ohne Neuzeichnen */
 @keyframes maskeglitch {
-  0%, 92%, 100% { filter: drop-shadow(0 0 18px rgba(61, 220, 132, 0.45)); transform: none; }
-  93% { filter: drop-shadow(-6px 0 0 #ff4040) drop-shadow(6px 0 0 #4c97ff); transform: translateX(4px) skewX(-4deg); }
-  96% { filter: drop-shadow(6px 0 0 #ff4040) drop-shadow(-6px 0 0 #4c97ff); transform: translateX(-4px) skewX(4deg); }
+  0%, 92%, 100% { translate: 0 0; opacity: 1; }
+  93% { translate: 5px 0; opacity: 0.7; }
+  96% { translate: -5px 0; opacity: 0.85; }
 }
 .vorlesen-knopf { min-height: 48px; min-width: 48px; padding: 0 0.6em; font-size: 1rem; }
 .story { display: flow-root; }
@@ -618,16 +621,17 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .anweisung-absatz { margin: 0; padding: 1vh 1.4vw; font-family: var(--sans); font-size: clamp(1rem, min(2vw, 3.4vh), 1.85rem); line-height: 1.4; color: var(--text-schwach); border-left: 6px solid transparent; border-radius: 0 8px 8px 0; transition: all 0.3s; }
 .anweisung-absatz.aktiv { color: #fff; background: rgba(61, 220, 132, 0.12); border-left-color: var(--gruen); }
 .anweisung-absatz.gelesen { color: var(--text); }
-.anweisung-knoepfe { display: flex; justify-content: flex-end; gap: 10px; margin-top: 2vh; opacity: 0.45; }
-.anweisung-knoepfe:hover { opacity: 1; }
+.anweisung-knoepfe { display: none !important; }
 .buehne-anmeldung.klein { padding: 4px 18px; margin-bottom: 1vh; border-style: solid; }
 .buehne-anmeldung.klein .buehne-code { font-size: clamp(1.6rem, 3.5vw, 3rem); }
 .buehne-anmeldung.klein .label::after { content: " (Nachzügler)"; }
 .link-knopf { display: inline-flex; align-items: center; text-decoration: none; }
 /* Video im Spielablauf bildschirmfüllend */
 .video-box video { width: 100vw; height: 82vh; object-fit: contain; background: #000; }
-.video-knoepfe { opacity: 0.4; }
-.video-knoepfe:hover { opacity: 1; }
+/* Während Video und Botschaft keine Knöpfe und kein Mauszeiger sichtbar.
+   Steuerung über die Tastatur: Leertaste/Pfeil rechts = weiter, Esc = schliessen */
+.video-knoepfe { display: none !important; }
+.video-box, .video-box * { cursor: none; }
 
 /* Spielleitung: Spiel einstellen und Material */
 .einstellungen { border-color: var(--gelb); }

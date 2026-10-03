@@ -53,7 +53,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und das **Hackervideo** läuft (fehlt `videos/intro.mp4`, spricht NULLBYTE mit Maske und Hackerstimme).
 4. **Spielanweisung:** Direkt nach dem Video erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein und tippen auf «Wir sind bereit». Die Tablets warten verdeckt.
 5. **Aufgaben erhalten:** Am Ende der Anweisung startet automatisch der Countdown auf dem Beamer und alle Tablets erhalten innerhalb weniger Sekunden ihre Aufgaben («Aufgaben empfangen», Protokoll 1). Der Beitrittscode bleibt klein auf der Leinwand, damit Nachzügler noch einsteigen können (sie starten sofort mit derselben Restzeit).
-6. Abkürzen: im Video «Weiter zur Spielanweisung ▶», in der Anweisung «Aufgaben jetzt freigeben ▶», in der Steuerung «Aufgaben sofort freigeben (ohne Intro)».
+6. Abkürzen: Während des Videos sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. Danach in der Anweisung «Aufgaben jetzt freigeben ▶», in der Steuerung «Aufgaben sofort freigeben (ohne Intro)».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
 Für die nächste Runde: «Reset (PIN)» in der Steuerung (erzeugt einen neuen Beitrittscode) und die Tablets zurücksetzen.
@@ -78,11 +78,11 @@ Auf `spielleitung.html` im Bereich **«1. Spiel einstellen»**:
 
 | Stufe | Netzwerk Protokoll 3 | Richtiger Weg (Summe 109) | Schwierigkeit |
 |---|---|---|---|
-| Leicht | 11 Server, 3 infiziert | A, H, I, G, Z (4 Verbindungen) | Alle Wege brauchen 4 Verbindungen, nur einer ist sauber |
-| Mittel | 14 Server, 4 infiziert | A, B, C, H, E, Z (5 Verbindungen) | Verlockende Abkürzung über D (4 Verbindungen) ist infiziert |
-| Schwer | 18 Server, 5 infiziert | A, B, C, H, M, Q, Z (6 Verbindungen) | Alle Wege mit 5 Verbindungen sind infiziert |
+| Leicht | 14 Server, 4 infiziert, 25 Verbindungen | A, F, G, C, D, E, Z (6 Verbindungen) | Der direkte Weg durch die Mitte ist infiziert, der saubere Weg macht einen Bogen nach oben |
+| Mittel | 18 Server, 5 infiziert, 32 Verbindungen | A, B, G, H, L, P, Q, Z (7 Verbindungen) | Alle kurzen Wege sind infiziert, der saubere Weg führt im Zickzack von oben nach unten |
+| Schwer | 22 Server, 7 infiziert, 38 Verbindungen | A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen) | Viele verlockende Abkürzungen, der saubere Weg beginnt ganz unten und steigt quer durchs Netz |
 
-Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der nicht länger ist als der richtige, warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Die Netzwerkbilder in den Teamsets müssen dann ebenfalls ersetzt werden.
+Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Die Netzwerkbilder in den Teamsets müssen dann ebenfalls ersetzt werden.
 
 * **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) und die Verschiebung der Chiffrierscheibe eingeben, «Übernehmen (PIN)». Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
 * Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code und die Verschiebung eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`.
@@ -158,6 +158,7 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 * Blockly wird zuerst lokal aus `lib/blockly/` geladen, bei Bedarf als Ersatz vom CDN unpkg.com. Renderer «zelos», damit die Blöcke wie in Scratch aussehen.
 * Protokoll 2 läuft über einen eigenen Interpreter über den Blockbaum, ohne `eval`.
 * Nach dem ersten Laden funktioniert alles offline (Service Worker). Nach Änderungen am Spiel in `sw.js` die Zahl in `CACHE_NAME` erhöhen.
+* Leistung auf den Tablets: Dateien kommen sofort aus dem Speicher und werden im Hintergrund aktualisiert, Seiten werden höchstens 2.5 Sekunden im Netz gesucht. Blockly wird schon während Protokoll 1 im Leerlauf vorgeladen. Animationen nutzen nur `transform` und `opacity`, der Countdown schreibt nur bei Änderungen ins Dokument.
 * Töne: Fehlen eigene MP3-Dateien in `sounds/`, erzeugt die Web Audio API die Töne synthetisch.
 * Zum lokalen Testen einen kleinen Webserver verwenden, zum Beispiel `python3 -m http.server` im Projektordner, dann `http://localhost:8000` öffnen.
 

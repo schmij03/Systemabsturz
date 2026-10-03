@@ -65,7 +65,15 @@ const Algorithmen = (function () {
     });
   }
 
-  async function ladeBlockly() {
+  let ladeVersprechen = null;
+
+  /* Lädt Blockly genau einmal (auch wenn vorladen() und init() gleichzeitig fragen) */
+  function ladeBlockly() {
+    if (!ladeVersprechen) ladeVersprechen = ladeBlocklyJetzt().catch(function (e) { ladeVersprechen = null; throw e; });
+    return ladeVersprechen;
+  }
+
+  async function ladeBlocklyJetzt() {
     if (window.Blockly && window.Blockly.inject) return BLOCKLY_QUELLEN[0].medien;
     for (const q of BLOCKLY_QUELLEN) {
       try {
@@ -657,7 +665,12 @@ const Algorithmen = (function () {
   /* Für automatische Tests: Zugriff auf den Arbeitsbereich */
   function arbeitsbereich() { return ws; }
 
-  return { init: init, stoppe: stoppe, arbeitsbereich: arbeitsbereich };
+  /** Lädt Blockly im Hintergrund, damit Protokoll 2 später sofort bereit ist. */
+  function vorladen() {
+    ladeBlockly().catch(function () { /* wird beim Öffnen nochmals versucht */ });
+  }
+
+  return { init: init, stoppe: stoppe, arbeitsbereich: arbeitsbereich, vorladen: vorladen };
 })();
 
 window.Algorithmen = Algorithmen;

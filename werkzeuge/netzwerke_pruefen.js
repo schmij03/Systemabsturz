@@ -42,7 +42,7 @@ Object.keys(NETZWERKE).forEach(function (stufe) {
   const kurz = Math.min.apply(null, sauber.map(function (w) { return w.length - 1; }));
   const beste = sauber.filter(function (w) { return w.length - 1 === kurz; });
   const code = summe(beste[0]);
-  const fallen = Array.from(new Set(wege.filter(function (w) { return infiziert(w) && w.length - 1 <= kurz; }).map(summe)))
+  const fallen = Array.from(new Set(wege.filter(function (w) { return infiziert(w) && w.length - 1 < kurz; }).map(summe)))
     .filter(function (z) { return z !== code; }).sort(function (a, b) { return a - b; });
   console.log('== ' + stufe + ': ' + Object.keys(n.server).length + ' Server, ' + n.verbindungen.length + ' Verbindungen');
   console.log('   kürzester sauberer Weg (' + kurz + ' Verbindungen): ' + beste.map(function (w) { return w.join('-') + ' = ' + summe(w); }).join(' | '));

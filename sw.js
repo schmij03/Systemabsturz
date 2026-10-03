@@ -8,7 +8,7 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
-const CACHE_NAME = 'systemabsturz-v13';
+const CACHE_NAME = 'systemabsturz-v17';
 
 const DATEIEN = [
   './',
@@ -79,20 +79,57 @@ self.addEventListener('activate', function (e) {
   );
 });
 
+/* Strategie für schnelle Ladezeiten im Schul-WLAN:
+   - Seiten (HTML): zuerst Netz (max. 2.5 s warten), sonst gespeicherte Version
+   - alle anderen Dateien (JS, CSS, Bilder, Töne, Blockly): sofort aus dem
+     Speicher, im Hintergrund wird die Datei aktualisiert (stale-while-revalidate) */
+const NETZ_TIMEOUT_MS = 2500;
+
+function speichern(anfrage, antwort) {
+  if (antwort && antwort.ok && antwort.status === 200 && antwort.type === 'basic') {
+    const kopie = antwort.clone();
+    caches.open(CACHE_NAME).then(function (cache) { cache.put(anfrage, kopie); });
+  }
+  return antwort;
+}
+
 self.addEventListener('fetch', function (e) {
   const anfrage = e.request;
   if (anfrage.method !== 'GET' || new URL(anfrage.url).origin !== self.location.origin) return;
   // Videos nicht cachen (gross, werden in Teilen geladen)
   if (anfrage.url.indexOf('/videos/') >= 0) return;
+
+  if (anfrage.mode === 'navigate') {
+    e.respondWith(new Promise(function (fertig) {
+      let erledigt = false;
+      const ausCache = function () {
+        caches.match(anfrage, { ignoreSearch: true }).then(function (c) {
+          if (c && !erledigt) { erledigt = true; fertig(c); }
+        });
+      };
+      const timer = setTimeout(ausCache, NETZ_TIMEOUT_MS);
+      fetch(anfrage).then(function (antwort) {
+        clearTimeout(timer);
+        speichern(anfrage, antwort);
+        if (!erledigt) { erledigt = true; fertig(antwort); }
+      }).catch(function () {
+        clearTimeout(timer);
+        caches.match(anfrage, { ignoreSearch: true }).then(function (c) {
+          if (!erledigt) { erledigt = true; fertig(c || Response.error()); }
+        });
+      });
+    }));
+    return;
+  }
+
   e.respondWith(
-    fetch(anfrage).then(function (antwort) {
-      if (antwort && antwort.ok && antwort.status === 200) {
-        const kopie = antwort.clone();
-        caches.open(CACHE_NAME).then(function (cache) { cache.put(anfrage, kopie); });
+    caches.match(anfrage, { ignoreSearch: true }).then(function (gespeichert) {
+      const ausNetz = fetch(anfrage).then(function (antwort) { return speichern(anfrage, antwort); });
+      if (gespeichert) {
+        e.waitUntil(ausNetz.catch(function () { /* offline: Speicher genügt */ }));
+        return gespeichert;
       }
-      return antwort;
-    }).catch(function () {
-      return caches.match(anfrage, { ignoreSearch: true });
+      return ausNetz;
     })
   );
 });
