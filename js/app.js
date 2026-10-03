@@ -1849,6 +1849,12 @@ function initSpielleitung() {
   });
 
   $('#hackervideo').addEventListener('click', zeigeVideo);
+  // Tastatur während Video und Botschaft (Knöpfe sind dort unsichtbar)
+  document.addEventListener('keydown', function (e) {
+    if ($('#video-box').hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); $('#video-schliessen').click(); }
+    else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); $('#video-freigeben').click(); }
+  });
   $('#video-schliessen').addEventListener('click', function () {
     const warAblauf = Leitung.ablauf;
     schliesseVideo();
@@ -2126,7 +2132,7 @@ function zeigeVideo() {
   ersatz.hidden = true;
   video.hidden = false;
   video.currentTime = 0;
-  video.controls = !Leitung.ablauf;   // im Spielablauf ohne Bedienleiste
+  video.controls = false;   // keine Bedienleiste auf dem Beamer
   const p = video.play();
   if (p && p.catch) p.catch(function () { zeigeVideoErsatz(); });
   video.onerror = zeigeVideoErsatz;

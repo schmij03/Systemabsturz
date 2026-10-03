@@ -53,7 +53,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und das **Hackervideo** läuft (fehlt `videos/intro.mp4`, spricht NULLBYTE mit Maske und Hackerstimme).
 4. **Spielanweisung:** Direkt nach dem Video erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein und tippen auf «Wir sind bereit». Die Tablets warten verdeckt.
 5. **Aufgaben erhalten:** Am Ende der Anweisung startet automatisch der Countdown auf dem Beamer und alle Tablets erhalten innerhalb weniger Sekunden ihre Aufgaben («Aufgaben empfangen», Protokoll 1). Der Beitrittscode bleibt klein auf der Leinwand, damit Nachzügler noch einsteigen können (sie starten sofort mit derselben Restzeit).
-6. Abkürzen: im Video «Weiter zur Spielanweisung ▶», in der Anweisung «Aufgaben jetzt freigeben ▶», in der Steuerung «Aufgaben sofort freigeben (ohne Intro)».
+6. Abkürzen: Während des Videos sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. Danach in der Anweisung «Aufgaben jetzt freigeben ▶», in der Steuerung «Aufgaben sofort freigeben (ohne Intro)».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
 Für die nächste Runde: «Reset (PIN)» in der Steuerung (erzeugt einen neuen Beitrittscode) und die Tablets zurücksetzen.

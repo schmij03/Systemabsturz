@@ -626,8 +626,10 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .link-knopf { display: inline-flex; align-items: center; text-decoration: none; }
 /* Video im Spielablauf bildschirmfüllend */
 .video-box video { width: 100vw; height: 82vh; object-fit: contain; background: #000; }
-.video-knoepfe { opacity: 0.4; }
-.video-knoepfe:hover { opacity: 1; }
+/* Während Video und Botschaft keine Knöpfe und kein Mauszeiger sichtbar.
+   Steuerung über die Tastatur: Leertaste/Pfeil rechts = weiter, Esc = schliessen */
+.video-knoepfe { display: none !important; }
+.video-box, .video-box * { cursor: none; }
 
 /* Spielleitung: Spiel einstellen und Material */
 .einstellungen { border-color: var(--gelb); }
