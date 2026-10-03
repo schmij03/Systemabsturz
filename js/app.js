@@ -185,7 +185,7 @@ const TEXTE = {
     1: {
       titel: 'Protokoll 1: Kryptografie',
       kurz: 'Kryptografie',
-      story: 'Diese Nachricht erschien um 08:13 Uhr auf allen Bildschirmen. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code ein.',
+      story: 'Diese Nachricht erschien soeben{UM_ZEIT} auf allen Bildschirmen. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code ein.',
       hinweis: 'Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen.',
       tipps: [
         'Lest den Hinweis zu den Hackern noch einmal. Welches Wort kennt ihr bereits?',
@@ -247,11 +247,11 @@ const TEXTE = {
   spielanweisung: {
     titel: 'SPIELANWEISUNG',
     absaetze: [
-      'Ihr seid die Notfall-Teams unserer Schule. Jedes Team erhält ein Tablet, einen Auftrag auf Papier, eine Chiffrierscheibe für Protokoll 1 und einen Netzwerkplan für Protokoll 3.',
-      'Öffnet auf dem Tablet das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht. Tippt danach auf «Wir sind bereit».',
+      'Ihr seid die Notfall-Teams unserer Schule. Jedes Team erhält ein Tablet oder einen Laptop, einen Auftrag auf Papier, eine Chiffrierscheibe für Protokoll 1 und einen Netzwerkplan für Protokoll 3.',
+      'Öffnet auf eurem Gerät das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht. Tippt oder klickt danach auf «Wir sind bereit».',
       'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jeder geknackte Code öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus.',
       'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kisten dürfen nur mit dem richtigen Code geöffnet werden.',
-      'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf dem Tablet. Viel Erfolg!'
+      'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf eurem Gerät. Viel Erfolg!'
     ]
   },
   /* Botschaft von NULLBYTE (Intro auf dem Beamer, wird vorgelesen).
@@ -267,18 +267,20 @@ const TEXTE = {
     'Warum wir das tun? Ganz einfach: Wir wollen beweisen, dass niemand eure Daten schützt.',
     'Euch ist Sicherheit egal. Also nehmen wir uns, was ungeschützt herumliegt.',
     'Noten, Stundenpläne, Fotos, alle Dateien: Wir haben alles verschlüsselt.',
-    'Um 08:13 Uhr haben wir euch eine Nachricht geschickt. Niemand hat sie verstanden.',
+    'Soeben{UM_ZEIT} haben wir euch eine Nachricht geschickt. Niemand hat sie verstanden.',
     'Drei Sicherheitsprotokolle schützen den Override. Kryptografie. Algorithmen. Netzwerke.',
     'Ihr glaubt, ihr könnt sie knacken? Ihr habt 45 Minuten.',
     'Danach löschen wir alles. Für immer.',
     'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
   ],
   bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
-  /* Texte für die Beamer-Ansicht der Spielleitung */
+  /* Texte für die Beamer-Ansicht der Spielleitung.
+     {UM_ZEIT} wird überall durch «, um HH:MM Uhr,» ersetzt: die Uhrzeit, zu der
+     die Spielleitung «Spiel starten» gedrückt hat (beim Vorlesen weggelassen). */
   szenen: {
     intro: {
       titel: 'ALARM: SCHULNETZ GESPERRT',
-      text: 'Heute Morgen um 08:13 Uhr ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Ihr Ziel: Sie wollen beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. Schwache Passwörter, offene Computer, unvorsichtige Klicks. Darum haben sie das Netz gesperrt und drohen, in 45 Minuten alle Daten der Schule zu löschen.'
+      text: 'Soeben{UM_ZEIT} ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Ihr Ziel: Sie wollen beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. Schwache Passwörter, offene Computer, unvorsichtige Klicks. Darum haben sie das Netz gesperrt und drohen, in 45 Minuten alle Daten der Schule zu löschen.'
     },
     auftrag: {
       titel: 'EUER AUFTRAG',
@@ -818,6 +820,30 @@ function fuelleTipp(text, verschiebung) {
   return String(text).replace('{SIGNATUR}', caesar('NULLBYTE', verschiebung)).replace('{INNEN_A}', caesar('A', verschiebung));
 }
 
+/** Uhrzeit des «Absturzes»: wann die Spielleitung «Spiel starten» gedrückt hat (HH:MM) */
+function absturzZeit() {
+  const st = (typeof Leitung !== 'undefined' && Leitung.stand) || (typeof Terminal !== 'undefined' && Terminal.stand) || null;
+  let ms = Date.now();
+  if (st && st.absturz) return st.absturz;
+  if (st && st.endzeit) ms = st.endzeit - SPIELDAUER_MINUTEN * 60000;
+  return uhrzeitKurz(ms);
+}
+
+function uhrzeitKurz(ms) {
+  const d = new Date(ms);
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+
+/** Text zum Anzeigen: {UM_ZEIT} wird «, um 10:42 Uhr,» */
+function mitZeit(text) {
+  return String(text).replace(/\{UM_ZEIT\}/g, ', um ' + absturzZeit() + ' Uhr,');
+}
+
+/** Text zum Vorlesen: ohne Uhrzeit, damit die fertigen Sprachaufnahmen passen */
+function ohneZeit(text) {
+  return String(text).replace(/\{UM_ZEIT\}/g, '');
+}
+
 /** Liest ?ende=HH:MM und liefert den Zeitpunkt (heute) in ms oder null. */
 function endeAusUrl() {
   const p = new URLSearchParams(location.search).get('ende');
@@ -1147,7 +1173,7 @@ async function resetTablet() {
     toast('Falsche PIN.', 'warnung');
     return;
   }
-  const wahl = await dialog('Spielleitung', 'Was möchtet ihr tun? Der Spielstand dieses Tablets bleibt erhalten, ausser ihr setzt das Spiel zurück.', [
+  const wahl = await dialog('Spielleitung', 'Was möchtet ihr tun? Der Spielstand auf diesem Gerät bleibt erhalten, ausser ihr setzt das Spiel zurück.', [
     { text: 'Abbrechen', wert: null },
     { text: 'Spiel zurücksetzen', wert: 'reset', klasse: 'gefahr' },
     { text: 'Zur Spielleitungsansicht', wert: 'leitung', klasse: 'primaer' }
@@ -1157,7 +1183,7 @@ async function resetTablet() {
     return;
   }
   if (wahl !== 'reset') return;
-  const ja = await dialog('Spielstand löschen?', 'Teamname, Punkte, gelöste Protokolle und Joker auf diesem Tablet werden gelöscht.', [
+  const ja = await dialog('Spielstand löschen?', 'Teamname, Punkte, gelöste Protokolle und Joker auf diesem Gerät werden gelöscht.', [
     { text: 'Abbrechen', wert: false },
     { text: 'Löschen', wert: true, klasse: 'gefahr' }
   ], { warnung: true });
@@ -1220,7 +1246,7 @@ function initTerminal() {
   [1, 2, 3].forEach(function (p) {
     const story = $('#protokoll-' + p + ' .story');
     story.insertBefore(Sprache.knopf(function () {
-      return TEXTE.protokolle[p].story + (TEXTE.protokolle[p].hinweis ? ' Hinweis: ' + TEXTE.protokolle[p].hinweis : '');
+      return ohneZeit(TEXTE.protokolle[p].story) + (TEXTE.protokolle[p].hinweis ? ' Hinweis: ' + TEXTE.protokolle[p].hinweis : '');
     }, 'normal', '🔊'), story.firstChild);
   });
   $('#helpdesk-vorlesen').appendChild(Sprache.knopf(function () {
@@ -1259,7 +1285,7 @@ function zeigeWarten() {
     $('#bereit-info').hidden = false;
   });
   $('#manuell-start').addEventListener('click', async function () {
-    const pin = await fragePin('Tablet manuell starten');
+    const pin = await fragePin('Gerät manuell starten');
     if (pin === null) return;
     if (pin !== SPIELLEITUNG_PIN) { Ton.spiele('fehler'); toast('Falsche PIN.', 'warnung'); return; }
     const ende = endeAusUrl();
@@ -1277,25 +1303,27 @@ async function frageStartsignal() {
     const start = await Signal.letzte(s.spielcode, 'start');
     const zeit = new Date().toLocaleTimeString('de-CH');
     if (start && start.ende && s.wartet) {
-      starteNachSignal(start.ende, start.stufe, start.p1);
+      starteNachSignal(start.ende, start.stufe, start.p1, start.absturz);
       return;
     }
     status.textContent = 'Verbunden. Warte auf das Startsignal … (geprüft ' + zeit + ')';
     status.className = 'warten-status ok';
   } catch (e) {
-    status.textContent = 'Keine Verbindung zum Startsignal. Prüft das WLAN. Die Spielleitung kann das Tablet auch manuell starten.';
+    status.textContent = 'Keine Verbindung zum Startsignal. Prüft das WLAN. Die Spielleitung kann das Gerät auch manuell starten.';
     status.className = 'warten-status fehler';
   }
 }
 
 /** Startsignal erhalten: Countdown setzen, Aufgaben freischalten. */
-function starteNachSignal(endzeit, stufe, p1) {
+function starteNachSignal(endzeit, stufe, p1, absturz) {
   const s = Terminal.stand;
   if (!s.wartet) return;
+  s.absturz = /^\d\d:\d\d$/.test(absturz || '') ? absturz : uhrzeitKurz(Date.now());
   if (stufe && STUFEN[stufe]) s.stufe = stufe;
   if (p1 && p1.geheimtext && p1.hash) s.p1 = { geheimtext: p1.geheimtext, hash: p1.hash, verschiebung: p1.verschiebung };
   // Geheimtext passend zu Stufe und Code dieser Runde
   $('#protokoll-1 .geheimnachricht').textContent = aktiveP1().geheimtext;
+  zeigeAbsturzZeit();
   clearInterval(Terminal.signalTimer);
   const jetzt = Date.now();
   s.wartet = false;
@@ -1472,10 +1500,19 @@ function protokollGeloest(p) {
 
 /* ----------------------------- Protokoll 1 -------------------------- */
 
+/** Uhrzeit des Absturzes in Story und Nachrichtenkopf von Protokoll 1 */
+function zeigeAbsturzZeit() {
+  const wurzel = $('#protokoll-1');
+  if (!wurzel) return;
+  $('.story', wurzel).textContent = mitZeit(TEXTE.protokolle[1].story);
+  const kopf = $('.nachricht-zeit', wurzel);
+  if (kopf) kopf.textContent = 'EINGEHENDE NACHRICHT, ' + absturzZeit() + ' UHR';
+}
+
 function baueProtokoll1() {
   const t = TEXTE.protokolle[1];
   const wurzel = $('#protokoll-1');
-  $('.story', wurzel).textContent = t.story;
+  zeigeAbsturzZeit();
   $('.geheimnachricht', wurzel).textContent = aktiveP1().geheimtext;
   $('.hinweis', wurzel).textContent = t.hinweis;
 
@@ -1783,7 +1820,8 @@ function initSpielleitung() {
   });
   zeigeSzene('intro');
   $('#szene-vorlesen').appendChild(Sprache.knopf(function () {
-    return $('#szene-titel').textContent + '. ' + $('#szene-text').textContent;
+    const sz = TEXTE.szenen[Leitung.szeneName] || {};
+    return sz.titel ? sz.titel + '. ' + ohneZeit(sz.text) : $('#szene-titel').textContent + '. ' + $('#szene-text').textContent;
   }, 'normal', '🔊 Story vorlesen'));
   if (!Sprache.verfuegbar) $('#auto-vorlesen-zeile').hidden = true;
 
@@ -1808,6 +1846,8 @@ function initSpielleitung() {
       return;
     }
     Leitung.ablauf = true;
+    Leitung.stand.absturz = uhrzeitKurz(Date.now());
+    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
     setzeStatus('Intro läuft (Botschaft von NULLBYTE, danach Spielanweisung mit Beitrittscode). Danach werden die Aufgaben automatisch freigegeben.', 'info');
     vollbild(true);
     window.scrollTo(0, 0);
@@ -1912,7 +1952,7 @@ function initSpielleitung() {
   $('#video-schliessen').addEventListener('click', function () {
     const warAblauf = Leitung.ablauf;
     schliesseBotschaft();
-    if (warAblauf) setzeStatus('Intro abgebrochen. Mit «Aufgaben jetzt freigeben» startet das Spiel auf den Tablets.', 'warnung');
+    if (warAblauf) setzeStatus('Intro abgebrochen. Mit «Aufgaben jetzt freigeben» startet das Spiel auf den Geräten der Teams.', 'warnung');
   });
   $('#nochmals-vorlesen').addEventListener('click', spieleNullbyteBotschaft);
   $('#nur-botschaft').addEventListener('click', zeigeBotschaft);
@@ -2017,7 +2057,7 @@ function tickLeitung() {
 }
 
 function hinweisNachStart() {
-  if (Leitung.stand.freigegeben) toast('Gilt nur für Tablets, die noch nicht gestartet sind. Startsignal erneut senden.', 'info');
+  if (Leitung.stand.freigegeben) toast('Gilt nur für Geräte, die noch nicht gestartet sind. Startsignal erneut senden.', 'info');
 }
 
 /** Übernimmt einen eigenen Code für Protokoll 1 (nur mit PIN). */
@@ -2061,7 +2101,7 @@ function zeigeP1Einstellung() {
     : 'Standard: Code aus js/app.js.';
   const box = $('#p1-vorschau');
   box.innerHTML = '';
-  box.appendChild(erstelle('span', 'label', 'Geheimtext auf den Tablets'));
+  box.appendChild(erstelle('span', 'label', 'Geheimtext auf den Geräten der Teams'));
   box.appendChild(erstelle('p', 'mono', text));
   box.appendChild(erstelle('p', 'klein', 'Unterschrift: ' + caesar('NULLBYTE', v) + '. Tipp 3 im Help-Desk: innen ' + caesar('A', v) + ' unter dem äusseren A.'));
   box.hidden = false;
@@ -2179,6 +2219,7 @@ async function freigeben() {
     s.endzeit = ende && ende.zeit > Date.now() ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000;
     s.gestoppt = null;
     s.freigegeben = true;
+    if (!s.absturz) s.absturz = uhrzeitKurz(Date.now());
     speichereJson(SPEICHER_LEITUNG, s);
   }
   if (!$('#video-box').hidden) schliesseBotschaft();
@@ -2194,14 +2235,14 @@ async function sendeStartsignal() {
   const s = Leitung.stand;
   setzeStatus('Startsignal wird gesendet …', 'info');
   try {
-    const nachricht = { typ: 'start', ende: s.endzeit, stufe: s.stufe || STANDARD_STUFE, gesendet: Date.now() };
+    const nachricht = { typ: 'start', ende: s.endzeit, stufe: s.stufe || STANDARD_STUFE, absturz: s.absturz || absturzZeit(), gesendet: Date.now() };
     // eigener Code für Protokoll 1: nur Geheimtext und Hash, nie der Code
     if (s.p1) nachricht.p1 = { geheimtext: s.p1.geheimtext, hash: s.p1.hash, verschiebung: s.p1.verschiebung };
     await Signal.sende(s.spielcode, nachricht);
-    setzeStatus('Aufgaben freigegeben um ' + new Date().toLocaleTimeString('de-CH') + '. Die Tablets starten innerhalb weniger Sekunden.', 'ok');
+    setzeStatus('Aufgaben freigegeben um ' + new Date().toLocaleTimeString('de-CH') + '. Die Geräte der Teams starten innerhalb weniger Sekunden.', 'ok');
     toast('Startsignal gesendet.', 'info');
   } catch (e) {
-    setzeStatus('Startsignal konnte nicht gesendet werden (Internet?). Erneut versuchen oder die Tablets manuell starten: auf dem Tablet «Spielleitung: manuell starten» und PIN.', 'fehler');
+    setzeStatus('Startsignal konnte nicht gesendet werden (Internet?). Erneut versuchen oder die Geräte manuell starten: auf dem Gerät des Teams «Spielleitung: manuell starten» und PIN.', 'fehler');
     toast('Startsignal nicht gesendet.', 'warnung');
   }
 }
@@ -2210,10 +2251,11 @@ function zeigeSzene(name, ohneVorlesen) {
   const sz = TEXTE.szenen[name];
   if (!sz) return;
   $('#szene-titel').textContent = sz.titel;
-  $('#szene-text').textContent = sz.text;
+  Leitung.szeneName = name;
+  $('#szene-text').textContent = mitZeit(sz.text);
   Sprache.stopp();
   const auto = $('#auto-vorlesen');
-  if (auto && auto.checked && Leitung.szeneGezeigt && !ohneVorlesen) Sprache.sprich(sz.titel + '. ' + sz.text, 'normal');
+  if (auto && auto.checked && Leitung.szeneGezeigt && !ohneVorlesen) Sprache.sprich(sz.titel + '. ' + ohneZeit(sz.text), 'normal');
   Leitung.szeneGezeigt = true;
   $$('[data-szene]').forEach(function (k) { k.classList.toggle('aktiv', k.dataset.szene === name); });
 }
@@ -2240,7 +2282,7 @@ function spieleNullbyteBotschaft() {
   function naechsteZeile() {
     if (ersatz._lauf !== lauf) return;
     if (z >= zeilen.length) { introFertig(); return; }
-    const zeile = '> ' + zeilen[z];
+    const zeile = '> ' + mitZeit(zeilen[z]);
     let i = 0;
     let getippt = false;
     let gesprochen = !Sprache.verfuegbar || !$('#hacker-stimme').checked;
@@ -2251,7 +2293,7 @@ function spieleNullbyteBotschaft() {
         setTimeout(naechsteZeile, 350);
       }
     }
-    if (!gesprochen) Sprache.sprich(zeilen[z], 'hacker').then(function () { gesprochen = true; weiter(); });
+    if (!gesprochen) Sprache.sprich(ohneZeit(zeilen[z]), 'hacker').then(function () { gesprochen = true; weiter(); });
     ersatz._timer = setInterval(function () {
       ziel.textContent = vorher + zeile.slice(0, ++i);
       if (i >= zeile.length) {
