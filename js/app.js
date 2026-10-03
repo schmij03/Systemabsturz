@@ -1046,14 +1046,26 @@ function initStartseite() {
 }
 
 /** Setzt den Spielstand dieses Geräts zurück (nur mit PIN). */
+/** Knopf «Spielleitung» unten rechts: nach der PIN Spiel zurücksetzen
+    oder zur Spielleitungsansicht wechseln. */
 async function resetTablet() {
-  const pin = await fragePin('Tablet zurücksetzen');
+  const pin = await fragePin('Spielleitung');
   if (pin === null) return;
   if (pin !== SPIELLEITUNG_PIN) {
     Ton.spiele('fehler');
     toast('Falsche PIN.', 'warnung');
     return;
   }
+  const wahl = await dialog('Spielleitung', 'Was möchtet ihr tun? Der Spielstand dieses Tablets bleibt erhalten, ausser ihr setzt das Spiel zurück.', [
+    { text: 'Abbrechen', wert: null },
+    { text: 'Spiel zurücksetzen', wert: 'reset', klasse: 'gefahr' },
+    { text: 'Zur Spielleitungsansicht', wert: 'leitung', klasse: 'primaer' }
+  ]);
+  if (wahl === 'leitung') {
+    location.href = 'spielleitung.html';
+    return;
+  }
+  if (wahl !== 'reset') return;
   const ja = await dialog('Spielstand löschen?', 'Teamname, Punkte, gelöste Protokolle und Joker auf diesem Tablet werden gelöscht.', [
     { text: 'Abbrechen', wert: false },
     { text: 'Löschen', wert: true, klasse: 'gefahr' }
@@ -1731,7 +1743,7 @@ function initSpielleitung() {
   // Schwierigkeit (Labyrinth Protokoll 2 und Netzwerkplan Protokoll 3)
   const wahl = $('#stufe-wahl');
   Object.keys(STUFEN).forEach(function (k) {
-    const o = erstelle('option', '', STUFEN[k].name + ' (max. ' + STUFEN[k].maxBloecke + ' Blöcke)');
+    const o = erstelle('option', '', STUFEN[k].name);
     o.value = k;
     wahl.appendChild(o);
   });
@@ -2129,6 +2141,19 @@ async function zeigeLoesungen() {
   if (!l) {
     liste.appendChild(erstelle('p', 'fehler', 'Die Lösungen konnten nicht entschlüsselt werden. Wurde die PIN geändert? Erzeugt die Konfiguration unten neu.'));
   } else {
+    // Protokoll 1: eingestellter Code dieser Runde ersetzt den Standard
+    const p1 = Leitung.stand.p1;
+    if (p1) {
+      l.p1 = p1.code + ' (für diese Runde eingestellt)';
+      l.p1info = 'Cäsar-Verschiebung ' + p1.verschiebung + ' (innen ' + caesar('A', p1.verschiebung) + ' unter dem äusseren A, Unterschrift ' +
+        caesar('NULLBYTE', p1.verschiebung) + '). Klartext: ' + p1Nachricht(p1.code, p1.verschiebung).klartext;
+    }
+    // Protokoll 3: Weg und Fallen der gewählten Stufe
+    const stufe = Leitung.stand.stufe || STANDARD_STUFE;
+    if (typeof NETZWERKE !== 'undefined' && NETZWERKE[stufe]) {
+      l.p3info = 'Stufe ' + STUFEN[stufe].name + ': ' + NETZWERKE[stufe].loesung;
+      l.fallen = NETZWERKE[stufe].fallen;
+    }
     [
       ['Protokoll 1 (Code Kiste 1)', l.p1],
       ['Protokoll 1 Erklärung', l.p1info],
@@ -2143,15 +2168,10 @@ async function zeigeLoesungen() {
       liste.appendChild(erstelle('dt', '', z[0]));
       liste.appendChild(erstelle('dd', '', z[1]));
     });
-    // Eigener Code für Protokoll 1 (Einstellung dieser Runde)
-    if (Leitung.stand.p1) {
-      const p1 = Leitung.stand.p1;
-      liste.appendChild(erstelle('dt', '', 'Protokoll 1, eingestellt für diese Runde'));
-      liste.appendChild(erstelle('dd', '', p1.code + ' (Verschiebung ' + p1.verschiebung + '). Klartext: ' + p1Nachricht(p1.code, p1.verschiebung).klartext));
-    }
-    // Netzwerkpläne Protokoll 3 pro Stufe (aus js/netzwerke.js)
+    // Netzwerkpläne Protokoll 3 der anderen Stufen (aus js/netzwerke.js)
     if (typeof NETZWERKE !== 'undefined') {
       Object.keys(NETZWERKE).forEach(function (k) {
+        if (k === stufe) return;
         liste.appendChild(erstelle('dt', '', 'Protokoll 3, Stufe ' + (STUFEN[k] ? STUFEN[k].name : k)));
         liste.appendChild(erstelle('dd', 'programm', NETZWERKE[k].loesung + '. Fallen: ' + NETZWERKE[k].fallen + '.'));
       });

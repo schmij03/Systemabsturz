@@ -119,5 +119,5 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 ## Zeitablauf und Reset
 
 1. Auf einem zweiten Tablet die Startseite mit einer Endzeit in 2 Minuten öffnen (zum Beispiel `index.html?ende=10:02`). Nach Ablauf: «SYSTEM GELÖSCHT», Eingaben gesperrt, Punkte bleiben sichtbar.
-2. Unten rechts «Spielleitung», PIN 4711, «Löschen». Erwartung: zurück auf der Startseite, Spielstand leer.
+2. Unten rechts «Spielleitung», PIN 4711. Erwartung: Auswahl «Spiel zurücksetzen» oder «Zur Spielleitungsansicht». «Zur Spielleitungsansicht» öffnet spielleitung.html. «Spiel zurücksetzen», dann «Löschen». Erwartung: zurück auf der Startseite, Spielstand leer.
 3. Offline-Test: Seite einmal online laden, dann WLAN ausschalten und neu laden. Das Terminal und die Blöcke funktionieren weiter.
