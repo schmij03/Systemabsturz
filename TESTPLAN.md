@@ -128,7 +128,7 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 | Schritt | Erwartung |
 |---|---|
 | 104 (Stufe schwer, Abkürzung über rote Server) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
-| 123 | «OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.» |
+| 999 | «OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.» |
 | 109 | Fanfare, grosser roter Knopf «OVERRIDE AUSLÖSEN» |
 | Knopf drücken | «SYSTEM WIEDERHERGESTELLT. Ihr habt die Schule gerettet!», Restzeit, Zeitbonus, Endpunktestand, Countdown steht still |
 
@@ -154,3 +154,20 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 1. Auf einem zweiten Tablet die Startseite mit einer Endzeit in 2 Minuten öffnen (zum Beispiel `index.html?ende=10:02`). Nach Ablauf: «SYSTEM GELÖSCHT», Eingaben gesperrt, Punkte bleiben sichtbar.
 2. Unten rechts «Spielleitung», PIN 4711. Erwartung: Auswahl «Spiel zurücksetzen» oder «Zur Spielleitungsansicht». «Zur Spielleitungsansicht» öffnet spielleitung.html. «Spiel zurücksetzen», dann «Löschen». Erwartung: zurück auf der Startseite, Spielstand leer.
 3. Offline-Test: Seite einmal online laden, dann WLAN ausschalten und neu laden. Das Terminal und die Blöcke funktionieren weiter.
+
+
+## Regressionen nach dem Code-Audit
+
+Vor dem Gerätetest `node --test tests/*.test.js` ausführen.
+
+* Startsignal empfangen: Der Vorleseknopf von Protokoll 1 bleibt sichtbar und bedienbar.
+* Kurz vor 00:00 eine Codeprüfung oder den letzten Blockly-Schritt auslösen: Nach Ablauf keine zusätzlichen Punkte und keine neu freigeschalteten Protokolle.
+* Blockly unmittelbar nach Erreichen des Ziels zurücksetzen: Keine verspätete Auswertung des alten Durchlaufs.
+* Joker-Dialog offen lassen, bis ein Gratis-Tipp erscheint: Bestätigen darf keinen anderen Tipp ungefragt kaufen.
+* Schwierigkeit Schwer und eigenen Schlosscode einstellen, Runde zurücksetzen: Auswahl, Vorschau, Druckmaterial und Startsignal behalten dieselben Einstellungen; Lösungen werden verborgen.
+* Bei `?ende=HH:MM` den Beamer stoppen und neu laden: Die gestoppte Restzeit bleibt erhalten.
+* PIN-Dialog per Enter bestätigen, per Escape abbrechen und mit Tab bedienen. Währenddessen dürfen Beamer-Tastenkürzel nicht reagieren.
+* Vorlesen mehrfach starten und stoppen, sowohl mit Aufnahme als auch Browserstimme; Intro und Anweisung dürfen nicht hängen bleiben.
+* Druckseite als erste Seite öffnen: Offline-Dateien müssen über den Service Worker im Projektwurzel geladen werden.
+* Nach vollständigem ersten Online-Laden und Neuladen WLAN deaktivieren: Startseite, Terminal und Druckseiten öffnen; manuellen Start prüfen.
+* Vor dem Einsatz iPad/Safari und Chrome/Edge im Querformat testen, insbesondere Touch-Blockly und Audiowiedergabe. Dossier/Leitfaden weiterhin visuell auf A4 prüfen.

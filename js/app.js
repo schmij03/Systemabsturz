@@ -5,7 +5,8 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
 
    ANPASSEN: Alle wichtigen Einstellungen stehen gleich hier oben.
-   Codes werden NIE im Klartext gespeichert, sondern als SHA-256-Hash.
+   Code-Eingaben werden als SHA-256-Hash geprüft. Die clientseitige
+   PIN und Verschleierung sind kein Zugriffsschutz (siehe README).
    Neue Hashes erzeugt ihr auf spielleitung.html im Bereich
    «Konfiguration erzeugen» (nach Eingabe der PIN).
    ===================================================================== */
@@ -169,6 +170,7 @@ const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4a
    Spielleitung die Tablets manuell mit der PIN. */
 const SIGNAL_SERVER = 'https://ntfy.sh';
 const SIGNAL_PRAEFIX = 'systemabsturz-phlu-';
+const SIGNAL_TIMEOUT_MS = 8000;       // hängende Anfragen abbrechen
 const SIGNAL_ABFRAGE_MS = 3000;       // so oft fragen wartende Tablets nach
 const SIGNAL_GUELTIG = '6h';          // so lange bleibt ein Startsignal abrufbar
 const SPIELCODE_ZEICHEN = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -572,6 +574,7 @@ const Sprache = (function () {
   let audioElement = null;       // Ersatz, falls Web Audio fehlt
   let lauf = 0;                  // bricht ältere Vorlese-Aufträge ab
   let spricht = false;
+  let beendeWiedergabe = null; // löst auch abgebrochene HTML-Audio-/Browser-Aufträge auf
 
   // Verzeichnis der Aufnahmen laden (fehlt es, gilt nur die Browserstimme)
   const bereit = fetch(TTS_ORDNER + 'verzeichnis.json', { cache: 'no-cache' })
@@ -622,6 +625,7 @@ const Sprache = (function () {
       const puffer = await new Promise(function (ok, fehler) { ctx.decodeAudioData(daten, ok, fehler); });
       if (meinLauf !== lauf) return true;
       if (ctx.state === 'suspended') await ctx.resume();
+      if (meinLauf !== lauf) return true;
       return new Promise(function (fertig) {
         const q = ctx.createBufferSource();
         q.buffer = puffer;
@@ -632,12 +636,22 @@ const Sprache = (function () {
       });
     }
     return new Promise(function (fertig) {
-      audioElement = audioElement || new Audio();
-      audioElement.src = url;
-      audioElement.onended = function () { fertig(true); };
-      audioElement.onerror = function () { fertig(false); };
-      const p = audioElement.play();
-      if (p && p.catch) p.catch(function () { fertig(false); });
+      const audio = new Audio();
+      audioElement = audio;
+      let erledigt = false;
+      function ende(wert) {
+        if (erledigt) return;
+        erledigt = true;
+        if (beendeWiedergabe === abbruch) beendeWiedergabe = null;
+        fertig(wert);
+      }
+      const abbruch = function () { ende(true); };
+      beendeWiedergabe = abbruch;
+      audio.src = url;
+      audio.onended = function () { ende(true); };
+      audio.onerror = function () { ende(false); };
+      const p = audio.play();
+      if (p && p.catch) p.catch(function () { ende(false); });
     });
   }
 
@@ -658,10 +672,18 @@ const Sprache = (function () {
       a.rate = e.tempo;
       // Sicherheitsnetz: manche Browser melden das Ende nicht zuverlässig
       let erledigt = false;
-      const ende = function () { if (!erledigt) { erledigt = true; fertig(); } };
+      let timer;
+      const ende = function () {
+        if (erledigt) return;
+        erledigt = true;
+        clearTimeout(timer);
+        if (beendeWiedergabe === ende) beendeWiedergabe = null;
+        fertig();
+      };
+      beendeWiedergabe = ende;
       a.onend = ende;
       a.onerror = ende;
-      setTimeout(ende, 3000 + sauber.length * 140);
+      timer = setTimeout(ende, 3000 + sauber.length * 140);
       window.speechSynthesis.speak(a);
     });
   }
@@ -690,6 +712,7 @@ const Sprache = (function () {
   function stopp() {
     lauf++;
     spricht = false;
+    if (beendeWiedergabe) beendeWiedergabe();
     if (quelle) { try { quelle.stop(); } catch (e) { /* schon beendet */ } quelle = null; }
     if (audioElement) audioElement.pause();
     if (browserTts) window.speechSynthesis.cancel();
@@ -726,17 +749,24 @@ const Signal = (function () {
 
   function thema(code) { return SIGNAL_SERVER + '/' + SIGNAL_PRAEFIX + String(code).toLowerCase(); }
 
+  async function anfrage(url, optionen) {
+    const controller = new AbortController();
+    const timer = setTimeout(function () { controller.abort(); }, SIGNAL_TIMEOUT_MS);
+    try {
+      const r = await fetch(url, Object.assign({}, optionen, { signal: controller.signal }));
+      if (!r.ok) throw new Error('Startsignal: HTTP ' + r.status);
+      return await r.text();
+    } finally { clearTimeout(timer); }
+  }
+
   /** Sendet eine Nachricht an alle Tablets mit diesem Beitrittscode. */
   async function sende(code, daten) {
-    const r = await fetch(thema(code), { method: 'POST', body: JSON.stringify(daten) });
-    if (!r.ok) throw new Error('Signal nicht gesendet: ' + r.status);
+    await anfrage(thema(code), { method: 'POST', body: JSON.stringify(daten) });
   }
 
   /** Liefert die neuste Nachricht eines Typs (oder null). */
   async function letzte(code, typ) {
-    const r = await fetch(thema(code) + '/json?poll=1&since=' + SIGNAL_GUELTIG, { cache: 'no-store' });
-    if (!r.ok) throw new Error('Abfrage fehlgeschlagen: ' + r.status);
-    const text = await r.text();
+    const text = await anfrage(thema(code) + '/json?poll=1&since=' + SIGNAL_GUELTIG, { cache: 'no-store' });
     let treffer = null;
     text.split('\n').forEach(function (zeile) {
       if (!zeile.trim()) return;
@@ -867,14 +897,18 @@ function mitParameter(seite) {
 }
 
 /** Schwierigkeitsstufe aus ?stufe=leicht|mittel|schwer (oder null). */
+function gueltigeStufe(st) {
+  return typeof STUFEN !== 'undefined' && Object.prototype.hasOwnProperty.call(STUFEN, st);
+}
+
 function stufeAusUrl() {
   const st = (new URLSearchParams(location.search).get('stufe') || '').toLowerCase();
-  return typeof STUFEN !== 'undefined' && STUFEN[st] ? st : null;
+  return gueltigeStufe(st) ? st : null;
 }
 
 /** Formatiert Millisekunden als MM:SS (oder H:MM:SS). */
 function formatZeit(ms) {
-  if (ms <= 0) return '00:00';
+  if (!Number.isFinite(ms) || ms <= 0) return '00:00';
   const total = Math.ceil(ms / 1000);
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
@@ -896,7 +930,8 @@ function ladeJson(schluessel) {
 function speichereJson(schluessel, wert) {
   try {
     localStorage.setItem(schluessel, JSON.stringify(wert));
-  } catch (e) { /* privater Modus: Spiel läuft trotzdem, aber ohne Speicherung */ }
+    return true;
+  } catch (e) { return false; }
 }
 
 /* ------------------------- Dialoge und Meldungen -------------------- */
@@ -905,10 +940,12 @@ function speichereJson(schluessel, wert) {
 function dialog(titel, inhalt, knoepfe, optionen) {
   optionen = optionen || {};
   return new Promise(function (aufloesen) {
+    const vorherigerFokus = document.activeElement;
     const hintergrund = erstelle('div', 'dialog-hintergrund');
     const box = erstelle('div', 'dialog' + (optionen.warnung ? ' warnung' : ''));
     box.setAttribute('role', 'dialog');
     box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', titel);
     box.appendChild(erstelle('h2', '', titel));
     if (typeof inhalt === 'string') box.appendChild(erstelle('p', '', inhalt));
     else if (inhalt) box.appendChild(inhalt);
@@ -921,9 +958,27 @@ function dialog(titel, inhalt, knoepfe, optionen) {
         let wert = k.wert;
         if (typeof wert === 'function') wert = wert(box);
         document.body.removeChild(hintergrund);
+        if (vorherigerFokus && vorherigerFokus.isConnected) vorherigerFokus.focus();
         aufloesen(wert);
       });
       leiste.appendChild(b);
+    });
+    box.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Escape') {
+        const abbrechen = (knoepfe || []).findIndex(function (k) { return k.wert === null || k.wert === false; });
+        if (abbrechen >= 0) { e.preventDefault(); leiste.children[abbrechen].click(); }
+      } else if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+        e.preventDefault();
+        const primaer = leiste.querySelector('.primaer');
+        if (primaer) primaer.click();
+      } else if (e.key === 'Tab') {
+        const f = Array.from(box.querySelectorAll('input, button, select, textarea, a[href]')).filter(function (el) { return !el.disabled && !el.hidden; });
+        if (!f.length) return;
+        const erstes = f[0], letztes = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === erstes) { e.preventDefault(); letztes.focus(); }
+        else if (!e.shiftKey && document.activeElement === letztes) { e.preventDefault(); erstes.focus(); }
+      }
     });
     box.appendChild(leiste);
     hintergrund.appendChild(box);
@@ -1015,11 +1070,14 @@ function erstelleZiffernfeld(container, optionen) {
     }
     const code = eingabe;
     sperre(true);
-    Promise.resolve(optionen.beiBestaetigen(code)).then(function (ergebnis) {
+    Promise.resolve().then(function () { return optionen.beiBestaetigen(code); }).then(function (ergebnis) {
       if (ergebnis === 'fertig') return; // Feld bleibt gesperrt
       eingabe = '';
       zeichneAnzeige();
       setTimeout(function () { sperre(false); }, ergebnis === 'falsch' ? SPERRE_NACH_FEHLER_MS : 0);
+    }).catch(function () {
+      setzeMeldung('Prüfung fehlgeschlagen. Bitte erneut versuchen.', 'fehler');
+      sperre(false);
     });
   }, 'Bestätigen');
   ok.textContent = 'Bestätigen';
@@ -1045,6 +1103,7 @@ function erstelleZiffernfeld(container, optionen) {
   wurzel.tabIndex = 0;
   wurzel.addEventListener('keydown', function (e) {
     if (gesperrt) return;
+    if (/^[0-9]$/.test(e.key) || e.key === 'Backspace' || e.key === 'Enter') e.preventDefault();
     if (/^[0-9]$/.test(e.key) && eingabe.length < stellen) { eingabe += e.key; zeichneAnzeige(); }
     else if (e.key === 'Backspace') { eingabe = eingabe.slice(0, -1); zeichneAnzeige(); }
     else if (e.key === 'Enter') ok.click();
@@ -1086,7 +1145,7 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
 }
 
 function ladeSpielstand() { return ladeJson(SPEICHER_TEAM); }
-function speichereSpielstand(s) { speichereJson(SPEICHER_TEAM, s); }
+function speichereSpielstand(s) { return speichereJson(SPEICHER_TEAM, s); }
 
 /* ===================================================================
    SEITE: index.html (Teamname eingeben, Spiel starten)
@@ -1100,7 +1159,7 @@ function initStartseite() {
 
   $('#ende-info').textContent = ende
     ? 'Countdown synchronisiert: Das Spiel endet um ' + ende.text + ' Uhr.'
-    : 'Der Countdown startet mit ' + SPIELDAUER_MINUTEN + ':00 beim Klick auf «Spiel starten».';
+    : 'Nach der Anmeldung wartet ihr auf die Freigabe der Spielleitung. Spielzeit: ' + SPIELDAUER_MINUTEN + ' Minuten.';
 
   if (stand && stand.team) {
     formular.hidden = true;
@@ -1119,7 +1178,10 @@ function initStartseite() {
     Ton.entsperren();   // Klick auf «Spiel starten» entsperrt den Ton
     Ton.spiele('klick');
     const endzeit = code ? null : (ende ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000);
-    speichereSpielstand(neuerSpielstand(name, endzeit, ende && !code ? ende.text : null, code));
+    if (!speichereSpielstand(neuerSpielstand(name, endzeit, ende && !code ? ende.text : null, code))) {
+      $('#start-meldung').textContent = 'Der Browser kann den Spielstand nicht speichern. Bitte Speicherplatz und Browsereinstellungen prüfen oder einen anderen Browser verwenden.';
+      return;
+    }
     setTimeout(function () { location.href = mitParameter('terminal.html'); }, 150);
   }
 
@@ -1262,8 +1324,8 @@ function initTerminal() {
 
   if (stand.override) zeigeSieg(false);
   if (stand.wartet) zeigeWarten();
-  tick();
   Terminal.timer = setInterval(tick, 250);
+  tick();
 
   // Blockly (640 KB) im Leerlauf vorladen, damit Protokoll 2 ohne Wartezeit öffnet
   const vorladen = function () { if (window.Algorithmen && window.Algorithmen.vorladen) window.Algorithmen.vorladen(); };
@@ -1297,21 +1359,34 @@ function zeigeWarten() {
 
 async function frageStartsignal() {
   const s = Terminal.stand;
-  if (!s.wartet) return;
+  if (!s.wartet || Terminal.signalAbfrage) return;
+  Terminal.signalAbfrage = true;
   const status = $('#warten-status');
   try {
     const start = await Signal.letzte(s.spielcode, 'start');
+    if (!s.wartet) return;
     const zeit = new Date().toLocaleTimeString('de-CH');
-    if (start && start.ende && s.wartet) {
+    if (gueltigesStartsignal(start)) {
       starteNachSignal(start.ende, start.stufe, start.p1, start.absturz);
       return;
     }
     status.textContent = 'Verbunden. Warte auf das Startsignal … (geprüft ' + zeit + ')';
     status.className = 'warten-status ok';
   } catch (e) {
+    if (!s.wartet) return;
     status.textContent = 'Keine Verbindung zum Startsignal. Prüft das WLAN. Die Spielleitung kann das Gerät auch manuell starten.';
     status.className = 'warten-status fehler';
-  }
+  } finally { Terminal.signalAbfrage = false; }
+}
+
+function gueltigesStartsignal(start) {
+  if (!start || start.typ !== 'start' || !Number.isFinite(start.ende) ||
+      start.ende <= Date.now() || start.ende > Date.now() + 24 * 60 * 60000) return false;
+  if (start.stufe !== undefined && !gueltigeStufe(start.stufe)) return false;
+  const p1 = start.p1;
+  return !p1 || (typeof p1.geheimtext === 'string' && p1.geheimtext.length > 0 && p1.geheimtext.length <= 2000 &&
+    typeof p1.hash === 'string' && /^[a-f0-9]{64}$/.test(p1.hash) &&
+    Number.isInteger(p1.verschiebung) && p1.verschiebung >= 1 && p1.verschiebung <= 25);
 }
 
 /** Startsignal erhalten: Countdown setzen, Aufgaben freischalten. */
@@ -1319,7 +1394,7 @@ function starteNachSignal(endzeit, stufe, p1, absturz) {
   const s = Terminal.stand;
   if (!s.wartet) return;
   s.absturz = /^\d\d:\d\d$/.test(absturz || '') ? absturz : uhrzeitKurz(Date.now());
-  if (stufe && STUFEN[stufe]) s.stufe = stufe;
+  if (gueltigeStufe(stufe)) s.stufe = stufe;
   if (p1 && p1.geheimtext && p1.hash) s.p1 = { geheimtext: p1.geheimtext, hash: p1.hash, verschiebung: p1.verschiebung };
   // Geheimtext passend zu Stufe und Code dieser Runde
   $('#protokoll-1 .geheimnachricht').textContent = aktiveP1().geheimtext;
@@ -1380,7 +1455,12 @@ function restzeit() {
   return s.endzeit - Date.now();
 }
 
-function speichere() { speichereSpielstand(Terminal.stand); }
+function speichere() {
+  if (!speichereSpielstand(Terminal.stand) && !Terminal.speicherWarnung) {
+    Terminal.speicherWarnung = true;
+    toast('Spielstand kann nicht gespeichert werden. Bitte die Seite nicht neu laden und die Spielleitung informieren.', 'warnung');
+  }
+}
 
 /* ------------------------------ Kopfzeile --------------------------- */
 
@@ -1426,14 +1506,12 @@ function tick() {
   // Gratis-Tipp nach 5 Minuten ohne Lösung im aktuellen Protokoll
   const p = aktuellesProtokoll();
   if (!s.geloest[p] && !s.gratisTipp[p] && s.protokollStart[p]) {
-    if (Date.now() - s.protokollStart[p] >= GRATIS_TIPP_MINUTEN * 60000) {
+    if (s.tippStufe[p] === 0 && Date.now() - s.protokollStart[p] >= GRATIS_TIPP_MINUTEN * 60000) {
       s.gratisTipp[p] = true;
-      if (s.tippStufe[p] === 0) {
-        s.tippStufe[p] = 1;
-        toast('Gratis-Tipp freigeschaltet! Öffnet den Help-Desk.', 'info');
-        $('#helpdesk-knopf').classList.add('blinkt');
-        Ton.spiele('klick');
-      }
+      s.tippStufe[p] = 1;
+      toast('Gratis-Tipp freigeschaltet! Öffnet den Help-Desk.', 'info');
+      $('#helpdesk-knopf').classList.add('blinkt');
+      Ton.spiele('klick');
       speichere();
       aktualisiereHelpDesk();
     }
@@ -1455,7 +1533,8 @@ function zeigeGeloescht() {
 }
 
 function spielGesperrt() {
-  return Terminal.stand.geloescht || restzeit() <= 0;
+  const s = Terminal.stand;
+  return s.wartet || s.override || s.geloescht || restzeit() <= 0;
 }
 
 /* -------------------------------- Tabs ------------------------------ */
@@ -1487,7 +1566,7 @@ function zeigeTab(p) {
 /** Schaltet das nächste Protokoll frei. */
 function protokollGeloest(p) {
   const s = Terminal.stand;
-  if (s.geloest[p]) return;
+  if (s.geloest[p] || spielGesperrt()) return;
   s.geloest[p] = true;
   s.punkte += PUNKTE_PRO_PROTOKOLL;
   if (p < 3) s.protokollStart[p + 1] = Date.now();
@@ -1504,7 +1583,10 @@ function protokollGeloest(p) {
 function zeigeAbsturzZeit() {
   const wurzel = $('#protokoll-1');
   if (!wurzel) return;
-  $('.story', wurzel).textContent = mitZeit(TEXTE.protokolle[1].story);
+  const story = $('.story', wurzel);
+  const vorlesen = $('.vorlesen-knopf', story);
+  story.textContent = mitZeit(TEXTE.protokolle[1].story);
+  if (vorlesen) story.insertBefore(vorlesen, story.firstChild);
   const kopf = $('.nachricht-zeit', wurzel);
   if (kopf) kopf.textContent = 'EINGEHENDE NACHRICHT, ' + absturzZeit() + ' UHR';
 }
@@ -1521,7 +1603,9 @@ function baueProtokoll1() {
     beschriftung: 'Code eingeben',
     beiBestaetigen: async function (code) {
       if (spielGesperrt()) return 'fertig';
-      if (await Krypto.pruefe(code, aktiveP1().hash)) {
+      const richtig = await Krypto.pruefe(code, aktiveP1().hash);
+      if (spielGesperrt()) return 'fertig';
+      if (richtig) {
         Ton.spiele('erfolg');
         Terminal.stand.kiste1 = code;
         protokollGeloest(1);
@@ -1567,6 +1651,7 @@ function baueBonus() {
     beiBestaetigen: async function (code) {
       if (spielGesperrt() || s.bonus) return 'fertig';
       const richtig = await Krypto.pruefe(code, HASHES.bonus);
+      if (spielGesperrt() || s.bonus) return 'fertig';
       s.bonus = richtig ? 'richtig' : 'falsch';
       if (richtig) s.punkte += BONUS_PUNKTE;
       speichere();
@@ -1600,10 +1685,13 @@ function starteAlgorithmen() {
     ton: Ton.spiele,
     /* Wird aufgerufen, wenn ANTI-V das Ziel erreicht. Liefert die Meldung. */
     zielErreicht: async function (gesammelt, info) {
+      const beendet = { ok: false, text: 'Das Spiel ist beendet oder noch nicht freigegeben.' };
+      if (spielGesperrt()) return beendet;
       const schluessel = gesammelt.join(',');
       if (await Krypto.pruefe(schluessel, HASHES.signaturen)) {
         const s = Terminal.stand;
         const kiste = await Krypto.entschluessle(KISTE2_VERSCHLUESSELT, schluessel);
+        if (spielGesperrt()) return beendet;
         s.kiste2 = kiste;
         const neu = !s.geloest[2];
         // Effizienzbonus: weniger Blöcke gibt mehr Punkte, Verbesserungen zählen auch später
@@ -1658,7 +1746,9 @@ function baueProtokoll3() {
     beschriftung: 'Override-Code',
     beiBestaetigen: async function (code) {
       if (spielGesperrt()) return 'fertig';
-      if (await Krypto.pruefe(code, HASHES.protokoll3)) {
+      const richtig = await Krypto.pruefe(code, HASHES.protokoll3);
+      if (spielGesperrt()) return 'fertig';
+      if (richtig) {
         Ton.spiele('fanfare');
         protokollGeloest(3);
         zeigeBuzzer();
@@ -1696,6 +1786,8 @@ function overrideAusloesen() {
   s.restMinutenPunkte = Math.floor(rest / 60000) * PUNKTE_PRO_RESTMINUTE;
   s.punkte += s.restMinutenPunkte;
   speichere();
+  if (window.Algorithmen) window.Algorithmen.stoppe();
+  clearInterval(Terminal.timer);
   Ton.spiele('fanfare');
   aktualisiereKopf();
   tick();
@@ -1780,10 +1872,15 @@ async function jokerEinloesen() {
     return;
   }
   const rest = JOKER_ANZAHL - s.jokerEingeloest;
+  const stufe = s.tippStufe[p];
   const ja = await dialog('Joker einlösen?',
     'Ihr erhaltet Tipp Stufe ' + (s.tippStufe[p] + 1) + ' zu ' + TEXTE.protokolle[p].titel + '. Das kostet ' + JOKER_KOSTEN + ' Punkte. Ihr habt noch ' + rest + (rest === 1 ? ' Joker.' : ' Joker.'),
     [{ text: 'Abbrechen', wert: false }, { text: 'Ja, Joker einlösen', wert: true, klasse: 'primaer' }]);
   if (!ja || spielGesperrt()) return;
+  if (aktuellesProtokoll() !== p || s.tippStufe[p] !== stufe) {
+    toast('Der Tipp hat sich inzwischen geändert. Bitte nochmals auswählen.', 'info');
+    return;
+  }
   if (s.tippStufe[p] >= tippsFuer(p).length || s.jokerEingeloest >= JOKER_ANZAHL) return;
   s.jokerEingeloest += 1;
   s.punkte -= JOKER_KOSTEN;
@@ -1802,8 +1899,9 @@ const Leitung = { stand: null, loesungenOffen: false };
 function initSpielleitung() {
   let stand = ladeJson(SPEICHER_LEITUNG) || { endzeit: null, gestoppt: null };
   if (!stand.spielcode) stand.spielcode = Signal.neuerCode();
+  if (!gueltigeStufe(stand.stufe)) stand.stufe = stufeAusUrl() || STANDARD_STUFE;
   const ende = endeAusUrl();
-  if (ende) {
+  if (ende && !stand.freigegeben) {
     stand.endzeit = ende.zeit;
     stand.gestoppt = null;
   }
@@ -1926,9 +2024,21 @@ function initSpielleitung() {
     const pin = await fragePin('Countdown zurücksetzen');
     if (pin === null) return;
     if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
-    Leitung.stand = { endzeit: null, gestoppt: null, spielcode: Signal.neuerCode(), freigegeben: false };
+    const bisher = Leitung.stand;
+    schliesseBotschaft();
+    schliesseAnweisung();
+    Leitung.stand = { endzeit: null, gestoppt: null, spielcode: Signal.neuerCode(), freigegeben: false,
+      stufe: bisher.stufe || STANDARD_STUFE };
+    if (bisher.p1) Leitung.stand.p1 = bisher.p1;
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
     zeigeSpielcode();
+    Leitung.loesungenOffen = false;
+    $('#loesungen').hidden = true;
+    $('#loesungen-knopf').textContent = 'Lösungen anzeigen';
+    zeigeP1Einstellung();
+    zeigeMaterial();
+    aktualisiereLinks();
+    tickLeitung();
     setzeStatus('', '');
     $('#gerettet').hidden = true;
     zeigeSzene('intro');
@@ -1978,10 +2088,11 @@ function initSpielleitung() {
   // Link-Generator für die Tablets
   const zeitFeld = $('#link-zeit');
   const vorschlag = new Date(Date.now() + (SPIELDAUER_MINUTEN + 5) * 60000);
-  zeitFeld.value = String(vorschlag.getHours()).padStart(2, '0') + ':' + String(Math.ceil(vorschlag.getMinutes() / 5) * 5 % 60).padStart(2, '0');
+  vorschlag.setMinutes(Math.ceil(vorschlag.getMinutes() / 5) * 5, 0, 0);
+  zeitFeld.value = uhrzeitKurz(vorschlag.getTime());
   if (ende) zeitFeld.value = ende.text;
   function aktualisiereLinks() {
-    const basis = location.href.replace(/[^/]*$/, '');
+    const basis = new URL('./', location.href).href;
     const z = zeitFeld.value;
     const st = Leitung.stand.stufe ? '&stufe=' + Leitung.stand.stufe : '';
     $('#link-tablet').textContent = basis + 'index.html?ende=' + z + st;
@@ -2134,7 +2245,7 @@ function zeigeMaterial() {
 function zeigeSpielcode() {
   const s = Leitung.stand;
   $$('.spielcode-wert').forEach(function (e) { e.textContent = s.spielcode; });
-  const basis = location.href.replace(/[^/]*$/, '');
+  const basis = new URL('./', location.href).href;
   $('#anmelde-link').textContent = basis + 'index.html?spiel=' + s.spielcode;
   // kurze Adresse zum Abtippen (ohne https://)
   $$('.anmelde-kurz').forEach(function (e) { e.textContent = basis.replace(/^https?:\/\//, '').replace(/\/$/, ''); });
@@ -2403,13 +2514,17 @@ async function erzeugeKonfiguration() {
     toast('Code Protokoll 1 muss dreistellig sein, Verschiebung zwischen 1 und 25.', 'warnung');
     return;
   }
+  if (!/^\d{2}$/.test(w('bonus')) || !/^\d{3}$/.test(w('kiste2')) || !/^\d{3}$/.test(w('p3')) || !/^\d,\d,\d$/.test(sig)) {
+    toast('Bonusantwort: 2 Ziffern; Kiste 2 und Override: je 3 Ziffern; Signaturen: 3 einzelne Ziffern mit Komma.', 'warnung');
+    return;
+  }
   const loesungen = {
     p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
     signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
     p3: w('p3'), p3info: w('p3info'), fallen: ''
   };
   const zeilen = [];
-  zeilen.push("const SPIELLEITUNG_PIN = '" + neuePin + "';");
+  zeilen.push('const SPIELLEITUNG_PIN = ' + JSON.stringify(neuePin) + ';');
   zeilen.push('');
   zeilen.push('const HASHES = {');
   zeilen.push("  protokoll1: '" + await Krypto.hashCode(loesungen.p1) + "',");
@@ -2451,6 +2566,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Offline-Fähigkeit: Service Worker speichert alle Dateien im Cache
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    navigator.serviceWorker.register('sw.js').catch(function () { /* egal */ });
+    const skript = document.querySelector('script[src$="js/app.js"]');
+    const worker = skript ? new URL('../sw.js', skript.src).href : new URL('sw.js', location.href).href;
+    navigator.serviceWorker.register(worker).catch(function () { /* egal */ });
   }
 });
+

@@ -51,7 +51,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
    * Seiten 6 und 7 **Protokoll 3:** «Routing reparieren» mit Auftrag und Lösungsfeldern, dann der Netzwerkplan im Querformat mit Legende.
    * Kachel **«Gesamtes Dossier»** öffnet `druck/teamset.html`: Die Stufe der Spielleitung ist vorgewählt und lässt sich oben im Dossier umstellen, gleich wie bei den Einzelblättern. Das Dossier passt sich an den eingestellten Code an und hat den Knopf «Als HTML herunterladen» (eigenständige Datei, ohne Skripte, auch offline). Fertige Dateien liegen zusätzlich in `material/Systemabsturz_Teamset_<Stufe>.html`. Einzelblätter: `druck/auftrag.html`, `druck/protokoll1.html`, `druck/protokoll2.html`, `druck/protokoll3.html`.
    * Druckeinstellung A4, «Tatsächliche Grösse» (100 %), farbig. Der Netzwerkplan druckt automatisch quer.
-   * **Leitfaden für die Spielleitung** (Kachel «Leitfaden Spielleitung», `druck/leitfaden.html`, 9 Seiten im gleichen Layout): Vorbereitung mit Checkliste, Material, Ablauf der Lektion, Tastatur, Notfälle, Punkte, Lösungen der gewählten Stufe, alle Help-Desk-Tipps und die Unterrichtsinfo. Die Lösungen (und die PIN) werden erst nach Eingabe der PIN eingefügt, damit sie nicht öffentlich im Internet stehen. Drucken oder «Als HTML herunterladen» (mit Lösungen, wenn sie eingefügt sind). Inhalt in `druck/leitfaden.js`.
+   * **Leitfaden für die Spielleitung** (Kachel «Leitfaden Spielleitung», `druck/leitfaden.html`, 9 Seiten im gleichen Layout): Vorbereitung mit Checkliste, Material, Ablauf der Lektion, Tastatur, Notfälle, Punkte, Lösungen der gewählten Stufe, alle Help-Desk-Tipps und die Unterrichtsinfo. Die Lösungen (und die PIN) werden erst nach Eingabe der PIN eingeblendet. Das verhindert versehentliches Anzeigen, ist aber kein Zugriffsschutz gegenüber Personen mit Zugriff auf den Quellcode. Drucken oder «Als HTML herunterladen» (mit Lösungen, wenn sie eingefügt sind). Inhalt in `druck/leitfaden.js`.
    * Inhalt aller Blätter: `druck/seiten.js`, Gestaltung: `druck/druck.css`. Nach Änderungen die Download-Dateien mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, Schwierigkeit für Protokoll 2 wählen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
 3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und **NULLBYTE meldet sich** mit Maske, getipptem Text und Hackerstimme.
@@ -60,11 +60,11 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 6. Abkürzen: Während der Botschaft sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. In der Anweisung gibt <kbd>→</kbd> oder <kbd>Enter</kbd> die Aufgaben sofort frei, in der Steuerung unter «Probleme?» «Aufgaben sofort freigeben».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
-Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode) und die Tablets zurücksetzen.
+Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode; Schwierigkeit und eigener Code für Kiste 1 bleiben erhalten) und die Tablets zurücksetzen.
 
 ### Wie kommt das Startsignal auf die Tablets?
 
-Das Spiel hat keinen eigenen Server. Das Startsignal läuft deshalb über den freien Benachrichtigungsdienst [ntfy.sh](https://ntfy.sh): Die Spielleitung sendet eine kurze Nachricht an einen Kanal, dessen Name den Beitrittscode enthält, und die wartenden Tablets fragen alle 3 Sekunden nach. Übertragen werden nur der Beitrittscode und die Endzeit, **keine Namen, keine Punkte, keine Personendaten**. Tablets, die sich erst nach dem Start anmelden oder neu laden, erhalten das Signal ebenfalls (es bleibt 6 Stunden abrufbar).
+Das Spiel hat keinen eigenen Server. Das Startsignal läuft deshalb über den freien Benachrichtigungsdienst [ntfy.sh](https://ntfy.sh): Die Spielleitung sendet eine kurze Nachricht an einen Kanal, dessen Name den Beitrittscode enthält, und die wartenden Tablets fragen alle 3 Sekunden nach. Der Beitrittscode bestimmt den Kanal. Die Nachricht enthält Endzeit, Stufe, Absturzuhrzeit und Sendezeit; bei eigenem Code zusätzlich Geheimtext, Hash und Verschiebung. **Teamnamen und Punkte werden nicht übertragen.** Wie bei jedem Netzwerkdienst fallen beim Anbieter Verbindungsdaten an. Tablets, die sich erst nach dem Start anmelden oder neu laden, erhalten das Signal ebenfalls (es bleibt 6 Stunden abrufbar; abgelaufene oder ungültige Signale werden verworfen).
 
 * Voraussetzung: Beamer-Laptop und Tablets haben Internet, und das Schulnetz blockiert ntfy.sh nicht. Am besten vor der Lektion einmal testen.
 * **Ohne Internet:** Auf jedem Tablet «Spielleitung: manuell starten (PIN)» tippen. Der Countdown startet dann mit 40:00 (oder synchron, wenn der Tablet-Link `?ende=HH:MM` verwendet wurde).
@@ -107,8 +107,8 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 | Stufe | Labyrinth | Nötige Idee | Blocklimit | Energie | Kürzeste bekannte Lösung |
 |---|---|---|---|---|---|
 | Leicht | Gang mit Ecken, keine roten Felder, Toolbox ohne Operatoren | falls vorne frei, dann vor, sonst rechts drehen | 5 | 38 | 5 Blöcke |
-| Mittel | Verschiebung 6 (A wird zu G, Unterschrift TARRHEZK) | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
-| Schwer (Standard) | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
+| Mittel (Standard) | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
+| Schwer | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
 
 Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also gleich. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
 * **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server finden, die Kennzahlen addieren und als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
@@ -168,7 +168,7 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 * `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`, voreingestellt «mittel»). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 
-**Codes ändern:** Die Codes stehen nicht im Klartext im Quellcode, sondern nur als SHA-256-Hash (mit Salz). So finden die Schülerinnen und Schüler die Lösungen nicht über «Quelltext anzeigen». Neue Hashes erzeugt ihr auf `spielleitung.html` im Reiter «Lösungen und Extras», Abschnitt «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
+**Codes ändern:** Code-Eingaben werden mit SHA-256-Hashes (mit Salz) verglichen. PIN, Rätseldaten und Prüflogik liegen jedoch im Browser; dreistellige Codes lassen sich durchprobieren und Spielstände lokal verändern. Die Verschleierung der Lösungen dient dem Spielablauf, nicht als Sicherheitsgrenze. Eigene Codes liegen auf dem Gerät der Spielleitung im lokalen Speicher. Neue Hashes erzeugt ihr auf `spielleitung.html` im Reiter «Lösungen und Extras», Abschnitt «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
 
 ## Technik
 
@@ -180,6 +180,17 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 * Töne: Fehlen eigene MP3-Dateien in `sounds/`, erzeugt die Web Audio API die Töne synthetisch.
 * Zum lokalen Testen einen kleinen Webserver verwenden, zum Beispiel `python3 -m http.server` im Projektordner, dann `http://localhost:8000` öffnen.
 
+## Automatische Prüfungen
+
+Mit Node.js ab Version 20, ohne zusätzliche Pakete:
+
+```sh
+node --test tests/*.test.js
+node werkzeuge/netzwerke_pruefen.js
+```
+
+Die Tests prüfen Spiellogik, Interpreter, Punkte, Zeitablauf, Startsignale und Cache-Verhalten mit Browser-Attrappen. Sie ersetzen nicht den Gerätetest und die Druckkontrolle aus `TESTPLAN.md`. Befunde und priorisierte Verbesserungsvorschläge stehen in `AUDIT.md`.
+
 ## Lizenz
 
 «Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, steht unter der Lizenz [Creative Commons Namensnennung, Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de).
@@ -187,3 +198,4 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 Das Hintergrundbild der Spielanweisung (`img/hintergrund-anweisung.webp`) wurde von der Spielleitung beigesteuert; vor einer Veröffentlichung prüfen, ob seine Lizenz mit CC BY-SA 4.0 vereinbar ist, sonst durch ein eigenes Bild mit gleichem Dateinamen ersetzen.
 
 Enthaltene Fremdsoftware und Medien: [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache License 2.0, siehe `lib/blockly/LICENSE`). Sprachaufnahmen erzeugt mit [Piper](https://github.com/rhasspy/piper) (MIT) und der Stimme [Thorsten-Voice](https://github.com/thorstenMueller/Thorsten-Voice) von Thorsten Müller (CC0).
+

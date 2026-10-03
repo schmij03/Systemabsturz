@@ -48,6 +48,8 @@ const Algorithmen = (function () {
   let ablauf = null;        // laufender Interpreter (Generator)
   let modus = 'aus';        // aus | auto | schritt | fertig
   let timer = null;
+  let effektTimer = null;
+  let lauf = 0; // verwirft verzögerte Ergebnisse eines alten Durchlaufs
   let tempo = TEMPO_STANDARD;
   let schritte = 0;
   let ignoriereAenderung = false;
@@ -400,6 +402,8 @@ const Algorithmen = (function () {
 
   /** Neuer Durchlauf: ANTI-V zurück auf den Start. */
   function zuruecksetzen() {
+    lauf++;
+    clearTimeout(effektTimer);
     stoppeTimer();
     zustand = Maze.neu();
     ablauf = null;
@@ -493,7 +497,9 @@ const Algorithmen = (function () {
     }
     if (ev.typ === 'infiziert') {
       modus = 'fertig';
-      setTimeout(function () {
+      const dieserLauf = lauf;
+      effektTimer = setTimeout(function () {
+        if (dieserLauf !== lauf || rueckrufe.gesperrt()) return;
         Maze.animiereInfiziert(zustand);
         rueckrufe.ton('alarm');
       }, tempo * 0.8);
@@ -502,11 +508,16 @@ const Algorithmen = (function () {
     }
     if (ev.typ === 'ziel') {
       const gesammelt = zustand.gesammelt.slice();
+      const dieserLauf = lauf;
+      const info = { bloecke: verwendeteBloecke, maxBloecke: Maze.stufe().maxBloecke };
       beende('Ziel erreicht. Signaturen werden geprüft …', 'info');
-      setTimeout(function () {
+      effektTimer = setTimeout(function () {
+        if (dieserLauf !== lauf || rueckrufe.gesperrt()) return;
         Maze.animiereZiel();
-        rueckrufe.zielErreicht(gesammelt, { bloecke: verwendeteBloecke, maxBloecke: Maze.stufe().maxBloecke }).then(function (antwort) {
-          meldung(antwort.text, antwort.ok ? 'ok' : 'warnung');
+        rueckrufe.zielErreicht(gesammelt, info).then(function (antwort) {
+          if (dieserLauf === lauf && !rueckrufe.gesperrt()) meldung(antwort.text, antwort.ok ? 'ok' : 'warnung');
+        }).catch(function () {
+          if (dieserLauf === lauf) meldung('Signaturen konnten nicht geprüft werden. Bitte erneut starten.', 'fehler');
         });
       }, tempo * 0.8);
       return -1;
@@ -659,6 +670,8 @@ const Algorithmen = (function () {
 
   /** Wird bei 00:00 aufgerufen. */
   function stoppe() {
+    lauf++;
+    clearTimeout(effektTimer);
     if (modus === 'auto' || modus === 'schritt') beende('SYSTEM GELÖSCHT', 'fehler');
   }
 
@@ -674,3 +687,4 @@ const Algorithmen = (function () {
 })();
 
 window.Algorithmen = Algorithmen;
+

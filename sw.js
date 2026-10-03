@@ -8,7 +8,8 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
-const CACHE_NAME = 'systemabsturz-v29';
+const CACHE_PRAEFIX = 'systemabsturz:' + self.registration.scope + ':';
+const CACHE_NAME = CACHE_PRAEFIX + 'v30';
 
 const DATEIEN = [
   './',
@@ -82,7 +83,7 @@ self.addEventListener('install', function (e) {
 self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys().then(function (namen) {
-      return Promise.all(namen.filter(function (n) { return n !== CACHE_NAME; }).map(function (n) { return caches.delete(n); }));
+      return Promise.all(namen.filter(function (n) { return n.startsWith(CACHE_PRAEFIX) && n !== CACHE_NAME; }).map(function (n) { return caches.delete(n); }));
     }).then(function () { return self.clients.claim(); })
   );
 });
@@ -93,49 +94,53 @@ self.addEventListener('activate', function (e) {
      Speicher, im Hintergrund wird die Datei aktualisiert (stale-while-revalidate) */
 const NETZ_TIMEOUT_MS = 2500;
 
-function speichern(anfrage, antwort) {
+// Query-Parameter ändern nur den Spielstand, nicht die statischen Dateien.
+function cacheSchluessel(anfrage) {
+  const url = new URL(anfrage.url);
+  url.search = '';
+  url.hash = '';
+  return url.href;
+}
+
+async function speichern(cache, anfrage, antwort) {
   if (antwort && antwort.ok && antwort.status === 200 && antwort.type === 'basic') {
-    const kopie = antwort.clone();
-    caches.open(CACHE_NAME).then(function (cache) { cache.put(anfrage, kopie); });
+    try { await cache.put(cacheSchluessel(anfrage), antwort.clone()); }
+    catch (e) { /* Speicher voll: die Netzantwort bleibt trotzdem nutzbar */ }
   }
   return antwort;
 }
 
 self.addEventListener('fetch', function (e) {
   const anfrage = e.request;
-  if (anfrage.method !== 'GET' || new URL(anfrage.url).origin !== self.location.origin) return;
+  if (anfrage.method !== 'GET' || !anfrage.url.startsWith(self.registration.scope)) return;
+
+  const cache = caches.open(CACHE_NAME);
+  const gespeichert = cache.then(function (c) { return c.match(cacheSchluessel(anfrage)); });
+  const ausNetz = fetch(anfrage).then(async function (antwort) {
+    return speichern(await cache, anfrage, antwort);
+  });
+  // Auch nach einer schnellen Cache-Antwort darf der Worker erst nach dem
+  // Aktualisieren beendet werden. waitUntil synchron im Ereignis registrieren.
+  e.waitUntil(ausNetz.catch(function () { /* offline */ }));
 
   if (anfrage.mode === 'navigate') {
     e.respondWith(new Promise(function (fertig) {
       let erledigt = false;
-      const ausCache = function () {
-        caches.match(anfrage, { ignoreSearch: true }).then(function (c) {
-          if (c && !erledigt) { erledigt = true; fertig(c); }
-        });
-      };
-      const timer = setTimeout(ausCache, NETZ_TIMEOUT_MS);
-      fetch(anfrage).then(function (antwort) {
-        clearTimeout(timer);
-        speichern(anfrage, antwort);
+      function liefere(antwort) {
         if (!erledigt) { erledigt = true; fertig(antwort); }
-      }).catch(function () {
+      }
+      const timer = setTimeout(function () {
+        gespeichert.then(function (c) { if (c) liefere(c); });
+      }, NETZ_TIMEOUT_MS);
+      ausNetz.then(async function (antwort) {
         clearTimeout(timer);
-        caches.match(anfrage, { ignoreSearch: true }).then(function (c) {
-          if (!erledigt) { erledigt = true; fertig(c || Response.error()); }
-        });
+        liefere(antwort.ok ? antwort : ((await gespeichert) || antwort));
+      }).catch(async function () {
+        clearTimeout(timer);
+        liefere((await gespeichert) || Response.error());
       });
     }));
     return;
   }
-
-  e.respondWith(
-    caches.match(anfrage, { ignoreSearch: true }).then(function (gespeichert) {
-      const ausNetz = fetch(anfrage).then(function (antwort) { return speichern(anfrage, antwort); });
-      if (gespeichert) {
-        e.waitUntil(ausNetz.catch(function () { /* offline: Speicher genügt */ }));
-        return gespeichert;
-      }
-      return ausNetz;
-    })
-  );
+  e.respondWith(gespeichert.then(function (c) { return c || ausNetz; }));
 });
