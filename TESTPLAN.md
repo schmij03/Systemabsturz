@@ -4,7 +4,7 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 ## Vorbereitung und Spielstart
 
-1. Auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» alle Blätter öffnen und drucken. Erwartung: je genau eine A4-Seite, die Chiffrierscheiben in voller Grösse, der Netzwerkplan farbig.
+1. Auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» das Teamset der gewählten Stufe öffnen und drucken. Erwartung: 7 A4-Seiten, die Chiffrierscheiben in voller Grösse (gross 172 mm, klein 142 mm), Seite 7 (Netzwerkplan) quer und farbig. Den Link «HTML» herunterladen, die Datei ohne Internet öffnen: gleiche 7 Seiten.
 2. «▶ Spiel starten». Erwartung: Vollbild, Botschaft von NULLBYTE mit Maske und Stimme.
 3. Nach der Botschaft (oder Taste → bzw. Leertaste): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben. Es sind keine Knöpfe sichtbar. Taste R liest nochmals vor, → oder Enter gibt die Aufgaben sofort frei.
 4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.

@@ -2073,16 +2073,15 @@ function zeigeMaterial() {
     const stufe = zeile.dataset.material;
     const datei = 'material/Systemabsturz_Teamset_' + stufe + '.pdf';
     const zelle = $('.pdf-zelle', zeile);
-    zelle.textContent = 'PDF folgt';
-    zelle.className = 'pdf-zelle klein';
+    // PDF nur anzeigen, wenn die Datei im Ordner material/ liegt
+    zelle.textContent = '';
     fetch(datei, { method: 'HEAD', cache: 'no-cache' }).then(function (r) {
       if (!r.ok) return;
-      zelle.innerHTML = '';
-      const a = erstelle('a', '', 'Teamset ' + stufe + ' (PDF)');
+      zelle.innerHTML = '· ';
+      const a = erstelle('a', '', 'PDF');
       a.href = datei;
       a.setAttribute('download', '');
       zelle.appendChild(a);
-      zelle.className = 'pdf-zelle';
     }).catch(function () { /* offline */ });
     zeile.classList.toggle('gewaehlt', (Leitung.stand.stufe || STANDARD_STUFE) === stufe.toLowerCase());
   });

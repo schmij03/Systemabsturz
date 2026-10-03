@@ -5,90 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Systemabsturz: Auftragsblatt</title>
   <link rel="stylesheet" href="druck.css">
-  <style>
-    .lage { display: flex; gap: 4mm; align-items: center; }
-    .lage img { height: 22mm; flex: none; }
-    .teamzeile { display: flex; align-items: center; gap: 3mm; margin-top: 3mm; font-weight: 700; }
-    .teamzeile .name { flex: 1; border-bottom: 1.2pt solid #111418; height: 9mm; margin-right: 4mm; }
-    .teamzeile span.feld { width: 10mm; height: 11mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
-    table.mission { border-collapse: separate; border-spacing: 0 1.2mm; width: 100%; }
-    table.mission td { border: none; padding: 1.5mm 3mm; vertical-align: middle; }
-    table.mission td.kategorie { width: 34mm; color: #fff; font-weight: 700; border-radius: 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    table.mission td.material { width: 30mm; color: #5f6670; font-size: 9.5pt; }
-    ul.regeln { margin: 0; padding-left: 5mm; }
-    ul.regeln li { margin-bottom: 1mm; }
-    .linie { border-bottom: 0.6pt solid #888; height: 8.5mm; }
-  </style>
 </head>
 <body>
   <div class="druckleiste">
-    <button type="button" onclick="window.print()">Drucken</button>
+    <button type="button" class="primaer" onclick="window.print()">Drucken</button>
+    <button type="button" id="als-html">Als HTML herunterladen</button>
     <label>Stufe <select id="stufe"><option value="leicht">Leicht</option><option value="mittel">Mittel</option><option value="schwer">Schwer</option></select></label>
-    <span>Ein Blatt pro Team. A4 hoch, farbig drucken.</span>
+    <span class="hinweis">Ein Blatt pro Team.</span>
   </div>
 
-  <div class="seite protokoll">
-    <div class="oberzeile">NOTFALL-TEAM &nbsp;·&nbsp; AUFTRAG &nbsp;·&nbsp; STRENG GEHEIM</div>
-    <div class="titelzeile"><h1>Systemabsturz: Rettet das Schulnetz</h1><span class="stufe" id="stufe-text"></span></div>
-
-    <div class="hinweis-kasten lage">
-      <img src="../img/maske.svg" alt="">
-      <div>
-        <span class="label">LAGE</span>
-        Heute Morgen um 08:13 Uhr hat die Hackergruppe NULLBYTE das Schulnetz gesperrt. Sie will beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. In 45 Minuten löscht NULLBYTE alle Daten: Noten, Stundenpläne, Fotos. Ihr seid ein Notfall-Team und müsst das System retten.
-      </div>
-    </div>
-
-    <div class="teamzeile">Teamname: <span class="name"></span> Beitrittscode: <span class="feld"></span><span class="feld"></span><span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
-
-    <h2>So geht ihr vor</h2>
-    <ol class="schritte">
-      <li>Öffnet auf eurem Tablet das <strong>Notfall-Terminal</strong>.</li>
-      <li>Gebt euren <strong>Teamnamen</strong> und den <strong>Beitrittscode</strong> von der Leinwand ein und tippt auf «Spiel starten».</li>
-      <li>Tippt auf «Wir sind bereit». Sobald die Spielleitung startet, erscheinen eure Aufgaben und der Countdown läuft.</li>
-    </ol>
-
-    <h2>Eure Mission: drei Sicherheitsprotokolle</h2>
-    <table class="mission">
-      <tr><td class="kategorie" style="background: #c62828">1 Kryptografie</td><td>Entschlüsselt die geheime Nachricht von NULLBYTE. Der Code öffnet <strong>Sicherheitskiste 1</strong>.</td><td class="material">Chiffrierscheibe</td></tr>
-      <tr><td class="kategorie" style="background: #4C97FF">2 Algorithmen</td><td>Programmiert den Antiviren-Roboter ANTI-V mit Blöcken. Er muss die drei Viren-Signaturen einsammeln. Der Code öffnet <strong>Sicherheitskiste 2</strong>.</td><td class="material">Tablet</td></tr>
-      <tr><td class="kategorie" style="background: #2e7d32">3 Netzwerke</td><td>Findet auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server. Die Summe ist der <strong>Override-Code</strong>.</td><td class="material">Netzwerkplan</td></tr>
-    </table>
-
-    <h2>Regeln</h2>
-    <ul class="regeln">
-      <li>Löst die Protokolle der Reihe nach. Jedes gelöste Protokoll schaltet das nächste frei.</li>
-      <li>Kisten dürfen nur mit dem richtigen Code geöffnet werden. Gewalt ist verboten.</li>
-      <li><strong>Help-Desk:</strong> Im Terminal gibt es Tipps. Jedes Team hat 3 Joker, jeder Joker kostet 20 Punkte. Kommt ihr 5 Minuten nicht weiter, gibt es einen Tipp gratis.</li>
-      <li><strong>Punkte:</strong> Start mit 100 Punkten, plus 20 pro Protokoll, Bonus für wenige Blöcke in Protokoll 2 und für jede übrige Minute beim Override.</li>
-      <li><strong>Zeit:</strong> Bei 00:00 ist alles verloren. Teilt die Arbeit auf und sprecht euch ab!</li>
-    </ul>
-
-    <h2>Notizen</h2>
-    <div class="linie"></div><div class="linie"></div><div class="linie"></div>
-
-    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span id="fuss-stufe"></span></div>
-  </div>
+  <main id="seiten"></main>
 
   <script src="../js/maze.js"></script>
+  <script src="../js/netzwerke.js"></script>
   <script src="../js/app.js"></script>
-  <script>
-    /* Stufe: ?stufe=... oder die auf der Spielleitung gewählte Stufe */
-    (function () {
-      var wahl = document.getElementById('stufe');
-      var leitung = ladeJson(SPEICHER_LEITUNG) || {};
-      wahl.value = stufeAusUrl() || leitung.stufe || STANDARD_STUFE;
-      function zeige() {
-        var key = wahl.value;
-        var name = STUFEN[key].name;
-        var badge = document.getElementById('stufe-text');
-        badge.textContent = 'STUFE ' + name.toUpperCase();
-        badge.className = 'stufe ' + key;
-        document.getElementById('fuss-stufe').textContent = 'Teamset Stufe ' + name + ' · Auftrag';
-      }
-      wahl.addEventListener('change', zeige);
-      zeige();
-    })();
-  </script>
+  <script src="seiten.js"></script>
+  <script>Druck.start({ teile: ['auftrag'], titel: 'Auftragsblatt', datei: 'Auftrag' });</script>
 </body>
 </html>

@@ -1,51 +1,97 @@
 /* =====================================================================
-   Systemabsturz: Druckmaterial (A4)
+   Systemabsturz: Druckmaterial (A4) im Layout der Teamsets
+   ---------------------------------------------------------------------
+   Rote Linie oben, Oberzeile in Courier, Titel mit Stufen-Abzeichen,
+   Arial 10 pt. Jede .seite ist genau eine A4-Seite (hoch oder quer).
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
-@page { size: A4; margin: 12mm; }
+@page { size: A4; margin: 0; }
+@page quer { size: A4 landscape; margin: 0; }
+
 * { box-sizing: border-box; }
-html { background: #e8e8e8; }
-body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: #111; }
-.seite { width: 210mm; min-height: 297mm; margin: 10mm auto; padding: 12mm; background: #fff; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); position: relative; }
-.seite.quer { width: 297mm; min-height: 210mm; }
-h1 { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 20pt; margin: 0 0 2mm; letter-spacing: 0.05em; }
-h2 { font-size: 13pt; margin: 5mm 0 2mm; border-bottom: 1.5pt solid #111; padding-bottom: 1mm; }
-p { margin: 0 0 2.5mm; }
-.kopf { display: flex; justify-content: space-between; align-items: center; border-bottom: 3pt solid #111; padding-bottom: 3mm; margin-bottom: 4mm; }
-.kopf .stempel { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; border: 2pt solid #c00; color: #c00; padding: 1mm 3mm; transform: rotate(-4deg); }
-.mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
-.kasten { border: 1.2pt solid #111; border-radius: 3mm; padding: 3mm 4mm; margin: 3mm 0; }
-.kasten.grau { background: #f2f2f2; }
-.linien { border-bottom: 0.6pt solid #999; height: 9mm; }
-.fuss { position: absolute; left: 12mm; right: 12mm; bottom: 8mm; font-size: 7.5pt; color: #555; display: flex; justify-content: space-between; }
-.druckleiste { max-width: 210mm; margin: 6mm auto 0; display: flex; gap: 8px; align-items: center; font-family: sans-serif; }
-.druckleiste button { min-height: 44px; padding: 0 16px; font-size: 12pt; cursor: pointer; }
-table { border-collapse: collapse; width: 100%; }
-td, th { border: 0.8pt solid #111; padding: 1.5mm 2mm; text-align: left; vertical-align: top; }
-/* ---------- Gemeinsames Design der Protokollblätter (Vorbild: Protokoll 2) ---------- */
-.oberzeile { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em; color: #5f6670; border-bottom: 1.2pt solid #111; padding-bottom: 1mm; margin-bottom: 3mm; }
-.titelzeile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
-.titelzeile h1 { font-family: Arial, Helvetica, sans-serif; font-size: 19pt; letter-spacing: 0; margin: 0; }
-.stufe { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 9pt; color: #fff; background: #111418; padding: 1mm 3mm; border-radius: 1mm; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html { background: #d9dce0; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.2; color: #111418; }
+:root { --rot: #c62828; --grau: #5f6670; --flaeche: #eef0f2; --linie: #9aa0aa; --schwarz: #111418; }
+
+/* ---------- Bedienleiste (nur Bildschirm) ---------- */
+.druckleiste { max-width: 210mm; margin: 6mm auto 0; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 11pt; }
+.druckleiste button, .druckleiste .knopf { min-height: 44px; padding: 0 16px; font-size: 12pt; cursor: pointer; border: 1px solid #8a9099; border-radius: 6px; background: #fff; color: #111418; text-decoration: none; display: inline-flex; align-items: center; }
+.druckleiste button.primaer { background: #111418; color: #fff; border-color: #111418; }
+.druckleiste select { min-height: 44px; font-size: 12pt; }
+.druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
+.druckleiste .hinweis { color: #444; font-size: 10pt; }
+
+/* ---------- Seite ---------- */
+.seite {
+  position: relative; width: 210mm; height: 297mm; margin: 8mm auto; padding: 16mm 21mm 20mm;
+  background: #fff; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); overflow: hidden;
+}
+.seite.quer { width: 297mm; height: 210mm; padding: 14mm 15mm 16mm; page: quer; }
+
+.oberzeile {
+  border-top: 4.5pt solid var(--rot); padding-top: 3.5mm; margin-bottom: 0.5mm;
+  font-family: "Courier New", Courier, monospace; font-weight: 700; font-size: 8.5pt; color: var(--grau); white-space: pre;
+}
+.titelzeile { display: flex; justify-content: space-between; align-items: center; gap: 6mm; border-bottom: 1.5pt solid var(--schwarz); padding-bottom: 1.5mm; margin-bottom: 4mm; }
+.titelzeile h1 { font-size: 19pt; line-height: 1.15; margin: 0; }
+.stufe { flex: none; font-weight: 700; font-size: 10pt; color: #fff; background: #2e7d32; padding: 0.3mm 1.6mm; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .stufe.leicht { background: #2e7d32; }
 .stufe.mittel { background: #ef6c00; }
 .stufe.schwer { background: #c62828; }
-.protokoll h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; border-bottom: 1pt solid #111; margin: 4mm 0 2mm; padding-bottom: 0; }
-ol.schritte { margin: 0; padding-left: 6mm; }
-ol.schritte li { margin-bottom: 1mm; }
-.hinweis-kasten { background: #eef0f2; padding: 2.5mm 4mm; border-radius: 1.5mm; margin-top: 2mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.hinweis-kasten .label { display: block; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; color: #5f6670; letter-spacing: 0.08em; margin-bottom: 1mm; }
-.eingabefelder { display: flex; align-items: center; gap: 4mm; margin-top: 3mm; font-weight: 700; }
-.feldname { margin: 3mm 0 0; font-weight: 700; }
-.eingabefelder span.feld { width: 12mm; height: 12mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
-.druckleiste select { min-height: 44px; font-size: 12pt; }
-.druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
+
+h2 { font-size: 13pt; margin: 4.5mm 0 1.5mm; }
+p { margin: 0 0 2.5mm; }
+ol, ul { margin: 0 0 2mm; padding-left: 7mm; }
+li { margin-bottom: 0.8mm; }
+.feldname { font-weight: 700; margin: 3mm 0 0; }
+
+/* ---------- Kästen ---------- */
+.kasten { background: var(--flaeche); padding: 3.5mm 4.5mm; margin: 3mm 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.kasten > :last-child { margin-bottom: 0; }
+.kasten h3 { font-size: 11.5pt; margin: 0 0 2mm; }
+.kasten.wissen { background: #f6d5d5; }
+.kasten.wissen .label { display: block; color: var(--rot); font-weight: 700; margin-bottom: 1mm; }
+.kasten .zeile { margin: 2mm 0; }
+
+/* ---------- Schreiblinien und Kästchen ---------- */
+.linie { border-bottom: 0.75pt solid var(--linie); height: 10.5mm; }
+.kasten .linie { margin-left: 0; }
+.geheimtext { font-family: "Courier New", Courier, monospace; font-size: 12pt; font-weight: 700; letter-spacing: 0.08em; line-height: 10.5mm; border-bottom: 0.75pt solid var(--linie); }
+.kaestchen { display: flex; align-items: center; margin: 9mm 0 7mm; }
+.kaestchen .text { width: 66mm; padding-left: 3mm; font-weight: 700; font-size: 11pt; }
+.kaestchen .feld { width: 14mm; height: 14.5mm; border: 1pt solid var(--schwarz); margin-right: 5.5mm; }
+
+/* ---------- Auftrag ---------- */
+table { border-collapse: collapse; width: 100%; }
+table.mission th { background: var(--schwarz); color: #fff; text-align: left; padding: 2mm 3mm; font-size: 10pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+table.mission td { padding: 1.5mm 3mm 2.5mm; border-bottom: 0.75pt solid #c9ced6; vertical-align: top; font-size: 9.5pt; }
+table.mission td:first-child { font-weight: 700; width: 25%; white-space: pre; }
+table.mission td:last-child { width: 15%; }
+
+/* ---------- Protokoll 2 ---------- */
+table.bloecke td { padding: 2mm 3mm; border-bottom: 0.75pt solid #dfe2e6; vertical-align: middle; font-size: 9.5pt; }
+table.bloecke td.kategorie { width: 23%; color: #fff; font-weight: 700; font-size: 10pt; border-bottom: 0.75pt solid #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.plan { border: 0.75pt solid #b9bfc7; height: 44mm; padding: 1.5mm 3mm; }
+.plan .hut { display: inline-block; background: #e7f0fb; font-weight: 700; font-size: 9pt; padding: 0.3mm 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/* ---------- Chiffrierscheiben ---------- */
+.scheibe { display: flex; justify-content: center; margin-top: 2mm; }
+.schere { text-align: center; font-size: 8.5pt; color: var(--grau); margin-top: 1mm; }
+
+/* ---------- Netzwerkplan ---------- */
+.netzplan { display: flex; justify-content: center; margin-top: 2mm; }
+.netzplan svg { width: 100%; height: 132mm; }
+.legende { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2mm 6mm; margin-top: 2mm; font-size: 10pt; }
+.legende .muster { display: inline-block; min-width: 5mm; padding: 0 1mm; margin-right: 1.5mm; text-align: center; font-weight: 700; font-size: 9pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.legende .grau { color: var(--grau); }
+
+/* ---------- Fusszeile ---------- */
+.fuss { position: absolute; left: 21mm; right: 21mm; bottom: 9mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--grau); }
+.seite.quer .fuss { left: 15mm; right: 15mm; }
 
 @media print {
-  html { background: #fff; }
-  .seite { margin: 0; box-shadow: none; width: auto; min-height: 0; height: 265mm; padding: 0; overflow: hidden; }
-  .seite + .seite { page-break-before: always; }
-  .seite.quer { width: auto; min-height: 0; height: 172mm; }
+  html, body { background: #fff; }
   .druckleiste { display: none; }
-  .fuss { left: 0; right: 0; bottom: 0; }
+  .seite { margin: 0; box-shadow: none; break-after: page; }
+  .seite:last-child { break-after: auto; }
 }

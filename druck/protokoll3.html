@@ -3,69 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Systemabsturz: Netzwerkplan</title>
+  <title>Systemabsturz: Protokoll 3</title>
   <link rel="stylesheet" href="druck.css">
-  <style>
-    .plan { display: flex; justify-content: center; margin: 2mm 0 0; }
-    .plan svg { width: 100%; max-height: 108mm; }
-    .wegfelder { display: flex; gap: 2mm; flex-wrap: wrap; margin-top: 2mm; }
-    .wegfelder span { width: 11mm; height: 11mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
-  </style>
 </head>
 <body>
   <div class="druckleiste">
-    <button type="button" onclick="window.print()">Drucken</button>
+    <button type="button" class="primaer" onclick="window.print()">Drucken</button>
+    <button type="button" id="als-html">Als HTML herunterladen</button>
     <label>Stufe <select id="stufe"><option value="leicht">Leicht</option><option value="mittel">Mittel</option><option value="schwer">Schwer</option></select></label>
-    <span>A4 hoch, farbig drucken (rote Server müssen erkennbar sein).</span>
+    <span class="hinweis">2 Seiten, farbig drucken. Der Netzwerkplan druckt automatisch im Querformat.</span>
   </div>
 
-  <div class="seite protokoll">
-    <div class="oberzeile">SICHERHEITSPROTOKOLL 3 &nbsp;·&nbsp; NETZWERKE</div>
-    <div class="titelzeile"><h1>Den sauberen Weg finden</h1><span class="stufe" id="stufe-text"></span></div>
-    <p>NULLBYTE hat Server im Schulnetz infiziert. Die Daten müssen von <strong>Server A</strong> zu <strong>Server Z</strong> fliessen, ohne einen infizierten Server zu berühren. Mit dem richtigen Weg erhaltet ihr den Override-Code und rettet das System.</p>
+  <main id="seiten"></main>
 
-    <h2>So geht ihr vor</h2>
-    <ol class="schritte">
-      <li>Streicht alle Verbindungen zu den roten (infizierten) Servern durch.</li>
-      <li>Sucht den <strong>kürzesten sauberen Weg</strong> von A nach Z, also den mit den wenigsten Verbindungen.</li>
-      <li>Addiert die <strong>Kennzahlen aller Server auf dem Weg</strong>, auch von A und Z. Die Summe ist der dreistellige Override-Code.</li>
-    </ol>
-
-    <h2>Netzwerkplan</h2>
-    <div class="plan" id="plan"></div>
-    <div class="hinweis-kasten">
-      <strong>Blau</strong> = Start und Ziel, <strong>weiss</strong> = sauber, <strong>rot</strong> = von NULLBYTE infiziert. Die Zahl rechts unten ist die Kennzahl des Servers, jede Linie ist eine Verbindung.
-    </div>
-
-    <h2>Eure Lösung</h2>
-    <p class="feldname">Unser Weg (Server der Reihe nach eintragen):</p>
-    <div class="wegfelder"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="eingabefelder">Override-Code: <span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
-
-    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span id="fuss-stufe"></span></div>
-  </div>
   <script src="../js/maze.js"></script>
   <script src="../js/netzwerke.js"></script>
   <script src="../js/app.js"></script>
-  <script>
-    /* Stufe: ?stufe=... oder die auf der Spielleitung gewählte Stufe */
-    (function () {
-      var wahl = document.getElementById('stufe');
-      var leitung = ladeJson(SPEICHER_LEITUNG) || {};
-      var stufe = stufeAusUrl() || leitung.stufe || STANDARD_STUFE;
-      function zeige() {
-        var key = wahl.value;
-        var name = STUFEN[key].name;
-        document.getElementById('plan').innerHTML = netzwerkSvg(key);
-        var badge = document.getElementById('stufe-text');
-        badge.textContent = 'STUFE ' + name.toUpperCase();
-        badge.className = 'stufe ' + key;
-        document.getElementById('fuss-stufe').textContent = 'Teamset Stufe ' + name + ' · Protokoll 3';
-      }
-      wahl.value = stufe;
-      wahl.addEventListener('change', zeige);
-      zeige();
-    })();
-  </script>
+  <script src="seiten.js"></script>
+  <script>Druck.start({ teile: ['protokoll3'], titel: 'Protokoll 3', datei: 'Protokoll3' });</script>
 </body>
 </html>
