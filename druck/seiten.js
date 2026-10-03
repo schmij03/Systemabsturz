@@ -98,7 +98,7 @@ var Druck = (function () {
       inhalt:
         '<p>Soeben erschien auf allen Bildschirmen der Schule eine verschlüsselte Nachricht. Ihr findet sie im <strong>Notfall-Terminal</strong> unter Protokoll 1. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code, der darin versteckt ist, im Terminal ein.</p>' +
         '<div class="kasten wissen"><span class="label">WAS WIR ÜBER DIE HACKER WISSEN</span>Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen. Vergleicht die Unterschrift mit dem Namen, dann wisst ihr, wie die Buchstaben verschoben wurden.</div>' +
-        '<p class="feldname">Geheimtext (aus dem Terminal abschreiben):</p>' + geheim +
+        '<p class="feldname">' + (opt && opt.geheimtext ? 'Geheimtext (steht auch im Terminal):' : 'Geheimtext (aus dem Terminal abschreiben):') + '</p>' + geheim +
         '<p class="feldname" style="margin-top: 7mm"><strong>Verschiebung:</strong> <span style="font-weight: 400">Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</span></p>' +
         '<p class="feldname">Entschlüsselte Nachricht (Klartext):</p>' + linien(4) +
         kaestchen('Code für das Terminal:', 3) +
