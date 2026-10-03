@@ -14,4 +14,4 @@ Hier liegen die Teamsets pro Schwierigkeitsstufe. Die Spielleitung lädt sie auf
 * `Systemabsturz_Teamset_Mittel.pdf`
 * `Systemabsturz_Teamset_Schwer.pdf`
 
-Die Netzwerkpläne in den Teamsets entsprechen `js/netzwerke.js`. Wer einen Plan ändert, muss beides anpassen.
+Die Netzwerkpläne in den Teamsets entsprechen `js/netzwerke.js` (neue, schwierigere Pläne: Leicht 11 Server, Mittel 14 Server, Schwer 18 Server). Wer einen Plan ändert, muss beides anpassen. Die Bilder für die Teamsets lassen sich aus `druck/protokoll3.html` erzeugen.

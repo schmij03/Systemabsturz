@@ -46,25 +46,55 @@ const HASHES = {
   bonus: '2a3cb8ba6b05f0675283ce45ffb61056a32e67c7a6eef8b467f31702a8a766aa',
   signaturen: '671033ca39e74b17f33a3621a5fd01f96fa8ea3683cd4bcf8754d0e196e40626',
   protokoll3: '6c01916c12bd0a1a72370b81ad09dd6c13eca4a371cc8facd0864f4108c34c96',
-  /* Falsche Wege über infizierte Server, je nach Netzwerkplan der Stufe
-     (siehe js/netzwerke.js): 065 und 079, bei mittel und schwer auch 111 */
+  /* Fallen: Summen von Wegen über infizierte Server, die nicht länger
+     sind als der richtige Weg (pro Stufe, siehe js/netzwerke.js).
+     Neu berechnen: node werkzeuge/netzwerke_pruefen.js --hashes */
   protokoll3Fallen: {
     leicht: [
-      'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
-      'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c'
+      '6d0a1d285584603ab85e41e2c631b0827a3591f4deb4ca8e87fbe7fa485f8a44',
+      '1caccf7d5033264d58d327b2741d5a36938f39fdedca8adbd826ceb99009febc',
+      'f5d628fbb6c1f556109dcb0bf43c5ae87d7acddc0c3188721c6997f7a5af4283'
     ],
     mittel: [
-      'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
-      'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c',
-      '2d72ee4079defc942a592b9d6c33a36de2f695b3b457f35506880e24b8eab090'
+      '9d5b1261d943622247ffaa564b6bb7bfef4dde0740db6924b0be5ffc1b5ed359',
+      '210f3aed08830124a2e205ee22677b6925eeaa045e54868f5d463fe9bc253787',
+      'c8382f7e15a87bf0616c8e541a68d5ca09814f1a2f149d9d07d69deb8228487a',
+      '8bc13d9262e8715e63e3caa1bb23b360ea3e93b29040ef17ef4fad1752f3de04',
+      'c219d914425e28d00919da86ebce879f705c845a78eee33436e1df8ec79b772c',
+      '2b2cc29a1b670301effba9625d8d478f60d1c69af041080e87d26a8ec35c33b3',
+      '5792a97df9b8c0ebecad7ba1f8a3d4a5e49fb4c3b51cb4278474e43e6306476f',
+      'c6821638e689d555dbe27721a8af8776f0be16f6f4f757d583bcee62f72434a4',
+      '38e6311336de831e106b52b529ac6cefbf49b270800bf43ca6e275a876f1ab9f',
+      '5dbefc2c5dd4da21471d777c4349dfdf617934d939949caafec2f0e8ee4b3d59',
+      'fdfc5a5d96a62fd4d45186bdff945353d9be7b878b616a66b2f613d5ac45d805',
+      '7d97679fc32edf3df1096bc2d608baac478c90ebe6b029b1106c633a8c29ffd6',
+      '818692191c878b3afb755ef77531bce09b73a6cd0e605f751734c9e33ab37431'
     ],
     schwer: [
-      'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
-      'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c',
-      '2d72ee4079defc942a592b9d6c33a36de2f695b3b457f35506880e24b8eab090'
+      'da164ed8ee1e5581e3c23e6ea2c0d0f12d9f9bf2833d09373c4e6254b44a7025',
+      '4adb6dfdc491400c8ca7cebda86e292013258e47e6c70b6658d79c714590cb77',
+      'c8382f7e15a87bf0616c8e541a68d5ca09814f1a2f149d9d07d69deb8228487a',
+      'e839abb5ed1b8015cca6bd1f398771c1a88412674e159af0e31b62fa360904b0',
+      'fb1a808db5d2b92077b9fd6daf544384b5a7fb75c0cdab45f1e1f4e8dd8a4191',
+      'c927e85579385ec615025c10a1b39ce3c06af9f83b2d94c469f0a8b0bef76a66',
+      '2b2cc29a1b670301effba9625d8d478f60d1c69af041080e87d26a8ec35c33b3',
+      'edd4ac5a332375086be7a461b63838b2e0d2545933e209681d534c6861fdf154',
+      'dccdda9a0f897d5d25b9c8eecf9a6c674f4d22c49c6242616e1689229ac99aae',
+      '8107d344949bd3483fd949dc3a84d824782f89ece525119fd45d1ac5f634e06d',
+      '38e6311336de831e106b52b529ac6cefbf49b270800bf43ca6e275a876f1ab9f',
+      '4a8daa78b163bacd9366460d186682b1cbb515ee8d863ed3114e4bb8d813ff63',
+      'a883f5e1cf68313b28f756182faf71ea12c88f3e3a3f16031d1ba6068cd6a7b7',
+      'd9a1fdff45367bc1c415f5fe9f8cfbd195bb00d1342129f2b9585b0cc11cdbef',
+      'fdfc5a5d96a62fd4d45186bdff945353d9be7b878b616a66b2f613d5ac45d805',
+      '7d97679fc32edf3df1096bc2d608baac478c90ebe6b029b1106c633a8c29ffd6',
+      '9a6bc718a23e13b7b8634bb1e4352be1b2e1fdbcab8ea0ef59504e7969b24b6e',
+      '7062a8ddee96d736430cd520fe5e173fadf32d8420982d067f30b79e60e8ce00',
+      '818692191c878b3afb755ef77531bce09b73a6cd0e605f751734c9e33ab37431',
+      'ddd819f0411e4cbe36f6c00d0d6852adbc454a3b854aa7fc52aaca1b832bc5be',
+      'b39bba864c0af61a84e546dc8e94315b011e1c3542dde64f8045bcfaf10019de',
+      '25f373d4f6269480896c69a42e471b1338cc29d10a83010cb73f73e1d12cd3a7'
     ]
-  }
-};
+  }};
 
 /* ------------------------- Protokoll 1 ------------------------------
    Die Nachricht wird aus dem Code erzeugt: {CODE} in der Vorlage wird
@@ -148,20 +178,20 @@ const TEXTE = {
       /* Tipps passend zum Netzwerkplan der Stufe (mittel: «tipps» darunter) */
       tippsStufen: {
         leicht: [
-          'Streicht zuerst alle Verbindungen zu den roten Servern durch.',
-          'Zählt die Verbindungen. Der beste Weg braucht genau vier.',
-          'Der Weg führt oben herum über Server C. Vergesst nicht, A und Z mitzuzählen.'
+          'Streicht zuerst alle Verbindungen zu den drei roten Servern durch.',
+          'Alle Wege von A nach Z brauchen mindestens vier Verbindungen. Nur einer davon ist sauber.',
+          'Der saubere Weg führt unten über Server H und Server I. Vergesst nicht, A und Z mitzuzählen.'
         ],
         schwer: [
-          'Streicht zuerst alle Verbindungen zu den roten Servern durch. Es sind drei rote Server.',
-          'Zählt die Verbindungen. Der beste Weg braucht genau vier, ein Weg mit fünf ist zu lang.',
-          'Der Weg führt unten herum über Server C und Server K. Vergesst nicht, A und Z mitzuzählen.'
+          'Streicht zuerst alle Verbindungen zu den fünf roten Servern durch. Was übrig bleibt, ist euer Netz.',
+          'Der beste saubere Weg braucht genau sechs Verbindungen. Alle Wege mit fünf Verbindungen führen über rote Server.',
+          'Der Weg führt oben über B und C, dann schräg hinunter über H und M. Vergesst nicht, A und Z mitzuzählen.'
         ]
       },
       tipps: [
-        'Streicht zuerst alle Verbindungen zu den roten Servern durch.',
-        'Zählt die Verbindungen. Der beste Weg braucht genau vier.',
-        'Der Weg führt über Server C. Vergesst nicht, A und Z mitzuzählen.'
+        'Streicht zuerst alle Verbindungen zu den vier roten Servern durch.',
+        'Der Weg über Server D sieht kurz aus, aber D ist infiziert. Der beste saubere Weg braucht genau fünf Verbindungen.',
+        'Der Weg führt über die Server B, C, H und E. Vergesst nicht, A und Z mitzuzählen.'
       ]
     }
   },
@@ -1913,6 +1943,8 @@ function zeigeMaterial() {
   });
   const link = $('#link-netzwerk');
   if (link) link.href = 'druck/protokoll3.html?stufe=' + (Leitung.stand.stufe || STANDARD_STUFE);
+  const link2 = $('#link-protokoll2');
+  if (link2) link2.href = 'druck/protokoll2.html?stufe=' + (Leitung.stand.stufe || STANDARD_STUFE);
 }
 
 function zeigeSpielcode() {
@@ -2196,12 +2228,9 @@ async function erzeugeKonfiguration() {
   const w = function (id) { return $('#gen-' + id).value.trim(); };
   const neuePin = w('pin') || SPIELLEITUNG_PIN;
   const sig = w('signaturen').split(/[^0-9]+/).filter(Boolean).join(',');
-  const fallen = w('fallen').split(/[^0-9]+/).filter(Boolean);
-  const fallenStufen = {
-    leicht: (w('fallen-leicht') || '065, 079').split(/[^0-9]+/).filter(Boolean),
-    mittel: fallen,
-    schwer: (w('fallen-schwer') || fallen.join(',')).split(/[^0-9]+/).filter(Boolean)
-  };
+  // Fallen für Protokoll 3 direkt aus den Netzwerkplänen (js/netzwerke.js)
+  const fallenStufen = {};
+  Object.keys(NETZWERKE).forEach(function (st) { fallenStufen[st] = netzwerkAnalyse(st).fallen; });
   const verschiebung = parseInt(w('verschiebung') || P1_VERSCHIEBUNG, 10);
   if (!/^\d{3}$/.test(w('p1')) || !(verschiebung >= 1 && verschiebung <= 25)) {
     toast('Code Protokoll 1 muss dreistellig sein, Verschiebung zwischen 1 und 25.', 'warnung');
@@ -2210,7 +2239,7 @@ async function erzeugeKonfiguration() {
   const loesungen = {
     p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
     signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
-    p3: w('p3'), p3info: w('p3info'), fallen: fallen.join(', ')
+    p3: w('p3'), p3info: w('p3info'), fallen: ''
   };
   const zeilen = [];
   zeilen.push("const SPIELLEITUNG_PIN = '" + neuePin + "';");
@@ -2220,10 +2249,10 @@ async function erzeugeKonfiguration() {
   zeilen.push("  bonus: '" + await Krypto.hashCode(loesungen.bonus) + "',");
   zeilen.push("  signaturen: '" + await Krypto.hashCode(sig) + "',");
   zeilen.push("  protokoll3: '" + await Krypto.hashCode(loesungen.p3) + "',");
-  zeilen.push('  /* Falsche Wege über infizierte Server, je nach Netzwerkplan der Stufe */');
+  zeilen.push('  /* Fallen pro Stufe, berechnet aus js/netzwerke.js */');
   zeilen.push('  protokoll3Fallen: {');
   const stufenZeilen = [];
-  for (const st of ['leicht', 'mittel', 'schwer']) {
+  for (const st of Object.keys(fallenStufen)) {
     const fh = [];
     for (const f of fallenStufen[st]) fh.push("      '" + await Krypto.hashCode(f) + "'");
     stufenZeilen.push('    ' + st + ': [\n' + fh.join(',\n') + '\n    ]');

@@ -8,7 +8,7 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
-const CACHE_NAME = 'systemabsturz-v10';
+const CACHE_NAME = 'systemabsturz-v13';
 
 const DATEIEN = [
   './',
@@ -25,6 +25,7 @@ const DATEIEN = [
   'druck/druck.css',
   'druck/auftrag.html',
   'druck/protokoll1.html',
+  'druck/protokoll2.html',
   'druck/protokoll3.html',
   'lib/blockly/blockly_compressed.js',
   'lib/blockly/msg/de.js',
