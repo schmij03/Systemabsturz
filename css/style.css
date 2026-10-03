@@ -484,7 +484,6 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .generator-ausgabe { width: 100%; margin-top: 12px; font-family: var(--mono); font-size: 0.8rem; background: #000; color: var(--gruen); border: 1px solid var(--rand); border-radius: 6px; padding: 10px; }
 
 .video-box { background: #000; flex-direction: column; gap: 14px; }
-.video-box video { max-width: 100%; max-height: 82vh; }
 .video-ersatz { width: min(1400px, 100%); display: flex; align-items: center; gap: 4vw; text-align: left; }
 .ersatz-rechts { flex: 1; min-width: 0; }
 .video-ersatz pre { font-size: clamp(1rem, 2vw, 1.8rem); line-height: 1.4; color: var(--gruen); white-space: pre-wrap; height: 70vh; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; margin: 0.5em 0 0; text-shadow: 0 0 12px rgba(61, 220, 132, 0.6); }
@@ -626,9 +625,7 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .buehne-anmeldung.klein .buehne-code { font-size: clamp(1.6rem, 3.5vw, 3rem); }
 .buehne-anmeldung.klein .label::after { content: " (Nachzügler)"; }
 .link-knopf { display: inline-flex; align-items: center; text-decoration: none; }
-/* Video im Spielablauf bildschirmfüllend */
-.video-box video { width: 100vw; height: 82vh; object-fit: contain; background: #000; }
-/* Während Video und Botschaft keine Knöpfe und kein Mauszeiger sichtbar.
+/* Während der Botschaft keine Knöpfe und kein Mauszeiger sichtbar.
    Steuerung über die Tastatur: Leertaste/Pfeil rechts = weiter, Esc = schliessen */
 .video-knoepfe { display: none !important; }
 .video-box, .video-box * { cursor: none; }

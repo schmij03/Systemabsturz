@@ -115,12 +115,12 @@
       <div class="karte start-karte">
         <h3>Spiel starten</h3>
         <ol class="zeitstrahl">
-          <li><strong>Video</strong><span>Vollbild, NULLBYTE meldet sich</span></li>
+          <li><strong>Botschaft</strong><span>Vollbild, NULLBYTE meldet sich mit Maske und Stimme</span></li>
           <li><strong>Spielanweisung</strong><span>wird vorgelesen, Beitrittscode gross darüber. Jetzt Material verteilen, Teams melden sich an.</span></li>
           <li><strong>Aufgaben frei</strong><span>Countdown startet, alle Tablets beginnen gleichzeitig</span></li>
         </ol>
         <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
-        <p class="tasten klein">Tastatur im Vollbild: <kbd>→</kbd> nächster Schritt, <kbd>R</kbd> Anweisung nochmals vorlesen, <kbd>Esc</kbd> Video abbrechen.</p>
+        <p class="tasten klein">Tastatur im Vollbild: <kbd>→</kbd> nächster Schritt, <kbd>R</kbd> Anweisung nochmals vorlesen, <kbd>Esc</kbd> Botschaft abbrechen.</p>
       </div>
 
       <div class="raster-2">
@@ -134,7 +134,6 @@
             <span id="szene-vorlesen"></span>
           </div>
           <div class="knopf-reihe">
-            <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
             <button type="button" id="nur-botschaft" class="knopf gefahr">Botschaft von NULLBYTE</button>
           </div>
           <div id="auto-vorlesen-zeile" class="schalter-zeile">
@@ -154,7 +153,7 @@
         <summary><h3>Probleme? Hilfe für Notfälle</h3></summary>
         <ul class="hilfe-liste">
           <li><button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button><span>Ein Tablet wartet noch, obwohl das Spiel läuft.</span></li>
-          <li><button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben</button><span>Ohne Video und Anweisung direkt starten.</span></li>
+          <li><button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben</button><span>Ohne Botschaft und Anweisung direkt starten.</span></li>
           <li><button type="button" id="neuer-code" class="knopf">Neuer Beitrittscode</button><span>Nur vor dem Start möglich.</span></li>
         </ul>
         <p class="klein">Kein Internet? Auf dem Tablet «Spielleitung: manuell starten» und PIN wählen.<br>Direkter Link für die Tablets: <code id="anmelde-link"></code></p>
@@ -228,10 +227,9 @@
     <span>«Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, Lizenz <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
   </footer>
 
-  <!-- Hackervideo (Platzhalter: videos/intro.mp4) -->
+  <!-- Botschaft von NULLBYTE (Intro im Vollbild) -->
   <div id="video-box" class="overlay video-box" hidden>
-    <video id="hacker-video" src="videos/intro.mp4" playsinline preload="none" controls></video>
-    <div id="video-ersatz" class="video-ersatz" hidden>
+    <div id="video-ersatz" class="video-ersatz">
       <img src="img/maske.svg" alt="Maske von NULLBYTE" class="maske maske-gross">
       <div class="ersatz-rechts">
         <div class="label rot blinkt-langsam">● EINGEHENDE ÜBERTRAGUNG: NULLBYTE</div>
@@ -245,7 +243,7 @@
     </div>
   </div>
 
-  <!-- Spielanweisung nach dem Video, darüber der Beitrittscode -->
+  <!-- Spielanweisung nach der Botschaft, darüber der Beitrittscode -->
   <div id="anweisung" class="overlay anweisung" hidden>
     <div class="anweisung-box">
       <div class="anweisung-code">

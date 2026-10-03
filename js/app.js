@@ -241,7 +241,7 @@ const TEXTE = {
       ]
     }
   },
-  /* Spielanweisung: erscheint nach dem Video auf dem Beamer, darüber der
+  /* Spielanweisung: erscheint nach der Botschaft auf dem Beamer, darüber der
      Beitrittscode. Jeder Absatz wird einzeln vorgelesen und hervorgehoben.
      Danach startet automatisch der Countdown. */
   spielanweisung: {
@@ -254,7 +254,7 @@ const TEXTE = {
       'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf dem Tablet. Viel Erfolg!'
     ]
   },
-  /* Botschaft von NULLBYTE (Hackervideo-Ersatz auf dem Beamer, wird vorgelesen).
+  /* Botschaft von NULLBYTE (Intro auf dem Beamer, wird vorgelesen).
      Jede Zeile wird einzeln getippt. */
   nullbyte: [
     'VERBINDUNG HERGESTELLT.',
@@ -1800,7 +1800,7 @@ function initSpielleitung() {
   $('#kopf-start').addEventListener('click', function () { $('#spiel-starten').click(); });
   $('#zur-buehne').addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-  // Spielablauf: Intro (Video oder Botschaft), danach Aufgaben freigeben
+  // Spielablauf: Botschaft von NULLBYTE, Spielanweisung, danach Aufgaben freigeben
   $('#spiel-starten').addEventListener('click', function () {
     Ton.entsperren();
     if (Leitung.stand.freigegeben) {
@@ -1808,10 +1808,10 @@ function initSpielleitung() {
       return;
     }
     Leitung.ablauf = true;
-    setzeStatus('Intro läuft (Video, danach Spielanweisung mit Beitrittscode). Danach werden die Aufgaben automatisch freigegeben.', 'info');
+    setzeStatus('Intro läuft (Botschaft von NULLBYTE, danach Spielanweisung mit Beitrittscode). Danach werden die Aufgaben automatisch freigegeben.', 'info');
     vollbild(true);
     window.scrollTo(0, 0);
-    zeigeVideo();
+    zeigeBotschaft();
   });
   $('#start-countdown').addEventListener('click', function () { Ton.entsperren(); freigeben(); });
   $('#video-freigeben').addEventListener('click', function () { Leitung.ablauf = true; introFertig(); });
@@ -1897,8 +1897,7 @@ function initSpielleitung() {
     $('#sync-info').textContent = 'Zurückgesetzt. Startet den Countdown neu oder öffnet die Seite mit ?ende=HH:MM.';
   });
 
-  $('#hackervideo').addEventListener('click', zeigeVideo);
-  // Tastatur während Video und Botschaft (Knöpfe sind dort unsichtbar)
+  // Tastatur während der Botschaft (Knöpfe sind dort unsichtbar)
   document.addEventListener('keydown', function (e) {
     if ($('#video-box').hidden) return;
     if (e.key === 'Escape') { e.preventDefault(); $('#video-schliessen').click(); }
@@ -1912,18 +1911,11 @@ function initSpielleitung() {
   });
   $('#video-schliessen').addEventListener('click', function () {
     const warAblauf = Leitung.ablauf;
-    schliesseVideo();
+    schliesseBotschaft();
     if (warAblauf) setzeStatus('Intro abgebrochen. Mit «Aufgaben jetzt freigeben» startet das Spiel auf den Tablets.', 'warnung');
   });
   $('#nochmals-vorlesen').addEventListener('click', spieleNullbyteBotschaft);
-  $('#nur-botschaft').addEventListener('click', function () {
-    Ton.entsperren();
-    $('#video-box').hidden = false;
-    $('#hacker-video').pause();
-    $('#hacker-video').hidden = true;
-    $('#video-ersatz').hidden = false;
-    spieleNullbyteBotschaft();
-  });
+  $('#nur-botschaft').addEventListener('click', zeigeBotschaft);
   $('#system-gerettet').addEventListener('click', function () {
     Ton.entsperren();
     if (Leitung.stand.endzeit && !Leitung.stand.gestoppt) {
@@ -2119,7 +2111,7 @@ function setzeStatus(text, art) {
 /** Intro ist zu Ende: Aufgaben freigeben, wenn der Spielablauf läuft. */
 function introFertig() {
   if (!Leitung.ablauf) return;
-  if (!$('#video-box').hidden) schliesseVideo();
+  if (!$('#video-box').hidden) schliesseBotschaft();
   Leitung.ablauf = true;
   zeigeAnweisung();
 }
@@ -2137,7 +2129,7 @@ function vollbild(an) {
   } catch (e) { /* egal */ }
 }
 
-/* Spielanweisung nach dem Video: Beitrittscode oben, Absätze werden
+/* Spielanweisung nach der Botschaft: Beitrittscode oben, Absätze werden
    nacheinander vorgelesen und hervorgehoben. Danach Freigabe. */
 async function zeigeAnweisung() {
   const box = $('#anweisung');
@@ -2190,7 +2182,7 @@ async function freigeben() {
     s.freigegeben = true;
     speichereJson(SPEICHER_LEITUNG, s);
   }
-  if (!$('#video-box').hidden) schliesseVideo();
+  if (!$('#video-box').hidden) schliesseBotschaft();
   const nachAnweisung = !$('#anweisung').hidden;
   schliesseAnweisung();
   window.scrollTo(0, 0);
@@ -2227,30 +2219,10 @@ function zeigeSzene(name, ohneVorlesen) {
   $$('[data-szene]').forEach(function (k) { k.classList.toggle('aktiv', k.dataset.szene === name); });
 }
 
-function zeigeVideo() {
+/* Botschaft von NULLBYTE im Vollbild: Maske, getippter Text, Hackerstimme */
+function zeigeBotschaft() {
   Ton.entsperren();
-  const box = $('#video-box');
-  const video = $('#hacker-video');
-  const ersatz = $('#video-ersatz');
-  box.hidden = false;
-  ersatz.hidden = true;
-  video.hidden = false;
-  video.currentTime = 0;
-  video.controls = false;   // keine Bedienleiste auf dem Beamer
-  const p = video.play();
-  if (p && p.catch) p.catch(function () { zeigeVideoErsatz(); });
-  video.onerror = zeigeVideoErsatz;
-  video.onended = introFertig;
-  if (video.error || video.networkState === 3) zeigeVideoErsatz();
-}
-
-/* Ersatz, solange videos/intro.mp4 fehlt: Hackertext tippt sich selbst */
-function zeigeVideoErsatz() {
-  const video = $('#hacker-video');
-  const ersatz = $('#video-ersatz');
-  if (!ersatz.hidden) return;
-  video.hidden = true;
-  ersatz.hidden = false;
+  $('#video-box').hidden = false;
   spieleNullbyteBotschaft();
 }
 
@@ -2297,10 +2269,8 @@ function spieleNullbyteBotschaft() {
   naechsteZeile();
 }
 
-function schliesseVideo() {
+function schliesseBotschaft() {
   Leitung.ablauf = false;
-  const video = $('#hacker-video');
-  video.pause();
   clearInterval($('#video-ersatz')._timer);
   $('#video-ersatz')._lauf = ($('#video-ersatz')._lauf || 0) + 1;
   Sprache.stopp();
