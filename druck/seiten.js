@@ -12,7 +12,7 @@ var Druck = (function () {
   'use strict';
 
   /** Adresse des Notfall-Terminals zum Abtippen (ohne https://) */
-  var ADRESSE_STANDARD = 'schmij03.github.io/HackingSchule';
+  var ADRESSE_STANDARD = 'schmij03.github.io/Systemabsturz';
   function adresse() {
     var l = window.location;
     if (!/^https?:$/.test(l.protocol) || /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(l.hostname)) return ADRESSE_STANDARD;
