@@ -137,7 +137,7 @@ Das Terminal zeigt «SYSTEM GELÖSCHT», alle Eingaben sind gesperrt, der Punkte
 
 ### Tablets zurücksetzen
 
-Auf dem Tablet unten rechts auf «Spielleitung» tippen, PIN eingeben (Standard **4711**) und bestätigen. Der Spielstand liegt nur im Browser des jeweiligen Geräts (localStorage).
+Auf dem Tablet unten rechts auf «Spielleitung» tippen und die PIN eingeben (Standard **4711**). Danach wählt ihr «Spiel zurücksetzen» (mit Bestätigung) oder «Zur Spielleitungsansicht», um vom Tablet aus die Spielleitung zu öffnen. Der Spielstand liegt nur im Browser des jeweiligen Geräts (localStorage).
 
 ## Anpassen
 

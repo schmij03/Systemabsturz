@@ -1046,14 +1046,26 @@ function initStartseite() {
 }
 
 /** Setzt den Spielstand dieses Geräts zurück (nur mit PIN). */
+/** Knopf «Spielleitung» unten rechts: nach der PIN Spiel zurücksetzen
+    oder zur Spielleitungsansicht wechseln. */
 async function resetTablet() {
-  const pin = await fragePin('Tablet zurücksetzen');
+  const pin = await fragePin('Spielleitung');
   if (pin === null) return;
   if (pin !== SPIELLEITUNG_PIN) {
     Ton.spiele('fehler');
     toast('Falsche PIN.', 'warnung');
     return;
   }
+  const wahl = await dialog('Spielleitung', 'Was möchtet ihr tun? Der Spielstand dieses Tablets bleibt erhalten, ausser ihr setzt das Spiel zurück.', [
+    { text: 'Abbrechen', wert: null },
+    { text: 'Spiel zurücksetzen', wert: 'reset', klasse: 'gefahr' },
+    { text: 'Zur Spielleitungsansicht', wert: 'leitung', klasse: 'primaer' }
+  ]);
+  if (wahl === 'leitung') {
+    location.href = 'spielleitung.html';
+    return;
+  }
+  if (wahl !== 'reset') return;
   const ja = await dialog('Spielstand löschen?', 'Teamname, Punkte, gelöste Protokolle und Joker auf diesem Tablet werden gelöscht.', [
     { text: 'Abbrechen', wert: false },
     { text: 'Löschen', wert: true, klasse: 'gefahr' }
