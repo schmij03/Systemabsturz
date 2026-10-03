@@ -22,9 +22,9 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
 | `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
-| `material/` | Teamsets pro Stufe (Word, PDF folgen), Download auf der Spielleitungsseite |
+| `material/` | Teamsets pro Stufe als eigenständige HTML-Dateien, Download auf der Spielleitungsseite |
 | `js/netzwerke.js` | Netzwerkpläne für Protokoll 3 pro Stufe mit Lösung |
-| `druck/` | Druckmaterial: Auftragsblatt, Chiffrierscheibe (Protokoll 1), Netzwerkplan (Protokoll 3) |
+| `druck/` | Druckmaterial: komplettes Teamset (`teamset.html`) und Einzelblätter, Inhalt in `seiten.js`, Gestaltung in `druck.css` |
 | `sw.js` | Service Worker: speichert alles für den Offline-Betrieb |
 | `TESTPLAN.md` | Kurzer Testplan vor dem Einsatz |
 
@@ -43,12 +43,14 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 
 ## Ablauf in der Lektion
 
-1. **Material drucken** (auf `spielleitung.html` im Reiter «1 Vorbereiten», Abschnitt «Material drucken», pro Team je ein Exemplar):
-   * **Auftragsblatt** (`druck/auftrag.html`): Lage, Anmeldung, die drei Protokolle, Regeln, Platz für Notizen.
-   * **Protokoll 1** (`druck/protokoll1.html`, 3 Seiten wie im Teamset): Auftragsblatt «Die Nachricht von NULLBYTE» mit Feldern für Geheimtext, Verschiebung, Klartext, Code und Bonusfrage, dann die grosse Scheibe (172 mm, Klartext) und die kleine Scheibe (142 mm, Geheimtext) mit Bauanleitung. Stufe wählbar, Geheimtext optional eindruckbar. In «Tatsächlicher Grösse» drucken, am besten auf festes Papier.
-   * **Protokoll 2** (`druck/protokoll2.html`, 1 Seite wie im Teamset): Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Feld zum Planen des Programms und für die Signaturen. Werte und Blöcke kommen direkt aus `js/maze.js`, passen also immer zur gewählten Stufe.
-   * **Protokoll 3: Netzwerkplan** (`druck/protokoll3.html`, 1 Seite): Vorgehen, Netzwerk mit Servern und Kennzahlen, Legende und Felder für Weg und Override-Code. A4 hoch, farbig drucken.
-   * Das Auftragsblatt und alle drei Protokollblätter haben dasselbe Design (Vorbild Protokoll 2): Oberzeile, Titel mit farbigem Stufen-Abzeichen (grün, orange, rot), Abschnitte «So geht ihr vor» und gleiche Fusszeile. Die gemeinsamen Regeln stehen in `druck/druck.css`.
+1. **Material drucken** (auf `spielleitung.html` im Reiter «1 Vorbereiten», Abschnitt «Material drucken»): pro Team ein **Teamset** der gewählten Stufe, 7 Seiten im Layout der Word-Vorlagen (rote Linie, Oberzeile, Titel mit Stufen-Abzeichen):
+   * Seite 1 **Auftrag:** Lage, Teamname und Beitrittscode, Anmeldung mit Adresse des Terminals, die drei Protokolle, Regeln, Notizen.
+   * Seiten 2 bis 4 **Protokoll 1:** «Die Nachricht von NULLBYTE» mit Feldern für Geheimtext, Verschiebung, Klartext, Code und Bonusfrage, dann die grosse Scheibe (172 mm, Klartext) und die kleine Scheibe (142 mm, Geheimtext) mit Bauanleitung. Am besten auf festes Papier.
+   * Seite 5 **Protokoll 2:** Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Planungsfeld und Signaturen.
+   * Seiten 6 und 7 **Protokoll 3:** «Routing reparieren» mit Auftrag und Lösungsfeldern, dann der Netzwerkplan im Querformat mit Legende.
+   * Ansehen und drucken: `druck/teamset.html?stufe=leicht` (passt sich an Stufe und eingestellten Code an, Knopf «Als HTML herunterladen»). Fertige Dateien zum Herunterladen: `material/Systemabsturz_Teamset_<Stufe>.html` (eigenständig, ohne Skripte, auch offline). Einzelblätter: `druck/auftrag.html`, `druck/protokoll1.html` (Geheimtext optional eindruckbar), `druck/protokoll2.html`, `druck/protokoll3.html`.
+   * Druckeinstellung A4, «Tatsächliche Grösse» (100 %), farbig. Der Netzwerkplan druckt automatisch quer.
+   * Inhalt aller Blätter: `druck/seiten.js`, Gestaltung: `druck/druck.css`. Nach Änderungen die Download-Dateien mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, Schwierigkeit für Protokoll 2 wählen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
 3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und **NULLBYTE meldet sich** mit Maske, getipptem Text und Hackerstimme.
 4. **Spielanweisung:** Direkt nach der Botschaft erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein und tippen auf «Wir sind bereit». Die Tablets warten verdeckt.
@@ -82,7 +84,7 @@ Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 | Mittel | Verschiebung 6 (A wird zu G, Unterschrift TARRHEZK) | 18 Server, 5 infiziert, 32 Verbindungen | A, B, G, H, L, P, Q, Z (7 Verbindungen) | Alle kurzen Wege sind infiziert, der saubere Weg führt im Zickzack von oben nach unten |
 | Schwer | Verschiebung 8 (A wird zu I, Unterschrift VCTTJGBM) | 22 Server, 7 infiziert, 38 Verbindungen | A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen) | Viele verlockende Abkürzungen, der saubere Weg beginnt ganz unten und steigt quer durchs Netz |
 
-Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Die Netzwerkbilder in den Teamsets müssen dann ebenfalls ersetzt werden.
+Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Danach die Teamsets mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 
 * **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) eingeben, «Übernehmen (PIN)». Die Verschiebung ergibt sich aus der Stufe und passt sich bei einem Stufenwechsel automatisch an. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
 * Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`. Der Geheimtext für die anderen Stufen wird daraus automatisch umgeschlüsselt. Die Verschiebungen je Stufe stehen in `P1_VERSCHIEBUNG_STUFEN`.

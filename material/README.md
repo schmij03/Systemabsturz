@@ -1,17 +1,21 @@
 # Material für die Spielleitung
 
-Hier liegen die Teamsets pro Schwierigkeitsstufe. Die Spielleitung lädt sie auf `spielleitung.html` unter «Material herunterladen und drucken» herunter.
+Hier liegen die Teamsets pro Schwierigkeitsstufe als eigenständige HTML-Dateien (Stil eingebettet, ohne Skripte, funktionieren auch offline). Die Spielleitung lädt sie auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» herunter, öffnet sie im Browser und druckt sie.
 
-| Datei | Inhalt |
+| Datei | Inhalt (7 Seiten) |
 |---|---|
-| `Systemabsturz_Teamset_Leicht.docx` | Auftrag, Protokoll 1 (Chiffrierscheibe), Protokoll 2, Protokoll 3 mit Netzwerkplan Stufe Leicht |
-| `Systemabsturz_Teamset_Mittel.docx` | dasselbe für Stufe Mittel |
-| `Systemabsturz_Teamset_Schwer.docx` | dasselbe für Stufe Schwer |
+| `Systemabsturz_Teamset_Leicht.html` | Auftrag, Protokoll 1 (Auftrag und Chiffrierscheibe), Protokoll 2, Protokoll 3 (Auftrag und Netzwerkplan quer), Stufe Leicht |
+| `Systemabsturz_Teamset_Mittel.html` | dasselbe für Stufe Mittel |
+| `Systemabsturz_Teamset_Schwer.html` | dasselbe für Stufe Schwer |
 
-**PDF-Versionen:** Legt die PDFs mit genau diesen Namen in diesen Ordner, dann erscheinen die Download-Links automatisch auf der Spielleitungsseite:
+Druckeinstellung: A4, «Tatsächliche Grösse» (100 %), farbig. Der Netzwerkplan druckt automatisch im Querformat.
 
-* `Systemabsturz_Teamset_Leicht.pdf`
-* `Systemabsturz_Teamset_Mittel.pdf`
-* `Systemabsturz_Teamset_Schwer.pdf`
+**Neu erzeugen:** Die Dateien entstehen aus `druck/teamset.html` (Inhalt in `druck/seiten.js`, Gestaltung in `druck/druck.css`). Nach Änderungen an Texten, Labyrinth oder Netzwerken neu erzeugen:
 
-Die Netzwerkpläne in den Teamsets entsprechen `js/netzwerke.js` (Leicht 14 Server, Mittel 18 Server, Schwer 22 Server). Wer einen Plan ändert, muss beides anpassen. Die Bilder für die Teamsets lassen sich aus `druck/protokoll3.html` erzeugen.
+```
+node werkzeuge/teamsets_erzeugen.js
+```
+
+Das Teamset im Browser (`druck/teamset.html?stufe=leicht`) passt sich zusätzlich an die Einstellungen der Spielleitung an und hat einen Knopf «Als HTML herunterladen».
+
+**PDF (optional):** Legt ihr `Systemabsturz_Teamset_Leicht.pdf` (und Mittel, Schwer) in diesen Ordner, erscheint auf der Spielleitungsseite automatisch ein PDF-Link.
