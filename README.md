@@ -47,6 +47,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 1. **Material drucken** (auf `spielleitung.html` unter «Material drucken», pro Team je ein Exemplar):
    * **Auftragsblatt** (`druck/auftrag.html`): Lage, Anmeldung, die drei Protokolle, Regeln, Platz für Notizen.
    * **Protokoll 1** (`druck/protokoll1.html`, 3 Seiten wie im Teamset): Auftragsblatt «Die Nachricht von NULLBYTE» mit Feldern für Geheimtext, Verschiebung, Klartext, Code und Bonusfrage, dann die grosse Scheibe (172 mm, Klartext) und die kleine Scheibe (142 mm, Geheimtext) mit Bauanleitung. Stufe wählbar, Geheimtext optional eindruckbar. In «Tatsächlicher Grösse» drucken, am besten auf festes Papier.
+   * **Protokoll 2** (`druck/protokoll2.html`, 1 Seite wie im Teamset): Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Feld zum Planen des Programms und für die Signaturen. Werte und Blöcke kommen direkt aus `js/maze.js`, passen also immer zur gewählten Stufe.
    * **Protokoll 3: Netzwerkplan** (`druck/protokoll3.html`): Netzwerk mit Servern und Kennzahlen, farbig im Querformat drucken.
 2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, Schwierigkeit für Protokoll 2 wählen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
 3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und das **Hackervideo** läuft (fehlt `videos/intro.mp4`, spricht NULLBYTE mit Maske und Hackerstimme).

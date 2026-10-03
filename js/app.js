@@ -1943,6 +1943,8 @@ function zeigeMaterial() {
   });
   const link = $('#link-netzwerk');
   if (link) link.href = 'druck/protokoll3.html?stufe=' + (Leitung.stand.stufe || STANDARD_STUFE);
+  const link2 = $('#link-protokoll2');
+  if (link2) link2.href = 'druck/protokoll2.html?stufe=' + (Leitung.stand.stufe || STANDARD_STUFE);
 }
 
 function zeigeSpielcode() {

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Systemabsturz: Protokoll 2</title>
+  <link rel="stylesheet" href="druck.css">
+  <style>
+    .oberzeile { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em; color: #5f6670; border-bottom: 1.2pt solid #111; padding-bottom: 1mm; margin-bottom: 3mm; }
+    .titelzeile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
+    .titelzeile h1 { font-family: Arial, Helvetica, sans-serif; font-size: 19pt; letter-spacing: 0; margin: 0; }
+    .stufe { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 9pt; color: #fff; padding: 1mm 3mm; border-radius: 1mm; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .stufe.leicht { background: #2e7d32; }
+    .stufe.mittel { background: #ef6c00; }
+    .stufe.schwer { background: #c62828; }
+    h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; border-bottom: 1pt solid #111; margin: 4mm 0 2mm; }
+    ol.schritte { margin: 0; padding-left: 6mm; }
+    ol.schritte li { margin-bottom: 1mm; }
+    table.bloecke { border-collapse: separate; border-spacing: 0 1.2mm; width: 100%; }
+    table.bloecke td { border: none; padding: 1.5mm 3mm; vertical-align: middle; }
+    table.bloecke td.kategorie { width: 30mm; color: #fff; font-weight: 700; border-radius: 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hinweis-kasten { background: #eef0f2; padding: 2.5mm 4mm; border-radius: 1.5mm; margin-top: 2mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    ul.regeln { margin: 0; padding-left: 5mm; }
+    ul.regeln li { margin-bottom: 1mm; }
+    .plan { border: 1pt solid #c9ced6; background: #e7f0fb; border-radius: 2mm; padding: 2.5mm 3mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hut { display: inline-block; background: #ffbf00; color: #111418; font-weight: 700; padding: 1.5mm 4mm; border-radius: 4mm 4mm 1.5mm 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .signaturen { display: flex; align-items: center; gap: 4mm; margin-top: 4mm; font-weight: 700; }
+    .signaturen span.feld { width: 12mm; height: 12mm; border: 1.5pt solid #111418; border-radius: 1.5mm; }
+    .druckleiste select { min-height: 44px; font-size: 12pt; }
+    .druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
+  </style>
+</head>
+<body>
+  <div class="druckleiste">
+    <button type="button" onclick="window.print()">Drucken</button>
+    <label>Stufe <select id="stufe"><option value="leicht">Leicht</option><option value="mittel">Mittel</option><option value="schwer">Schwer</option></select></label>
+    <span>A4 hoch, farbig drucken.</span>
+  </div>
+
+  <div class="seite">
+    <div class="oberzeile">SICHERHEITSPROTOKOLL 2 &nbsp;·&nbsp; ALGORITHMEN</div>
+    <div class="titelzeile"><h1>Virenscanner programmieren</h1><span class="stufe" id="stufe-text"></span></div>
+    <p id="einleitung"></p>
+
+    <h2>So geht ihr vor</h2>
+    <ol class="schritte">
+      <li>Zieht die Blöcke aus der Werkzeugleiste unter «wenn Programm startet».</li>
+      <li>Startet das Programm oder lasst es Schritt für Schritt laufen und beobachtet, welcher Block gerade arbeitet.</li>
+      <li>Sammelt ANTI-V auf dem Weg ins Ziel die richtigen Signaturen ein, ist Protokoll 2 geknackt.</li>
+    </ol>
+
+    <h2>Eure Blöcke</h2>
+    <table class="bloecke" id="bloecke"></table>
+    <div class="hinweis-kasten" id="definitionen"></div>
+
+    <h2>Regeln des Terminals</h2>
+    <ul class="regeln" id="regeln"></ul>
+
+    <h2>Plant euer Programm</h2>
+    <div class="plan" id="plan"><span class="hut">wenn Programm startet</span></div>
+
+    <div class="signaturen">Eingesammelte Signaturen: <span class="feld"></span><span class="feld"></span><span class="feld"></span></div>
+
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span id="fuss-stufe"></span></div>
+  </div>
+
+  <script src="../js/maze.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    /* Inhalt aus der Spielkonfiguration (js/maze.js): verfügbare Blöcke,
+       Blocklimit und Energie stimmen so immer mit dem Terminal überein. */
+    (function () {
+      var KATEGORIEN = [
+        { name: 'Steuerung', farbe: '#FFAB19', bloecke: { antiv_wiederhole: 'wiederhole bis Ziel erreicht', antiv_falls: 'falls ‹ › dann', antiv_falls_sonst: 'falls ‹ › dann sonst' } },
+        { name: 'Bewegung', farbe: '#4C97FF', bloecke: { antiv_vor: 'gehe 1 Feld vor', antiv_rechts: 'drehe dich nach rechts', antiv_links: 'drehe dich nach links' } },
+        { name: 'Fühlen', farbe: '#5CB1D6', bloecke: { antiv_rechts_frei: 'rechts frei?', antiv_vorne_frei: 'vorne frei?', antiv_links_frei: 'links frei?', antiv_rechts_infiziert: 'rechts infiziert?', antiv_vorne_infiziert: 'vorne infiziert?' } },
+        { name: 'Operatoren', farbe: '#59C059', bloecke: { antiv_und: '‹ › und ‹ ›', antiv_oder: '‹ › oder ‹ ›', antiv_nicht: 'nicht ‹ ›' } }
+      ];
+      var wahl = document.getElementById('stufe');
+      var leitung = ladeJson(SPEICHER_LEITUNG) || {};
+      wahl.value = stufeAusUrl() || leitung.stufe || STANDARD_STUFE;
+
+      function zeige() {
+        var key = wahl.value;
+        var st = STUFEN[key];
+        var erlaubt = function (typ) { return !st.toolbox || st.toolbox.indexOf(typ) >= 0; };
+        var hatInfiziert = st.labyrinth.some(function (z) { return z.indexOf('X') >= 0; });
+
+        var badge = document.getElementById('stufe-text');
+        badge.textContent = 'STUFE ' + st.name.toUpperCase();
+        badge.className = 'stufe ' + key;
+        document.getElementById('fuss-stufe').textContent = 'Teamset Stufe ' + st.name + ' · Protokoll 2';
+
+        document.getElementById('einleitung').textContent = 'NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert im Notfall-Terminal den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt.' +
+          (hatInfiziert ? ' Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.' : '');
+
+        var tabelle = document.getElementById('bloecke');
+        tabelle.innerHTML = '';
+        var mitInfiziert = false;
+        KATEGORIEN.forEach(function (k) {
+          var liste = Object.keys(k.bloecke).filter(erlaubt);
+          if (!liste.length) return;
+          if (liste.indexOf('antiv_rechts_infiziert') >= 0) mitInfiziert = true;
+          var tr = document.createElement('tr');
+          var td1 = document.createElement('td');
+          td1.className = 'kategorie';
+          td1.style.background = k.farbe;
+          td1.textContent = k.name;
+          var td2 = document.createElement('td');
+          td2.textContent = liste.map(function (t) { return '«' + k.bloecke[t] + '»'; }).join(', ');
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tabelle.appendChild(tr);
+        });
+
+        document.getElementById('definitionen').innerHTML =
+          '<strong>frei</strong> heisst: Auf dem Nachbarfeld steht keine Mauer.' +
+          (mitInfiziert ? ' <strong>infiziert</strong> heisst: Das Feld ist rot.' : '') +
+          '<br>Rechts und links gelten aus der Sicht von ANTI-V. Stellt euch hinter den Roboter!';
+
+        document.getElementById('regeln').innerHTML =
+          '<li><strong>Schleife ist Pflicht:</strong> Ohne «wiederhole bis Ziel erreicht» startet das Programm nicht.</li>' +
+          '<li><strong>Blocklimit:</strong> Höchstens ' + st.maxBloecke + ' Blöcke. Ist das Limit erreicht, werden die Blöcke grau.</li>' +
+          '<li><strong>Energie:</strong> ANTI-V kann höchstens ' + st.energie + ' Felder gehen. Umwege enden mit «Energie leer!».</li>' +
+          '<li><strong>Effizienzbonus:</strong> ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' Punkte für jeden Block unter dem Limit. Nach dem Lösen dürft ihr weiter optimieren.</li>';
+
+        // Planungsfeld wie im Teamset: bei Leicht etwas höher
+        document.getElementById('plan').style.height = (key === 'leicht' ? 53 : 41) + 'mm';
+      }
+      wahl.addEventListener('change', zeige);
+      zeige();
+    })();
+  </script>
+</body>
+</html>
