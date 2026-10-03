@@ -8,7 +8,7 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
-const CACHE_NAME = 'systemabsturz-v4';
+const CACHE_NAME = 'systemabsturz-v5';
 
 const DATEIEN = [
   './',
@@ -49,9 +49,17 @@ self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
       // Einzeln laden, damit eine fehlende Datei nicht alles verhindert
-      return Promise.all(DATEIEN.map(function (d) {
+      const alle = Promise.all(DATEIEN.map(function (d) {
         return cache.add(d).catch(function () { /* Datei fehlt: überspringen */ });
       }));
+      // Sprachaufnahmen laut audio/tts/verzeichnis.json ebenfalls speichern
+      const stimmen = fetch('audio/tts/verzeichnis.json').then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (v) {
+          if (!v || !v.dateien) return null;
+          const liste = ['audio/tts/verzeichnis.json'].concat(Object.keys(v.dateien).map(function (k) { return 'audio/tts/' + v.dateien[k]; }));
+          return Promise.all(liste.map(function (d) { return cache.add(d).catch(function () { /* überspringen */ }); }));
+        }).catch(function () { /* ohne Aufnahmen */ });
+      return Promise.all([alle, stimmen]);
     }).then(function () { return self.skipWaiting(); })
   );
 });
