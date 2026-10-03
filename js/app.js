@@ -26,6 +26,11 @@ const JOKER_KOSTEN = 20;
 const BONUS_PUNKTE = 10;
 const PUNKTE_PRO_RESTMINUTE = 1;
 
+/** Effizienzbonus in Protokoll 2: Grundbonus plus Punkte pro Block,
+    der unter dem Blocklimit der Stufe bleibt (Limit siehe js/maze.js) */
+const BLOCK_BONUS_BASIS = 10;
+const BLOCK_BONUS_PRO_BLOCK = 5;
+
 /** Nach so vielen Minuten ohne Lösung erscheint Tipp-Stufe 1 gratis */
 const GRATIS_TIPP_MINUTEN = 5;
 
@@ -91,6 +96,19 @@ const TEXTE = {
       titel: 'Protokoll 2: Algorithmen',
       kurz: 'Algorithmen',
       story: 'Stark, Kiste 1 ist offen! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
+      /* Tipps für die Stufen leicht und mittel (schwer: «tipps» darunter) */
+      tippsStufen: {
+        leicht: [
+          'ANTI-V soll geradeaus gehen, solange vorne frei ist. An jeder Ecke biegt der Gang nach rechts ab.',
+          'Ihr braucht «wiederhole bis Ziel erreicht» und darin «falls dann sonst» mit der Bedingung «vorne frei?».',
+          'wiederhole bis Ziel erreicht: falls vorne frei, dann gehe 1 Feld vor, sonst drehe dich nach rechts. Das sind genau 5 Blöcke.'
+        ],
+        mittel: [
+          'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
+          'In der Wiederholung prüft ihr zuerst rechts, dann vorne. Ist beides zu, dreht ANTI-V nach links. Ihr braucht zwei «falls dann sonst» ineinander.',
+          'falls rechts frei, dann drehe rechts und gehe vor. Sonst: falls vorne frei, dann gehe vor, sonst drehe links.'
+        ]
+      },
       tipps: [
         'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
         'Ihr braucht eine Wiederholung und darin «falls dann sonst». Eine Bedingung mit «und» ist nur wahr, wenn beide Teile stimmen. Ein rotes Feld ist nie erlaubt.',
@@ -544,8 +562,16 @@ function endeAusUrl() {
 
 /** Hängt den aktuellen ?ende-Parameter an einen Link an. */
 function mitParameter(seite) {
-  const p = new URLSearchParams(location.search).get('ende');
-  return p ? seite + '?ende=' + encodeURIComponent(p) : seite;
+  const q = new URLSearchParams(location.search);
+  const teile = [];
+  ['ende', 'stufe'].forEach(function (k) { if (q.get(k)) teile.push(k + '=' + encodeURIComponent(q.get(k))); });
+  return teile.length ? seite + '?' + teile.join('&') : seite;
+}
+
+/** Schwierigkeitsstufe aus ?stufe=leicht|mittel|schwer (oder null). */
+function stufeAusUrl() {
+  const st = (new URLSearchParams(location.search).get('stufe') || '').toLowerCase();
+  return typeof STUFEN !== 'undefined' && STUFEN[st] ? st : null;
 }
 
 /** Formatiert Millisekunden als MM:SS (oder H:MM:SS). */
@@ -754,7 +780,10 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
     override: false,
     restBeiOverride: null,
     geloescht: false,
-    programm: null                      // Blockly-Programm (Protokoll 2)
+    programm: null,                     // Blockly-Programm (Protokoll 2)
+    stufe: stufeAusUrl() || (typeof STANDARD_STUFE !== 'undefined' ? STANDARD_STUFE : 'schwer'),
+    blockBonus: 0,                      // bester Effizienzbonus in Protokoll 2
+    bloecke: null
   };
 }
 
@@ -913,7 +942,7 @@ function initTerminal() {
   $('#helpdesk-vorlesen').appendChild(Sprache.knopf(function () {
     const s = Terminal.stand;
     const p = aktuellesProtokoll();
-    const frei = TEXTE.protokolle[p].tipps.slice(0, s.tippStufe[p]);
+    const frei = tippsFuer(p).slice(0, s.tippStufe[p]);
     if (!frei.length) return 'Noch kein Tipp freigeschaltet. Ihr habt ' + (JOKER_ANZAHL - s.jokerEingeloest) + ' Joker.';
     return frei.map(function (t, i) { return 'Tipp ' + (i + 1) + ': ' + t; }).join(' ');
   }, 'normal', '🔊 Tipps vorlesen'));
@@ -959,7 +988,7 @@ async function frageStartsignal() {
     const start = await Signal.letzte(s.spielcode, 'start');
     const zeit = new Date().toLocaleTimeString('de-CH');
     if (start && start.ende && s.wartet) {
-      starteNachSignal(start.ende);
+      starteNachSignal(start.ende, start.stufe);
       return;
     }
     status.textContent = 'Verbunden. Warte auf das Startsignal … (geprüft ' + zeit + ')';
@@ -971,9 +1000,10 @@ async function frageStartsignal() {
 }
 
 /** Startsignal erhalten: Countdown setzen, Aufgaben freischalten. */
-function starteNachSignal(endzeit) {
+function starteNachSignal(endzeit, stufe) {
   const s = Terminal.stand;
   if (!s.wartet) return;
+  if (stufe && STUFEN[stufe]) s.stufe = stufe;
   clearInterval(Terminal.signalTimer);
   const jetzt = Date.now();
   s.wartet = false;
@@ -996,6 +1026,13 @@ function starteNachSignal(endzeit) {
     tick();
     toast('Los geht es! Knackt Protokoll 1.', 'info');
   }, 2500);
+}
+
+/** Tipps zu einem Protokoll, in Protokoll 2 passend zur Stufe. */
+function tippsFuer(p) {
+  const t = TEXTE.protokolle[p];
+  const stufe = Terminal.stand && Terminal.stand.stufe;
+  return (t.tippsStufen && t.tippsStufen[stufe]) || t.tipps;
 }
 
 /** Das erste noch nicht gelöste Protokoll (3, falls alles gelöst ist). */
@@ -1214,6 +1251,7 @@ function starteAlgorithmen() {
   Terminal.algorithmenGestartet = true;
   window.Algorithmen.init({
     programm: Terminal.stand.programm,
+    stufe: Terminal.stand.stufe,
     speichereProgramm: function (daten) {
       Terminal.stand.programm = daten;
       speichere();
@@ -1221,16 +1259,31 @@ function starteAlgorithmen() {
     gesperrt: spielGesperrt,
     ton: Ton.spiele,
     /* Wird aufgerufen, wenn ANTI-V das Ziel erreicht. Liefert die Meldung. */
-    zielErreicht: async function (gesammelt) {
+    zielErreicht: async function (gesammelt, info) {
       const schluessel = gesammelt.join(',');
       if (await Krypto.pruefe(schluessel, HASHES.signaturen)) {
+        const s = Terminal.stand;
         const kiste = await Krypto.entschluessle(KISTE2_VERSCHLUESSELT, schluessel);
-        Terminal.stand.kiste2 = kiste;
-        const neu = !Terminal.stand.geloest[2];
+        s.kiste2 = kiste;
+        const neu = !s.geloest[2];
+        // Effizienzbonus: weniger Blöcke gibt mehr Punkte, Verbesserungen zählen auch später
+        const bonus = Math.max(0, BLOCK_BONUS_BASIS + BLOCK_BONUS_PRO_BLOCK * (info.maxBloecke - info.bloecke));
+        let zusatz = 'Euer Programm: ' + info.bloecke + ' Blöcke (Limit ' + info.maxBloecke + ').';
+        if (bonus > (s.blockBonus || 0) && !spielGesperrt() && !s.override) {
+          const plus = bonus - (s.blockBonus || 0);
+          zusatz += neu ? ' Effizienzbonus: plus ' + plus + ' Punkte.' : ' Neuer Rekord! Plus ' + plus + ' Punkte.';
+          s.punkte += plus;
+          s.blockBonus = bonus;
+          s.bloecke = info.bloecke;
+        } else if (!neu) {
+          zusatz += ' Euer Rekord: ' + s.bloecke + ' Blöcke. Schafft ihr es mit weniger?';
+        }
+        speichere();
+        aktualisiereKopf();
         protokollGeloest(2);
         Ton.spiele('erfolg');
         zeigeErfolg2(neu);
-        return { ok: true, text: erfolgstext2() };
+        return { ok: true, text: erfolgstext2() + ' ' + zusatz };
       }
       Ton.spiele('fehler');
       return { ok: false, text: 'Ziel erreicht, aber Signaturen unvollständig. ANTI-V muss den richtigen Weg nehmen.' };
@@ -1239,7 +1292,9 @@ function starteAlgorithmen() {
 }
 
 function erfolgstext2() {
-  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: ' + (Terminal.stand.kiste2 || '???');
+  const s = Terminal.stand;
+  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: ' + (s.kiste2 || '???') +
+    (s.blockBonus ? ' (Effizienzbonus ' + s.blockBonus + ' Punkte für ' + s.bloecke + ' Blöcke)' : '');
 }
 
 function zeigeErfolg2(neu) {
@@ -1312,6 +1367,7 @@ function zeigeSieg(neu) {
   $('#sieg-team').textContent = s.team;
   $('#sieg-zeit').textContent = formatZeit(s.restBeiOverride);
   $('#sieg-bonus').textContent = s.restMinutenPunkte || 0;
+  $('#sieg-blockbonus').textContent = (s.blockBonus || 0) + ' Punkte' + (s.bloecke ? ' (' + s.bloecke + ' Blöcke)' : '');
   $('#sieg-punkte').textContent = s.punkte;
   if (neu) o.classList.add('neu');
   $('#protokoll-3 .buzzer-bereich').hidden = true;
@@ -1344,7 +1400,7 @@ function aktualisiereHelpDesk() {
   $('#helpdesk-titel').textContent = t.titel;
   const liste = $('#tipp-liste');
   liste.innerHTML = '';
-  t.tipps.forEach(function (tipp, i) {
+  tippsFuer(p).forEach(function (tipp, i) {
     const li = erstelle('li', 'tipp' + (i < s.tippStufe[p] ? ' frei' : ''));
     li.appendChild(erstelle('strong', '', 'Stufe ' + (i + 1) + ': '));
     li.appendChild(document.createTextNode(i < s.tippStufe[p] ? tipp : 'gesperrt'));
@@ -1358,7 +1414,7 @@ function aktualisiereHelpDesk() {
   if (s.geloest[p] && p === 3) {
     knopf.hidden = true;
     info.textContent = 'Alle Protokolle gelöst.';
-  } else if (s.tippStufe[p] >= t.tipps.length) {
+  } else if (s.tippStufe[p] >= tippsFuer(p).length) {
     knopf.hidden = true;
     info.textContent = 'Alle Tipps zu diesem Protokoll sind freigeschaltet.';
   } else if (rest <= 0) {
@@ -1386,7 +1442,7 @@ async function jokerEinloesen() {
     'Ihr erhaltet Tipp Stufe ' + (s.tippStufe[p] + 1) + ' zu ' + TEXTE.protokolle[p].titel + '. Das kostet ' + JOKER_KOSTEN + ' Punkte. Ihr habt noch ' + rest + (rest === 1 ? ' Joker.' : ' Joker.'),
     [{ text: 'Abbrechen', wert: false }, { text: 'Ja, Joker einlösen', wert: true, klasse: 'primaer' }]);
   if (!ja || spielGesperrt()) return;
-  if (s.tippStufe[p] >= TEXTE.protokolle[p].tipps.length || s.jokerEingeloest >= JOKER_ANZAHL) return;
+  if (s.tippStufe[p] >= tippsFuer(p).length || s.jokerEingeloest >= JOKER_ANZAHL) return;
   s.jokerEingeloest += 1;
   s.punkte -= JOKER_KOSTEN;
   s.tippStufe[p] += 1;
@@ -1449,6 +1505,22 @@ function initSpielleitung() {
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
     zeigeSpielcode();
   });
+  // Schwierigkeit des Labyrinths
+  const wahl = $('#stufe-wahl');
+  Object.keys(STUFEN).forEach(function (k) {
+    const o = erstelle('option', '', STUFEN[k].name + ' (max. ' + STUFEN[k].maxBloecke + ' Blöcke)');
+    o.value = k;
+    wahl.appendChild(o);
+  });
+  if (!Leitung.stand.stufe) Leitung.stand.stufe = stufeAusUrl() || STANDARD_STUFE;
+  wahl.value = Leitung.stand.stufe;
+  wahl.addEventListener('change', function () {
+    Leitung.stand.stufe = wahl.value;
+    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    if (Leitung.stand.freigegeben) toast('Gilt nur für Tablets, die noch nicht gestartet sind. Startsignal erneut senden.', 'info');
+    aktualisiereLinks();
+  });
+
   zeigeSpielcode();
   if (Leitung.stand.freigegeben) setzeStatus('Aufgaben wurden freigegeben. Bei Problemen «Startsignal erneut senden».', 'ok');
 
@@ -1509,7 +1581,8 @@ function initSpielleitung() {
   function aktualisiereLinks() {
     const basis = location.href.replace(/[^/]*$/, '');
     const z = zeitFeld.value;
-    $('#link-tablet').textContent = basis + 'index.html?ende=' + z;
+    const st = Leitung.stand.stufe ? '&stufe=' + Leitung.stand.stufe : '';
+    $('#link-tablet').textContent = basis + 'index.html?ende=' + z + st;
     $('#link-beamer').textContent = basis + 'spielleitung.html?ende=' + z;
   }
   zeitFeld.addEventListener('input', aktualisiereLinks);
@@ -1551,6 +1624,7 @@ function zeigeSpielcode() {
   $$('.spielcode-wert').forEach(function (e) { e.textContent = s.spielcode; });
   const basis = location.href.replace(/[^/]*$/, '');
   $('#anmelde-link').textContent = basis + 'index.html?spiel=' + s.spielcode;
+  if (s.stufe && STUFEN[s.stufe]) $$('.stufe-wert').forEach(function (e) { e.textContent = STUFEN[s.stufe].name; });
 }
 
 function setzeStatus(text, art) {
@@ -1587,7 +1661,7 @@ async function sendeStartsignal() {
   const s = Leitung.stand;
   setzeStatus('Startsignal wird gesendet …', 'info');
   try {
-    await Signal.sende(s.spielcode, { typ: 'start', ende: s.endzeit, gesendet: Date.now() });
+    await Signal.sende(s.spielcode, { typ: 'start', ende: s.endzeit, stufe: s.stufe || STANDARD_STUFE, gesendet: Date.now() });
     setzeStatus('Aufgaben freigegeben um ' + new Date().toLocaleTimeString('de-CH') + '. Die Tablets starten innerhalb weniger Sekunden.', 'ok');
     toast('Startsignal gesendet.', 'info');
   } catch (e) {
@@ -1719,6 +1793,12 @@ async function zeigeLoesungen() {
       if (!z[1]) return;
       liste.appendChild(erstelle('dt', '', z[0]));
       liste.appendChild(erstelle('dd', '', z[1]));
+    });
+    // Musterlösungen Protokoll 2 pro Stufe (aus js/maze.js)
+    Object.keys(STUFEN).forEach(function (k) {
+      const st = STUFEN[k];
+      liste.appendChild(erstelle('dt', '', 'Protokoll 2, Stufe ' + st.name));
+      liste.appendChild(erstelle('dd', 'programm', st.musterloesung + '. Energie: ' + st.energie + ' Felder.'));
     });
   }
   box.hidden = false;

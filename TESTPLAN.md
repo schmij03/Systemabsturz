@@ -45,7 +45,8 @@ wiederhole bis Ziel erreicht
 * Der jeweils ausgeführte Block leuchtet gelb.
 * Die Leiste zeigt nacheinander **Signaturen: 3 8 5**, genau diese drei Zahlen in dieser Reihenfolge.
 * Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: 642».
-* Tab 3 wird freigeschaltet, 150 Punkte (mit Bonus).
+* Zusatz: «Euer Programm: 15 Blöcke (Limit 15). Effizienzbonus: plus 10 Punkte.»
+* Tab 3 wird freigeschaltet, 170 Punkte (mit Bonusfrage und Effizienzbonus, ohne Joker).
 
 ### Test B: Programm ohne «nicht»
 
@@ -61,6 +62,16 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 |---|---|
 | Nur «drehe dich nach links» und «gehe 1 Feld vor» anhängen | ANTI-V stösst an die Mauer, «Mauer!» |
 | «wiederhole bis Ziel erreicht» mit nur «drehe dich nach rechts» | Abbruch: «Endlosschleife? ANTI-V dreht sich im Kreis.» |
+| Nur «gehe 1 Feld vor» ohne Schleife | «Ihr müsst mit der Schleife «wiederhole bis Ziel erreicht» arbeiten.» |
+| Mehr als 15 Blöcke ziehen (Stufe schwer) | Ab 15 Blöcken werden die Blöcke in der Toolbox grau, Anzeige «Blöcke 15 / 15» gelb |
+| Kürzere Lösung mit 11 Blöcken (Help-Desk-Tipp 3 ohne «sonst» beim ersten «falls», siehe Lösungsansicht) | «Neuer Rekord! Plus 20 Punkte.» |
+
+### Stufen leicht und mittel
+
+1. Auf der Spielleitung die Stufe «Leicht» wählen und ein Tablet starten (oder `index.html?stufe=leicht`). Erwartung: Spirallabyrinth, Toolbox ohne Operatoren, «Blöcke 0 / 5», «Energie 38 / 38».
+2. Programm: wiederhole bis Ziel erreicht { falls vorne frei? dann gehe 1 Feld vor, sonst drehe dich nach rechts }. Erwartung: 3, 8, 5, Code 642, Effizienzbonus 10.
+3. Gleiches Programm mit «drehe dich nach links». Erwartung: «Energie leer!».
+4. Stufe «Mittel»: Musterlösung ohne «und» und «nicht» (9 Blöcke) erreicht das Ziel mit 3, 8, 5.
 | «Schritt für Schritt» mehrmals drücken | Je ein Block wird ausgeführt und hervorgehoben |
 | Tempo-Regler verschieben | Animation wird schneller oder langsamer |
 | Seite neu laden | Das gebaute Programm ist noch da |

@@ -16,7 +16,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `css/style.css` | Gestaltung im Terminal-Look |
 | `js/app.js` | Hauptlogik, **alle Einstellungen oben in der Datei** (PIN, Spieldauer, Punkte, Hashes, Texte, Tipps) |
 | `js/blocks.js` | Protokoll 2: Scratch-Blöcke mit Blockly und eigener Interpreter |
-| `js/maze.js` | Protokoll 2: Labyrinth, Signaturen und Darstellung von ANTI-V |
+| `js/maze.js` | Protokoll 2: drei Labyrinthe (Schwierigkeitsstufen), Signaturen, Blocklimit, Energie und Darstellung von ANTI-V |
 | `lib/blockly/` | Lokale Kopie von Blockly 13.3.0 (Apache 2.0) für den Offline-Betrieb |
 | `sounds/` | Platzhalter für Töne (sonst synthetische Töne), siehe `sounds/README.md` |
 | `videos/` | Platz für das Hackervideo `intro.mp4`, siehe `videos/README.md` |
@@ -63,11 +63,27 @@ Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: I
 
 * **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln, dreistelligen Code im Terminal eingeben. Der Code öffnet das Zahlenschloss von Sicherheitskiste 1. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte).
 * **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg erscheint der Code für Sicherheitskiste 2.
+
+### Protokoll 2: Regeln, Stufen und Effizienzbonus
+
+* **Schleife ist Pflicht:** Ein Programm ohne «wiederhole bis Ziel erreicht» startet nicht («Ihr müsst mit der Schleife arbeiten»).
+* **Blocklimit:** Pro Stufe darf das Programm höchstens so viele Blöcke haben, wie die Musterlösung braucht (ohne «wenn Programm startet»). Ist das Limit erreicht, werden die Blöcke in der Toolbox grau. Ein Programm ohne Schleife wäre viel zu lang und passt deshalb nie ins Limit. Die Anzeige «Blöcke 7 / 15» zeigt den Stand.
+* **Energie:** ANTI-V darf nur so viele Felder gehen, wie der richtige Weg lang ist («Energie 16 / 16»). Umwege und Hin-und-her-Laufen enden mit «Energie leer!».
+* **Effizienzbonus:** Wer Protokoll 2 löst, erhält 10 Punkte plus 5 Punkte für jeden Block unter dem Limit. Die Musterlösung gibt also 10 Punkte, eine kürzere Lösung mehr. Teams dürfen nach dem Lösen weiter optimieren: Ein neuer Rekord bringt die Differenz als Zusatzpunkte.
+* **Schwierigkeitsstufen** (Auswahl auf `spielleitung.html` im Bereich «Spielablauf», wird mit dem Startsignal an die Tablets geschickt; alternativ per Link `index.html?stufe=leicht`):
+
+| Stufe | Labyrinth | Nötige Idee | Blocklimit | Energie | Kürzeste bekannte Lösung |
+|---|---|---|---|---|---|
+| Leicht | Gang mit Ecken, keine roten Felder, Toolbox ohne Operatoren | falls vorne frei, dann vor, sonst rechts drehen | 5 | 38 | 5 Blöcke |
+| Mittel | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
+| Schwer (Standard) | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
+
+Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also gleich. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
 * **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server finden, die Kennzahlen addieren und als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
 
 ### Help-Desk und Punkte
 
-* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage.
+* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage, plus Effizienzbonus in Protokoll 2 (10 Punkte plus 5 pro eingespartem Block).
 * Jedes Team hat 3 Joker. Ein Joker zeigt die nächste Tippstufe (1, 2, 3) des aktuellen Protokolls.
 * Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll).
 * Punkte, Joker, Teamname und Countdown sind immer in der Kopfzeile sichtbar.
@@ -91,7 +107,7 @@ Auf dem Tablet unten rechts auf «Spielleitung» tippen, PIN eingeben (Standard 
 Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 
 * `js/app.js`: PIN, Spieldauer, Joker-Kosten (Standard 20 Punkte), Botschaft von NULLBYTE, Stimmen fürs Vorlesen, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
-* `js/maze.js`: Labyrinth, Zahlen auf den Feldern, Startrichtung, maximale Schrittzahl.
+* `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 
 **Codes ändern:** Die Codes stehen nicht im Klartext im Quellcode, sondern nur als SHA-256-Hash (mit Salz). So finden die Schülerinnen und Schüler die Lösungen nicht über «Quelltext anzeigen». Neue Hashes erzeugt ihr auf `spielleitung.html` im Bereich «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
