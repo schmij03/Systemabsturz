@@ -22,6 +22,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `videos/` | Platz für das Hackervideo `intro.mp4`, siehe `videos/README.md` |
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
+| `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
 | `druck/` | Druckmaterial: Auftragsblatt, Chiffrierscheibe (Protokoll 1), Netzwerkplan (Protokoll 3) |
 | `sw.js` | Service Worker: speichert alles für den Offline-Betrieb |
 | `TESTPLAN.md` | Kurzer Testplan vor dem Einsatz |
@@ -143,5 +144,7 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 ## Lizenz
 
 «Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, steht unter der Lizenz [Creative Commons Namensnennung, Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de).
+
+Das Hintergrundbild der Spielanweisung (`img/hintergrund-anweisung.webp`) wurde von der Spielleitung beigesteuert; vor einer Veröffentlichung prüfen, ob seine Lizenz mit CC BY-SA 4.0 vereinbar ist, sonst durch ein eigenes Bild mit gleichem Dateinamen ersetzen.
 
 Enthaltene Fremdsoftware und Medien: [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache License 2.0, siehe `lib/blockly/LICENSE`). Sprachaufnahmen erzeugt mit [Piper](https://github.com/rhasspy/piper) (MIT) und der Stimme [Thorsten-Voice](https://github.com/thorstenMueller/Thorsten-Voice) von Thorsten Müller (CC0).

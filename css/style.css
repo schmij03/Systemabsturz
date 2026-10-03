@@ -578,7 +578,35 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 
 /* ===================== Spielanweisung (Beamer) ====================== */
 
-.anweisung { background: radial-gradient(circle at 50% 20%, #0b2214, #020604 70%); z-index: 260; align-items: flex-start; overflow-y: auto; }
+.anweisung { background: #020604; z-index: 260; align-items: flex-start; overflow-y: auto; }
+/* Hintergrundbild (Hacker mit Maske): rechts gut sichtbar, links dunkler
+   Verlauf für Beitrittscode und Anweisung. Leicht heranzoomend. */
+.anweisung::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(to right, #020604 0%, #020604 30%, rgba(2, 6, 4, 0.75) 48%, rgba(2, 6, 4, 0.15) 70%, rgba(2, 6, 4, 0) 100%),
+    url("../img/hintergrund-anweisung.webp") right center / auto 100% no-repeat,
+    #020604;
+  animation: hintergrundzoom 60s ease-in-out infinite alternate;
+  transform-origin: right center;
+  z-index: -1;
+}
+@keyframes hintergrundzoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+.anweisung { justify-content: flex-start; }
+.anweisung .anweisung-box { position: relative; width: min(60vw, 1150px); margin: 0 0 0 3vw; text-align: left; }
+.anweisung-code { display: flex; width: fit-content; background: rgba(5, 12, 7, 0.85); }
+.anweisung h1 { text-align: left; }
+.anweisung-text { background: rgba(4, 10, 6, 0.72); border: 1px solid rgba(61, 220, 132, 0.3); border-radius: 12px; padding: 1.2vh 0.8vw; }
+.anweisung-absatz { font-size: clamp(1rem, min(1.6vw, 2.9vh), 1.7rem) !important; line-height: 1.35; padding-top: 0.7vh; padding-bottom: 0.7vh; }
+.anweisung .anweisung-codewert { font-size: clamp(2.8rem, min(8vw, 12vh), 8rem); }
+.anweisung .anweisung-code { margin-bottom: 2vh; }
+.anweisung h1 { margin-bottom: 1.2vh; }
+@media (max-width: 900px), (orientation: portrait) {
+  .anweisung::before { background: linear-gradient(rgba(2, 6, 4, 0.8), rgba(2, 6, 4, 0.9)), url("../img/hintergrund-anweisung.webp") center / cover no-repeat, #020604; }
+  .anweisung .anweisung-box { width: 100%; margin: 0 auto; }
+}
 .anweisung-box { width: min(1300px, 100%); margin: 0 auto; padding: 2vh 2vw; text-align: center; }
 .anweisung-code { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; padding: 1.5vh 3vw; margin-bottom: 3vh; border: 3px solid var(--gelb); border-radius: 12px; background: rgba(255, 213, 79, 0.06); box-shadow: 0 0 40px rgba(255, 213, 79, 0.2); }
 .anweisung-code .label { color: var(--gelb); font-size: clamp(0.9rem, 1.6vw, 1.4rem); }

@@ -1795,6 +1795,8 @@ async function zeigeAnweisung() {
   for (let i = 0; i < elemente.length; i++) {
     if (box._lauf !== lauf || box.hidden) return;
     elemente.forEach(function (e, j) { e.classList.toggle('aktiv', j === i); e.classList.toggle('gelesen', j < i); });
+    // aktuellen Absatz sichtbar halten (kleine Beamer)
+    if (elemente[i].scrollIntoView) elemente[i].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     if ($('#auto-vorlesen').checked) {
       await Sprache.sprich(a.absaetze[i], 'normal');
     } else {
