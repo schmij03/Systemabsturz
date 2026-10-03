@@ -852,3 +852,5 @@ html.info-offen, html.info-offen body { overflow: hidden; }
   html.info-druck .info-hinweis { font-size: 9.5pt; }
 }
 @page { size: A4; margin: 15mm; }
+.dossier-kachel { border-color: var(--gruen); background: rgba(61, 220, 132, 0.08); }
+.dossier-kachel strong { color: var(--gruen-hell); }

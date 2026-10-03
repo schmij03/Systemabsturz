@@ -1,6 +1,6 @@
 # Material für die Spielleitung
 
-Hier liegen die Teamsets pro Schwierigkeitsstufe als eigenständige HTML-Dateien (Stil eingebettet, ohne Skripte, funktionieren auch offline). Die Spielleitung lädt sie auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» herunter, öffnet sie im Browser und druckt sie.
+Hier liegen die Teamsets pro Schwierigkeitsstufe als eigenständige HTML-Dateien (Stil eingebettet, ohne Skripte, funktionieren auch offline). Auf der Spielleitung öffnet die Kachel «Gesamtes Dossier» dasselbe Dossier mit Stufenwahl und dem Knopf «Als HTML herunterladen».
 
 | Datei | Inhalt (7 Seiten) |
 |---|---|
