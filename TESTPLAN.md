@@ -4,7 +4,7 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 ## Vorbereitung und Spielstart
 
-1. Auf `spielleitung.html` unter «Material drucken» alle drei Blätter öffnen und drucken. Erwartung: je genau eine A4-Seite, die Chiffrierscheiben in voller Grösse, der Netzwerkplan farbig.
+1. Auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» alle Blätter öffnen und drucken. Erwartung: je genau eine A4-Seite, die Chiffrierscheiben in voller Grösse, der Netzwerkplan farbig.
 2. «▶ Spiel starten». Erwartung: Vollbild, Video oder Botschaft von NULLBYTE mit Maske und Stimme.
 3. Nach dem Video (oder Taste → bzw. Leertaste): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben. Es sind keine Knöpfe sichtbar. Taste R liest nochmals vor, → oder Enter gibt die Aufgaben sofort frei.
 4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
@@ -14,6 +14,8 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 8. Lautstärke prüfen: Beim Tippen auf das Ziffernfeld ist ein Klick zu hören.
 
 ## Spiel einstellen
+
+Die Steuerung zeigt oben immer Phase, Beitrittscode, Stufe und Restzeit. Der passende Reiter öffnet sich automatisch: vor dem Start «1 Vorbereiten», nach der Freigabe «2 Spiel durchführen», nach «System gerettet» oder Zeitablauf «3 Nach dem Spiel».
 
 1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 und Verschiebung 7 eingeben, «Übernehmen (PIN)». Erwartung: Vorschau zeigt den neuen Geheimtext, Unterschrift UBSSIFAL.
 2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.

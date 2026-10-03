@@ -32,128 +32,196 @@
 
   <!-- Steuerung für die Lehrperson -->
   <section id="steuerung" class="steuerung">
-    <h2>Steuerung</h2>
-    <p id="sync-info" class="klein"></p>
 
-    <div class="karte einstellungen">
-      <h3>1. Spiel einstellen</h3>
-      <label class="zeile">Schwierigkeit <select id="stufe-wahl" class="stufe-wahl"></select></label>
-      <p class="klein">Die Schwierigkeit gilt für Protokoll 2 und Protokoll 3. Druckt das passende Teamset.</p>
-
-      <h4>Code für Protokoll 1 (Zahlenschloss von Kiste 1)</h4>
-      <p class="klein">Stellt hier den dreistelligen Code eures Zahlenschlosses ein. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET SIEBEN ZWEI NEUN ...») und mit dem Startsignal an die Tablets geschickt. Der Code selbst wird nicht übertragen, nur der Geheimtext und ein Hash.</p>
-      <div class="p1-einstellung">
-        <label>Code <input id="p1-code" class="pin-klein" inputmode="numeric" maxlength="3" placeholder="z. B. 418" autocomplete="off"></label>
-        <label>Verschiebung <select id="p1-verschiebung" class="stufe-wahl"></select></label>
-        <button type="button" id="p1-uebernehmen" class="knopf primaer">Übernehmen (PIN)</button>
-        <button type="button" id="p1-standard" class="knopf">Standard</button>
+    <!-- Kopfleiste: bleibt beim Scrollen sichtbar -->
+    <header class="leitung-kopf">
+      <div class="kopf-chips">
+        <span class="kopf-chip phase-chip"><span class="chip-label">Phase</span> <strong id="phase-wert">Vorbereitung</strong></span>
+        <span class="kopf-chip"><span class="chip-label">Beitrittscode</span> <strong class="spielcode-wert code-chip"></strong></span>
+        <span class="kopf-chip"><span class="chip-label">Stufe</span> <strong class="stufe-wert"></strong></span>
+        <span class="kopf-chip"><span class="chip-label">Zeit</span> <strong id="mini-countdown">45:00</strong></span>
       </div>
-      <p id="p1-status" class="klein"></p>
-      <div id="p1-vorschau" class="p1-vorschau" hidden></div>
-    </div>
-
-    <div class="karte ablauf">
-      <h3>2. Spielablauf</h3>
-      <ol>
-        <li>Material bereitlegen: pro Team ein Auftragsblatt, eine Chiffrierscheibe (Protokoll 1) und einen Netzwerkplan (Protokoll 3), siehe «Material drucken».</li>
-        <li>«▶ Spiel starten»: Der Beamer wechselt in den Vollbildmodus und das Hackervideo läuft ohne sichtbare Knöpfe (fehlt <code>videos/intro.mp4</code>, spricht NULLBYTE mit Maske und Stimme). Tastatur: <kbd>Leertaste</kbd> oder <kbd>→</kbd> springt zur Spielanweisung, <kbd>Esc</kbd> bricht ab.</li>
-        <li>Direkt nach dem Video erscheint die Spielanweisung mit dem Beitrittscode <strong class="spielcode-wert"></strong> darüber und wird vorgelesen (ohne sichtbare Knöpfe). Tastatur: <kbd>→</kbd> oder <kbd>Enter</kbd> gibt die Aufgaben sofort frei, <kbd>R</kbd> liest nochmals vor. Jetzt das Material verteilen. Die Teams melden sich auf den Tablets an und warten.</li>
-        <li>Am Ende der Anweisung startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben. Der Beitrittscode bleibt klein auf der Leinwand sichtbar.</li>
-      </ol>
-      <p class="klein">Direkter Link für die Tablets: <code id="anmelde-link"></code></p>
-      <div class="knopf-reihe">
-        <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
-        <button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben (ohne Intro)</button>
-        <button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button>
-        <button type="button" id="neuer-code" class="knopf">Neuer Beitrittscode</button>
+      <div class="kopf-knoepfe">
+        <button type="button" id="kopf-start" class="knopf primaer">▶ Spiel starten</button>
+        <button type="button" id="vollbild" class="knopf">⛶ Vollbild</button>
+        <a href="#" id="zur-buehne" class="knopf link-knopf">▲ Beamer-Ansicht</a>
       </div>
       <p id="ablauf-status" class="ablauf-status" role="status"></p>
-    </div>
+    </header>
 
-    <div class="knopf-reihe">
-      <button type="button" class="knopf" data-szene="intro">Story: Alarm</button>
-      <button type="button" class="knopf" data-szene="auftrag">Story: Auftrag</button>
-      <button type="button" class="knopf" data-szene="regeln">Story: Regeln</button>
-      <button type="button" class="knopf" data-szene="gerettet">Story: Gerettet</button>
-      <span id="szene-vorlesen"></span>
-    </div>
-    <p id="auto-vorlesen-zeile" class="schalter-zeile">
-      <label><input type="checkbox" id="auto-vorlesen" checked> Story beim Wechseln automatisch vorlesen</label>
-      <label><input type="checkbox" id="hacker-stimme" checked> Botschaft von NULLBYTE mit Hackerstimme vorlesen</label>
-    </p>
-    <div class="knopf-reihe">
-      <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
-      <button type="button" id="nur-botschaft" class="knopf gefahr">Botschaft von NULLBYTE</button>
-      <button type="button" id="system-gerettet" class="knopf primaer">System gerettet</button>
-      <button type="button" id="vollbild" class="knopf">Vollbild</button>
-      <button type="button" id="reset-countdown" class="knopf">Reset (PIN)</button>
-    </div>
+    <!-- Reiter: Schritt für Schritt -->
+    <nav class="reiter" role="tablist" aria-label="Schritte der Spielleitung">
+      <button type="button" role="tab" class="reiter-knopf" data-reiter="vorbereiten"><span class="reiter-nr">1</span> Vorbereiten</button>
+      <button type="button" role="tab" class="reiter-knopf" data-reiter="spiel"><span class="reiter-nr">2</span> Spiel durchführen</button>
+      <button type="button" role="tab" class="reiter-knopf" data-reiter="nachher"><span class="reiter-nr">3</span> Nach dem Spiel</button>
+      <button type="button" role="tab" class="reiter-knopf" data-reiter="extras"><span class="reiter-nr">?</span> Lösungen und Extras</button>
+    </nav>
 
-    <div class="karte">
-      <h3>Countdown synchronisieren</h3>
-      <p>Alle Geräte zählen auf dieselbe Uhrzeit herunter. Wählt das Spielende und öffnet auf jedem Tablet den Tablet-Link.</p>
-      <label class="zeile">Spielende <input type="time" id="link-zeit" step="60"></label>
-      <p class="link-zeile"><span class="label">Tablets:</span> <code id="link-tablet"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-tablet">Kopieren</button></p>
-      <p class="link-zeile"><span class="label">Beamer:</span> <code id="link-beamer"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-beamer">Kopieren</button></p>
-      <button type="button" id="link-oeffnen" class="knopf">Beamer mit dieser Endzeit öffnen</button>
-    </div>
+    <!-- 1. Vorbereiten -->
+    <div class="reiter-inhalt" data-inhalt="vorbereiten" role="tabpanel">
+      <div class="raster-2">
+        <div class="karte einstellungen">
+          <h3><span class="schritt">A</span> Schwierigkeit wählen</h3>
+          <label class="zeile">Stufe <select id="stufe-wahl" class="stufe-wahl gross-wahl"></select></label>
+          <p class="klein">Gilt für Protokoll 2 (Labyrinth) und Protokoll 3 (Netzwerkplan). Druckt danach das Material derselben Stufe.</p>
+          <table id="stufen-uebersicht" class="stufen-tabelle"></table>
+        </div>
 
-    <div class="karte">
-      <h3>Material herunterladen und drucken</h3>
-      <p><strong>Teamsets</strong> (Auftrag, Protokoll 1 mit Chiffrierscheibe, Protokoll 2, Protokoll 3 mit Netzwerkplan), pro Team ein Exemplar der gewählten Stufe:</p>
-      <table class="material-tabelle">
-        <tr><th>Stufe</th><th>PDF</th><th>Word</th></tr>
-        <tr data-material="Leicht"><td>Leicht</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Leicht.docx" download>Teamset Leicht (.docx)</a></td></tr>
-        <tr data-material="Mittel"><td>Mittel</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Mittel.docx" download>Teamset Mittel (.docx)</a></td></tr>
-        <tr data-material="Schwer"><td>Schwer</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Schwer.docx" download>Teamset Schwer (.docx)</a></td></tr>
-      </table>
-      <p><strong>Einzelblätter zum Drucken</strong> (A4, «Tatsächliche Grösse»), passend zur gewählten Stufe und zum eingestellten Code:</p>
-      <div class="knopf-reihe">
-        <a class="knopf link-knopf" href="druck/auftrag.html" target="_blank" rel="noopener">Auftragsblatt</a>
-        <a class="knopf link-knopf" href="druck/protokoll1.html" target="_blank" rel="noopener">Protokoll 1: Auftrag und Chiffrierscheibe (3 Seiten)</a>
-        <a class="knopf link-knopf" id="link-protokoll2" href="druck/protokoll2.html" target="_blank" rel="noopener">Protokoll 2: Algorithmen</a>
-        <a class="knopf link-knopf" id="link-netzwerk" href="druck/protokoll3.html" target="_blank" rel="noopener">Protokoll 3: Netzwerkplan</a>
+        <div class="karte einstellungen">
+          <h3><span class="schritt">B</span> Code für Kiste 1 (Protokoll 1)</h3>
+          <p class="klein">Zahlenschloss eurer ersten Kiste. Die geheime Nachricht wird automatisch neu verschlüsselt.</p>
+          <div class="p1-einstellung">
+            <label>Code <input id="p1-code" class="pin-klein" inputmode="numeric" maxlength="3" placeholder="z. B. 418" autocomplete="off"></label>
+            <label>Verschiebung <select id="p1-verschiebung" class="stufe-wahl"></select></label>
+            <button type="button" id="p1-uebernehmen" class="knopf primaer">Übernehmen (PIN)</button>
+            <button type="button" id="p1-standard" class="knopf">Standard</button>
+          </div>
+          <p id="p1-status" class="klein"></p>
+          <details class="mehr">
+            <summary>Geheimtext anzeigen</summary>
+            <div id="p1-vorschau" class="p1-vorschau" hidden></div>
+            <p class="klein">Der Code selbst wird nicht an die Tablets übertragen, nur der Geheimtext und ein Hash.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="karte">
+        <h3><span class="schritt">C</span> Material drucken</h3>
+        <p class="klein">Pro Team ein Exemplar der gewählten Stufe. Druckeinstellung A4, «Tatsächliche Grösse». Die Blätter passen sich automatisch an Stufe und Code an.</p>
+        <div class="druck-kacheln">
+          <a class="druck-kachel" href="druck/auftrag.html" target="_blank" rel="noopener"><span class="kachel-icon">📄</span><strong>Auftragsblatt</strong><span class="klein">1 Seite</span></a>
+          <a class="druck-kachel" href="druck/protokoll1.html" target="_blank" rel="noopener"><span class="kachel-icon">🔐</span><strong>Protokoll 1</strong><span class="klein">Auftrag und Chiffrierscheibe, 3 Seiten</span></a>
+          <a class="druck-kachel" id="link-protokoll2" href="druck/protokoll2.html" target="_blank" rel="noopener"><span class="kachel-icon">🧩</span><strong>Protokoll 2</strong><span class="klein">Algorithmen</span></a>
+          <a class="druck-kachel" id="link-netzwerk" href="druck/protokoll3.html" target="_blank" rel="noopener"><span class="kachel-icon">🌐</span><strong>Protokoll 3</strong><span class="klein">Netzwerkplan</span></a>
+        </div>
+        <details class="mehr">
+          <summary>Komplette Teamsets herunterladen (Word und PDF)</summary>
+          <table class="material-tabelle">
+            <tr><th>Stufe</th><th>PDF</th><th>Word</th></tr>
+            <tr data-material="Leicht"><td>Leicht</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Leicht.docx" download>Teamset Leicht (.docx)</a></td></tr>
+            <tr data-material="Mittel"><td>Mittel</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Mittel.docx" download>Teamset Mittel (.docx)</a></td></tr>
+            <tr data-material="Schwer"><td>Schwer</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Schwer.docx" download>Teamset Schwer (.docx)</a></td></tr>
+          </table>
+        </details>
+      </div>
+
+      <div class="weiter-zeile">
+        <button type="button" class="knopf primaer" data-gehe-zu="spiel">Alles bereit: weiter zu «Spiel durchführen» ▶</button>
       </div>
     </div>
 
-    <div class="karte">
-      <h3>Team-Tablets zurücksetzen</h3>
-      <ol>
-        <li>Auf dem Tablet unten rechts auf «Spielleitung» tippen (auch auf der Startseite).</li>
-        <li>PIN eingeben, «Spiel zurücksetzen» wählen und «Löschen» bestätigen. Der Spielstand dieses Tablets wird gelöscht.</li>
-        <li>Für die nächste Runde den Tablet-Link mit der neuen Endzeit öffnen, dann den Teamnamen eingeben.</li>
-      </ol>
-      <p class="klein">Der Spielstand liegt nur im Browser des jeweiligen Tablets (localStorage). Die Spielleitung sieht die Punkte nicht zentral, die Teams melden ihren Endpunktestand.</p>
+    <!-- 2. Spiel durchführen -->
+    <div class="reiter-inhalt" data-inhalt="spiel" role="tabpanel" hidden>
+      <div class="karte start-karte">
+        <h3>Spiel starten</h3>
+        <ol class="zeitstrahl">
+          <li><strong>Video</strong><span>Vollbild, NULLBYTE meldet sich</span></li>
+          <li><strong>Spielanweisung</strong><span>wird vorgelesen, Beitrittscode gross darüber. Jetzt Material verteilen, Teams melden sich an.</span></li>
+          <li><strong>Aufgaben frei</strong><span>Countdown startet, alle Tablets beginnen gleichzeitig</span></li>
+        </ol>
+        <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
+        <p class="tasten klein">Tastatur im Vollbild: <kbd>→</kbd> nächster Schritt, <kbd>R</kbd> Anweisung nochmals vorlesen, <kbd>Esc</kbd> Video abbrechen.</p>
+      </div>
+
+      <div class="raster-2">
+        <div class="karte">
+          <h3>Auf dem Beamer zeigen</h3>
+          <div class="knopf-reihe">
+            <button type="button" class="knopf" data-szene="intro">Alarm</button>
+            <button type="button" class="knopf" data-szene="auftrag">Auftrag</button>
+            <button type="button" class="knopf" data-szene="regeln">Regeln</button>
+            <button type="button" class="knopf" data-szene="gerettet">Gerettet</button>
+            <span id="szene-vorlesen"></span>
+          </div>
+          <div class="knopf-reihe">
+            <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
+            <button type="button" id="nur-botschaft" class="knopf gefahr">Botschaft von NULLBYTE</button>
+          </div>
+          <div id="auto-vorlesen-zeile" class="schalter-zeile">
+            <label><input type="checkbox" id="auto-vorlesen" checked> Story automatisch vorlesen</label>
+            <label><input type="checkbox" id="hacker-stimme" checked> NULLBYTE mit Hackerstimme</label>
+          </div>
+        </div>
+
+        <div class="karte">
+          <h3>Ein Team hat Protokoll 3 geknackt</h3>
+          <p class="klein">Zeigt die Schlussszene auf dem Beamer und hält die Uhr an.</p>
+          <button type="button" id="system-gerettet" class="knopf primaer gross-knopf">✓ System gerettet</button>
+        </div>
+      </div>
+
+      <details class="karte hilfe-karte">
+        <summary><h3>Probleme? Hilfe für Notfälle</h3></summary>
+        <ul class="hilfe-liste">
+          <li><button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button><span>Ein Tablet wartet noch, obwohl das Spiel läuft.</span></li>
+          <li><button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben</button><span>Ohne Video und Anweisung direkt starten.</span></li>
+          <li><button type="button" id="neuer-code" class="knopf">Neuer Beitrittscode</button><span>Nur vor dem Start möglich.</span></li>
+        </ul>
+        <p class="klein">Kein Internet? Auf dem Tablet «Spielleitung: manuell starten» und PIN wählen.<br>Direkter Link für die Tablets: <code id="anmelde-link"></code></p>
+        <p id="sync-info" class="klein"></p>
+      </details>
     </div>
 
-    <div class="karte">
-      <h3>Lösungen</h3>
-      <button type="button" id="loesungen-knopf" class="knopf">Lösungen anzeigen</button>
-      <div id="loesungen" hidden>
-        <dl id="loesungen-liste" class="loesungen-liste"></dl>
+    <!-- 3. Nach dem Spiel -->
+    <div class="reiter-inhalt" data-inhalt="nachher" role="tabpanel" hidden>
+      <div class="raster-2">
+        <div class="karte">
+          <h3>Neue Runde vorbereiten</h3>
+          <p>Setzt Countdown, Beitrittscode und Beamer zurück. Danach mit Schritt 1 neu beginnen.</p>
+          <button type="button" id="reset-countdown" class="knopf gefahr">Spiel zurücksetzen (PIN)</button>
+        </div>
+        <div class="karte">
+          <h3>Team-Tablets zurücksetzen</h3>
+          <ol>
+            <li>Auf dem Tablet unten rechts auf «Spielleitung» tippen.</li>
+            <li>PIN eingeben, «Spiel zurücksetzen» wählen und «Löschen» bestätigen.</li>
+          </ol>
+          <p class="klein">Der Spielstand liegt nur auf dem jeweiligen Tablet. Die Teams melden ihren Endpunktestand mündlich.</p>
+        </div>
       </div>
     </div>
 
-    <details class="karte">
-      <summary><h3>Konfiguration erzeugen (Codes ändern)</h3></summary>
-      <p>Hier erzeugt ihr neue Hashes, wenn ihr das Spiel mit eigenen Codes spielen wollt. Die Ausgabe ersetzt die entsprechenden Konstanten oben in <code>js/app.js</code>. Die Eingaben werden nirgends gespeichert.</p>
-      <div class="generator">
-        <label>Code Protokoll 1 (Kiste 1) <input id="gen-p1" inputmode="numeric"></label>
-        <label>Erklärung Protokoll 1 <input id="gen-p1info"></label>
-        <label>Bonusantwort <input id="gen-bonus" inputmode="numeric"></label>
-        <label>Signaturen Protokoll 2 (mit Komma) <input id="gen-signaturen"></label>
-        <label>Code Kiste 2 <input id="gen-kiste2" inputmode="numeric"></label>
-        <label>Override-Code Protokoll 3 <input id="gen-p3" inputmode="numeric"></label>
-        <label>Erklärung Protokoll 3 <input id="gen-p3info"></label>
-        <label>Verschiebung Protokoll 1 (1 bis 25) <input id="gen-verschiebung" inputmode="numeric" placeholder="4"></label>
-        <label>Neue PIN (leer = bisherige) <input id="gen-pin" inputmode="numeric"></label>
+    <!-- Lösungen und Extras -->
+    <div class="reiter-inhalt" data-inhalt="extras" role="tabpanel" hidden>
+      <div class="karte">
+        <h3>Lösungen</h3>
+        <p class="klein">Passen sich an die gewählte Stufe und den Code für Kiste 1 an. Nicht auf dem Beamer zeigen.</p>
+        <button type="button" id="loesungen-knopf" class="knopf">Lösungen anzeigen</button>
+        <div id="loesungen" hidden>
+          <dl id="loesungen-liste" class="loesungen-liste"></dl>
+        </div>
       </div>
-      <button type="button" id="generator-knopf" class="knopf primaer">Konfiguration erzeugen (PIN)</button>
-      <textarea id="generator-ausgabe" class="generator-ausgabe" rows="16" readonly hidden></textarea>
-      <p class="klein">Wenn ihr das Labyrinth ändert, passt ihr es in <code>js/maze.js</code> an und erzeugt hier die neuen Signaturen.</p>
-    </details>
 
-    <p class="klein"><a href="index.html">Zur Startseite der Teams</a></p>
+      <details class="karte">
+        <summary><h3>Countdown ohne Internet synchronisieren</h3></summary>
+        <p>Nur nötig, wenn das Startsignal nicht funktioniert. Alle Geräte zählen dann auf dieselbe Uhrzeit herunter.</p>
+        <label class="zeile">Spielende <input type="time" id="link-zeit" step="60"></label>
+        <p class="link-zeile"><span class="label">Tablets:</span> <code id="link-tablet"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-tablet">Kopieren</button></p>
+        <p class="link-zeile"><span class="label">Beamer:</span> <code id="link-beamer"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-beamer">Kopieren</button></p>
+        <button type="button" id="link-oeffnen" class="knopf">Beamer mit dieser Endzeit öffnen</button>
+      </details>
+
+      <details class="karte">
+        <summary><h3>Konfiguration erzeugen (Codes ändern)</h3></summary>
+        <p>Hier erzeugt ihr neue Hashes, wenn ihr das Spiel mit eigenen Codes spielen wollt. Die Ausgabe ersetzt die entsprechenden Konstanten oben in <code>js/app.js</code>. Die Eingaben werden nirgends gespeichert.</p>
+        <div class="generator">
+          <label>Code Protokoll 1 (Kiste 1) <input id="gen-p1" inputmode="numeric"></label>
+          <label>Erklärung Protokoll 1 <input id="gen-p1info"></label>
+          <label>Bonusantwort <input id="gen-bonus" inputmode="numeric"></label>
+          <label>Signaturen Protokoll 2 (mit Komma) <input id="gen-signaturen"></label>
+          <label>Code Kiste 2 <input id="gen-kiste2" inputmode="numeric"></label>
+          <label>Override-Code Protokoll 3 <input id="gen-p3" inputmode="numeric"></label>
+          <label>Erklärung Protokoll 3 <input id="gen-p3info"></label>
+          <label>Verschiebung Protokoll 1 (1 bis 25) <input id="gen-verschiebung" inputmode="numeric" placeholder="4"></label>
+          <label>Neue PIN (leer = bisherige) <input id="gen-pin" inputmode="numeric"></label>
+        </div>
+        <button type="button" id="generator-knopf" class="knopf primaer">Konfiguration erzeugen (PIN)</button>
+        <textarea id="generator-ausgabe" class="generator-ausgabe" rows="16" readonly hidden></textarea>
+        <p class="klein">Wenn ihr das Labyrinth ändert, passt ihr es in <code>js/maze.js</code> an und erzeugt hier die neuen Signaturen.</p>
+      </details>
+
+      <p class="klein"><a href="index.html">Zur Startseite der Teams</a></p>
+    </div>
   </section>
 
   <footer class="fuss">

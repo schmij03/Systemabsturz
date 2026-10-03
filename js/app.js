@@ -1774,6 +1774,19 @@ function initSpielleitung() {
   }, 'normal', '🔊 Story vorlesen'));
   if (!Sprache.verfuegbar) $('#auto-vorlesen-zeile').hidden = true;
 
+  // Reiter und Kopfleiste
+  $$('.reiter-knopf').forEach(function (k) {
+    k.addEventListener('click', function () { zeigeReiter(k.dataset.reiter); });
+  });
+  $$('[data-gehe-zu]').forEach(function (k) {
+    k.addEventListener('click', function () {
+      zeigeReiter(k.dataset.geheZu);
+      $('#steuerung').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  $('#kopf-start').addEventListener('click', function () { $('#spiel-starten').click(); });
+  $('#zur-buehne').addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
   // Spielablauf: Intro (Video oder Botschaft), danach Aufgaben freigeben
   $('#spiel-starten').addEventListener('click', function () {
     Ton.entsperren();
@@ -1833,7 +1846,22 @@ function initSpielleitung() {
   });
   if (!Leitung.stand.stufe) Leitung.stand.stufe = stufeAusUrl() || STANDARD_STUFE;
   wahl.value = Leitung.stand.stufe;
+  const zeigeStufen = function () {
+    const t = $('#stufen-uebersicht');
+    if (!t) return;
+    t.innerHTML = '<tr><th></th><th>Protokoll 2</th><th>Protokoll 3</th></tr>';
+    Object.keys(STUFEN).forEach(function (k) {
+      const z = erstelle('tr', k === wahl.value ? 'gewaehlt' : '');
+      const netz = typeof NETZWERKE !== 'undefined' && NETZWERKE[k];
+      z.appendChild(erstelle('td', '', STUFEN[k].name));
+      z.appendChild(erstelle('td', '', 'max. ' + STUFEN[k].maxBloecke + ' Blöcke'));
+      z.appendChild(erstelle('td', '', netz ? Object.keys(netz.server).length + ' Server' : ''));
+      t.appendChild(z);
+    });
+  };
+  zeigeStufen();
   wahl.addEventListener('change', function () {
+    zeigeStufen();
     Leitung.stand.stufe = wahl.value;
     speichereJson(SPEICHER_LEITUNG, Leitung.stand);
     hinweisNachStart();
@@ -1935,6 +1963,40 @@ function initSpielleitung() {
   tickLeitung();
 }
 
+/* Kopfleiste und Reiter der Steuerung */
+const PHASEN = {
+  vorbereitung: { text: 'Vorbereitung', reiter: 'vorbereiten' },
+  laeuft: { text: 'Spiel läuft', reiter: 'spiel' },
+  beendet: { text: 'Beendet', reiter: 'nachher' }
+};
+
+function zeigeReiter(name) {
+  $$('.reiter-knopf').forEach(function (k) {
+    const an = k.dataset.reiter === name;
+    k.classList.toggle('aktiv', an);
+    k.setAttribute('aria-selected', an ? 'true' : 'false');
+  });
+  $$('.reiter-inhalt').forEach(function (b) { b.hidden = b.dataset.inhalt !== name; });
+}
+
+function aktualisiereLeitungKopf(zeit) {
+  const s = Leitung.stand;
+  setzeText($('#mini-countdown'), zeit);
+  const phase = !s.freigegeben ? 'vorbereitung' : ((s.gestoppt !== null && s.gestoppt !== undefined) || (s.endzeit && Date.now() >= s.endzeit) ? 'beendet' : 'laeuft');
+  if (Leitung.phase !== phase) {
+    const erstes = !Leitung.phase;
+    Leitung.phase = phase;
+    document.body.dataset.phase = phase;
+    setzeText($('#phase-wert'), PHASEN[phase].text);
+    $('#kopf-start').hidden = phase !== 'vorbereitung';
+    // Beim Laden und bei jedem Phasenwechsel den passenden Reiter zeigen
+    zeigeReiter(PHASEN[phase].reiter);
+    if (!erstes && phase === 'beendet') setzeStatus('Spiel beendet. Für eine neue Runde: «Nach dem Spiel», «Spiel zurücksetzen».', 'ok');
+  }
+  const stufe = STUFEN[s.stufe || STANDARD_STUFE];
+  if (stufe) $$('.stufe-wert').forEach(function (e) { setzeText(e, stufe.name); });
+}
+
 function tickLeitung() {
   const s = Leitung.stand;
   const uhr = $('#gross-countdown');
@@ -1948,6 +2010,7 @@ function tickLeitung() {
   uhr.classList.toggle('abgelaufen', !!s.endzeit && !s.gestoppt && rest <= 0);
   uhr.classList.toggle('wartet', !s.endzeit);
   $('#buehne-anmeldung').classList.toggle('klein', !!s.freigegeben);
+  aktualisiereLeitungKopf(uhr.textContent);
   setzeText($('#gross-label'), !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG')));
 }
 

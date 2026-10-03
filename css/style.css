@@ -646,3 +646,116 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .material-tabelle a { display: inline-flex; align-items: center; min-height: 44px; }
 .material-tabelle tr.gewaehlt td { background: rgba(255, 213, 79, 0.08); }
 .material-tabelle tr.gewaehlt td:first-child::after { content: " (gewählt)"; color: var(--gelb); }
+
+/* ===================== Steuerung: Kopfleiste und Reiter ===================== */
+
+.steuerung { max-width: 1180px; padding-top: 0; }
+.leitung-kopf {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px;
+  margin: 0 -16px 16px; padding: 12px 16px;
+  background: rgba(5, 10, 7, 0.96); border-bottom: 1px solid var(--rand);
+}
+.kopf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.kopf-chip {
+  display: inline-flex; align-items: baseline; gap: 8px; padding: 6px 12px;
+  background: var(--flaeche); border: 1px solid var(--rand); border-radius: 999px; font-size: 0.95rem;
+}
+.chip-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-schwach); }
+.kopf-chip strong { color: #fff; font-variant-numeric: tabular-nums; }
+.kopf-chip .code-chip { font-family: var(--mono); color: var(--gelb); letter-spacing: 0.15em; }
+.phase-chip strong { color: var(--gelb); }
+body[data-phase="laeuft"] .phase-chip { border-color: var(--gruen); }
+body[data-phase="laeuft"] .phase-chip strong { color: var(--gruen); }
+body[data-phase="beendet"] .phase-chip strong { color: var(--text-schwach); }
+.kopf-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; }
+.kopf-knoepfe .knopf { min-height: 44px; padding: 8px 14px; font-size: 0.95rem; }
+.leitung-kopf .ablauf-status { flex-basis: 100%; margin: 0; font-size: 0.95rem; }
+.leitung-kopf .ablauf-status:empty { display: none; }
+
+.reiter { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+.reiter-knopf {
+  display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 8px 12px;
+  font: 700 1rem var(--sans); color: var(--text-schwach); cursor: pointer;
+  background: var(--flaeche); border: 1px solid var(--rand); border-radius: var(--radius);
+}
+.reiter-knopf:hover { color: var(--text); border-color: var(--gruen-dunkel); }
+.reiter-knopf:focus-visible { outline: 3px solid var(--gelb); outline-offset: 2px; }
+.reiter-knopf.aktiv { color: #fff; background: var(--flaeche-hell); border-color: var(--gruen); box-shadow: inset 0 -3px 0 var(--gruen); }
+.reiter-nr {
+  display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid currentColor; font-size: 0.9rem;
+}
+.reiter-knopf.aktiv .reiter-nr { background: var(--gruen); border-color: var(--gruen); color: #04140a; }
+
+.reiter-inhalt h3 { display: flex; align-items: center; gap: 10px; margin-top: 0; }
+.schritt {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; flex: none; border-radius: 6px;
+  background: var(--gelb); color: #1a1400; font-size: 0.85rem;
+}
+.raster-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 14px; margin-bottom: 14px; }
+.raster-2 > .karte { margin-bottom: 0; }
+.einstellungen { border-color: var(--rand); }
+.gross-wahl { min-height: 52px; font-size: 1.1rem; min-width: 180px; }
+.mehr { margin-top: 12px; }
+.mehr summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; color: var(--gruen-hell); font-weight: 600; }
+.mehr[open] summary { margin-bottom: 8px; }
+
+.druck-kacheln { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 12px 0 4px; }
+.druck-kachel {
+  display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; min-height: 96px;
+  background: var(--flaeche-hell); border: 1px solid var(--rand); border-radius: var(--radius);
+  color: var(--text); text-decoration: none;
+}
+.druck-kachel:hover, .druck-kachel:focus-visible { border-color: var(--gruen); color: #fff; }
+.druck-kachel strong { font-size: 1.05rem; }
+.kachel-icon { font-size: 1.5rem; line-height: 1; }
+
+.weiter-zeile { display: flex; justify-content: flex-end; margin-top: 6px; }
+
+.start-karte { border-color: var(--gruen); text-align: center; padding: 20px; }
+.start-karte h3 { justify-content: center; font-size: 1.3rem; }
+.zeitstrahl { list-style: none; counter-reset: zs; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 18px; padding: 0; text-align: left; }
+.zeitstrahl li {
+  counter-increment: zs; position: relative; padding: 12px 14px 12px 50px;
+  background: var(--flaeche-hell); border: 1px solid var(--rand); border-radius: var(--radius);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.zeitstrahl li::before {
+  content: counter(zs); position: absolute; left: 12px; top: 12px;
+  display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--gruen-dunkel); color: #fff; font-weight: 700; font-size: 0.85rem;
+}
+.zeitstrahl span { font-size: 0.88rem; color: var(--text-schwach); }
+.start-karte .gross-knopf { min-width: min(420px, 100%); min-height: 64px; font-size: 1.3rem; }
+.tasten { margin: 12px 0 0; }
+.tasten kbd { font-family: var(--mono); padding: 1px 6px; border: 1px solid var(--rand); border-radius: 4px; background: #000; color: var(--text); }
+
+.hilfe-karte summary h3 { color: var(--gelb); }
+.hilfe-liste { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 8px; }
+.hilfe-liste li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.hilfe-liste .knopf { min-width: 240px; }
+.hilfe-liste span { color: var(--text-schwach); font-size: 0.92rem; }
+
+@media (max-width: 760px) {
+  .reiter { grid-template-columns: 1fr 1fr; }
+  .zeitstrahl { grid-template-columns: 1fr; }
+  .raster-2 { grid-template-columns: 1fr; }
+  .hilfe-liste .knopf { min-width: 0; width: 100%; }
+}
+
+.stufen-tabelle { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+.stufen-tabelle th, .stufen-tabelle td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rand); }
+.stufen-tabelle th { color: var(--text-schwach); font-weight: 600; font-size: 0.8rem; }
+.stufen-tabelle tr.gewaehlt td { background: rgba(255, 213, 79, 0.08); color: #fff; }
+.stufen-tabelle tr.gewaehlt td:first-child { color: var(--gelb); font-weight: 700; }
+.zur-steuerung {
+  opacity: 0.75; padding: 8px 14px; border: 1px solid var(--rand); border-radius: 999px;
+  background: rgba(11, 21, 16, 0.85); font-family: var(--sans); text-decoration: none;
+}
+.zur-steuerung:hover { opacity: 1; }
+@media (max-width: 760px) {
+  .leitung-kopf { position: static; }
+  .kopf-knoepfe { width: 100%; }
+  .kopf-knoepfe .knopf { flex: 1 1 auto; }
+}
