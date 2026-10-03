@@ -762,6 +762,11 @@ const Signal = (function () {
    HILFSFUNKTIONEN
    =================================================================== */
 
+/** Schreibt Text nur, wenn er sich geändert hat (spart Layout-Arbeit im Takt) */
+function setzeText(el, text) {
+  if (el && el.textContent !== text) el.textContent = text;
+}
+
 function $(selektor, wurzel) { return (wurzel || document).querySelector(selektor); }
 function $$(selektor, wurzel) { return Array.prototype.slice.call((wurzel || document).querySelectorAll(selektor)); }
 
@@ -1220,6 +1225,11 @@ function initTerminal() {
   if (stand.wartet) zeigeWarten();
   tick();
   Terminal.timer = setInterval(tick, 250);
+
+  // Blockly (640 KB) im Leerlauf vorladen, damit Protokoll 2 ohne Wartezeit öffnet
+  const vorladen = function () { if (window.Algorithmen && window.Algorithmen.vorladen) window.Algorithmen.vorladen(); };
+  if (window.requestIdleCallback) window.requestIdleCallback(vorladen, { timeout: 4000 });
+  else setTimeout(vorladen, 1500);
 }
 
 /* --------------------- Warten auf die Spielleitung ------------------ */
@@ -1348,10 +1358,11 @@ function aktualisiereKopf() {
 function tick() {
   const s = Terminal.stand;
   const rest = restzeit();
-  const uhr = $('#countdown');
-  uhr.textContent = formatZeit(rest);
-  uhr.classList.toggle('knapp', !s.override && rest <= 5 * 60000);
-  uhr.classList.toggle('gestoppt', s.override);
+  const uhr = Terminal.uhr || (Terminal.uhr = $('#countdown'));
+  setzeText(uhr, formatZeit(rest));
+  const knapp = !s.override && rest <= 5 * 60000;
+  if (Terminal.uhrKnapp !== knapp) { uhr.classList.toggle('knapp', knapp); Terminal.uhrKnapp = knapp; }
+  if (Terminal.uhrGestoppt !== !!s.override) { uhr.classList.toggle('gestoppt', !!s.override); Terminal.uhrGestoppt = !!s.override; }
 
   if (s.override || s.wartet) return;
 
@@ -1925,13 +1936,13 @@ function tickLeitung() {
   if (!s.endzeit) rest = SPIELDAUER_MINUTEN * 60000;
   else if (s.gestoppt !== null && s.gestoppt !== undefined) rest = s.gestoppt;
   else rest = s.endzeit - Date.now();
-  uhr.textContent = formatZeit(rest);
+  setzeText(uhr, formatZeit(rest));
   uhr.classList.toggle('lang', uhr.textContent.length > 5);
   uhr.classList.toggle('knapp', !!s.endzeit && !s.gestoppt && rest <= 5 * 60000);
   uhr.classList.toggle('abgelaufen', !!s.endzeit && !s.gestoppt && rest <= 0);
   uhr.classList.toggle('wartet', !s.endzeit);
   $('#buehne-anmeldung').classList.toggle('klein', !!s.freigegeben);
-  $('#gross-label').textContent = !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG'));
+  setzeText($('#gross-label'), !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG')));
 }
 
 function hinweisNachStart() {

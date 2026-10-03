@@ -158,6 +158,7 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 * Blockly wird zuerst lokal aus `lib/blockly/` geladen, bei Bedarf als Ersatz vom CDN unpkg.com. Renderer «zelos», damit die Blöcke wie in Scratch aussehen.
 * Protokoll 2 läuft über einen eigenen Interpreter über den Blockbaum, ohne `eval`.
 * Nach dem ersten Laden funktioniert alles offline (Service Worker). Nach Änderungen am Spiel in `sw.js` die Zahl in `CACHE_NAME` erhöhen.
+* Leistung auf den Tablets: Dateien kommen sofort aus dem Speicher und werden im Hintergrund aktualisiert, Seiten werden höchstens 2.5 Sekunden im Netz gesucht. Blockly wird schon während Protokoll 1 im Leerlauf vorgeladen. Animationen nutzen nur `transform` und `opacity`, der Countdown schreibt nur bei Änderungen ins Dokument.
 * Töne: Fehlen eigene MP3-Dateien in `sounds/`, erzeugt die Web Audio API die Töne synthetisch.
 * Zum lokalen Testen einen kleinen Webserver verwenden, zum Beispiel `python3 -m http.server` im Projektordner, dann `http://localhost:8000` öffnen.
 
