@@ -75,11 +75,13 @@ Auf `spielleitung.html` im Bereich **«1. Spiel einstellen»**:
 
 * **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Bereich «Material herunterladen und drucken», die gewählte Stufe ist markiert). Der Override-Code ist auf allen Stufen 109.
 
-| Stufe | Netzwerk Protokoll 3 | Richtiger Weg | Fallen |
+| Stufe | Netzwerk Protokoll 3 | Richtiger Weg (Summe 109) | Schwierigkeit |
 |---|---|---|---|
-| Leicht | 8 Server, 2 infiziert | A, B, C, D, Z = 109 | 065, 079 |
-| Mittel | 9 Server, 2 infiziert | A, B, C, E, Z = 109 | 065, 079, 111 |
-| Schwer | 12 Server, 3 infiziert | A, D, C, K, Z = 109 | 065, 079, 111 |
+| Leicht | 11 Server, 3 infiziert | A, H, I, G, Z (4 Verbindungen) | Alle Wege brauchen 4 Verbindungen, nur einer ist sauber |
+| Mittel | 14 Server, 4 infiziert | A, B, C, H, E, Z (5 Verbindungen) | Verlockende Abkürzung über D (4 Verbindungen) ist infiziert |
+| Schwer | 18 Server, 5 infiziert | A, B, C, H, M, Q, Z (6 Verbindungen) | Alle Wege mit 5 Verbindungen sind infiziert |
+
+Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der nicht länger ist als der richtige, warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Die Netzwerkbilder in den Teamsets müssen dann ebenfalls ersetzt werden.
 
 * **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) und die Verschiebung der Chiffrierscheibe eingeben, «Übernehmen (PIN)». Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
 * Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code und die Verschiebung eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`.

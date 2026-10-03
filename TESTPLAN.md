@@ -18,14 +18,16 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 und Verschiebung 7 eingeben, «Übernehmen (PIN)». Erwartung: Vorschau zeigt den neuen Geheimtext, Unterschrift UBSSIFAL.
 2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
 3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
-4. Protokoll 3 auf Stufe Leicht: 079 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «oben herum über Server C».
+4. Protokoll 3 auf Stufe Leicht: 102 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «unten über Server H und Server I».
 5. «Standard» stellt Code 729 mit Verschiebung 4 wieder her.
 
 ## Netzwerkpläne (Protokoll 3) prüfen
 
-* Leicht: A, B, C, D, Z = 12 + 18 + 34 + 21 + 24 = **109**. Fallen: A, H, Z = 065; A, E, G, Z = 079.
-* Mittel: A, B, C, E, Z = 12 + 23 + 31 + 19 + 24 = **109**. Fallen: A, G, Z = 065; A, B, H, Z = 079; A, F, G, Z = 111.
-* Schwer: A, D, C, K, Z = 12 + 15 + 22 + 36 + 24 = **109**. Fallen: A, H, Z = 065; A, D, G, Z = 079; A, B, J, I, Z = 111.
+Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn der kürzeste saubere Weg nicht eindeutig ist).
+
+* Leicht: A, H, I, G, Z = 12 + 21 + 34 + 18 + 24 = **109**. Fallen: 098, 102, 122.
+* Mittel: A, B, C, H, E, Z = 12 + 16 + 22 + 16 + 19 + 24 = **109**. Verlockende Falle: A, B, C, D, Z = 101.
+* Schwer: A, B, C, H, M, Q, Z = 12 + 14 + 17 + 11 + 16 + 15 + 24 = **109**. Fallen mit 5 Verbindungen: 107, 114, 117, 126.
 
 ## Protokoll 1
 
@@ -94,7 +96,7 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 
 | Schritt | Erwartung |
 |---|---|
-| 065 (oder 079, 111) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
+| 107 (Stufe schwer, Weg über I) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
 | 123 | «OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.» |
 | 109 | Fanfare, grosser roter Knopf «OVERRIDE AUSLÖSEN» |
 | Knopf drücken | «SYSTEM WIEDERHERGESTELLT. Ihr habt die Schule gerettet!», Restzeit, Zeitbonus, Endpunktestand, Countdown steht still |
