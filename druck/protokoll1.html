@@ -139,10 +139,19 @@
     </div>
     <div class="kasten grau">
       <strong>Geheime Nachricht (erschien um 08:13 Uhr auf allen Bildschirmen):</strong>
-      <div class="nachricht">EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI</div>
+      <div class="nachricht" id="geheimtext"></div>
       <div style="margin-top: 2mm">Klartext: ____________________________________________________________________________</div>
     </div>
     <div class="fuss"><span>«Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, CC BY-SA 4.0</span><span>Protokoll 1</span></div>
   </div>
+  <script src="../js/app.js"></script>
+  <script>
+    /* Geheimtext passend zum eingestellten Code (Spielleitung) oder Standard */
+    (function () {
+      var leitung = ladeJson(SPEICHER_LEITUNG) || {};
+      var p1 = leitung.p1;
+      document.getElementById('geheimtext').textContent = p1 && p1.geheimtext ? p1.geheimtext : P1_GEHEIMTEXT;
+    })();
+  </script>
 </body>
 </html>

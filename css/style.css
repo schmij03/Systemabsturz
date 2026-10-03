@@ -628,3 +628,17 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .video-box video { width: 100vw; height: 82vh; object-fit: contain; background: #000; }
 .video-knoepfe { opacity: 0.4; }
 .video-knoepfe:hover { opacity: 1; }
+
+/* Spielleitung: Spiel einstellen und Material */
+.einstellungen { border-color: var(--gelb); }
+.einstellungen h4 { margin: 14px 0 4px; color: var(--gruen-hell); }
+.p1-einstellung { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-end; }
+.p1-einstellung label { display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; }
+.pin-klein { min-height: 48px; width: 7em; font: inherit; font-size: 1.3rem; letter-spacing: 0.3em; text-align: center; background: #000; color: var(--gruen-hell); border: 2px solid var(--rand); border-radius: 6px; }
+.p1-vorschau { margin-top: 8px; padding: 10px 12px; background: #000; border: 1px solid var(--rand); border-radius: 6px; }
+.p1-vorschau .mono { font-family: var(--mono); color: var(--rot); letter-spacing: 0.08em; margin: 4px 0; }
+.material-tabelle { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+.material-tabelle th, .material-tabelle td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rand); }
+.material-tabelle a { display: inline-flex; align-items: center; min-height: 44px; }
+.material-tabelle tr.gewaehlt td { background: rgba(255, 213, 79, 0.08); }
+.material-tabelle tr.gewaehlt td:first-child::after { content: " (gewählt)"; color: var(--gelb); }

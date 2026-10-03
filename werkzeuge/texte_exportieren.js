@@ -14,7 +14,7 @@ const vm = require('vm');
 const wurzel = path.join(__dirname, '..');
 const quelltext = ['js/maze.js', 'js/app.js']
   .map(function (d) { return fs.readFileSync(path.join(wurzel, d), 'utf8'); })
-  .join('\n;\n') + '\n;globalThis.__export = { TEXTE: TEXTE, STUFEN: STUFEN, JOKER_ANZAHL: JOKER_ANZAHL };';
+  .join('\n;\n') + '\n;globalThis.__export = { TEXTE: TEXTE, STUFEN: STUFEN, JOKER_ANZAHL: JOKER_ANZAHL, fuelleTipp: fuelleTipp, P1_VERSCHIEBUNG: P1_VERSCHIEBUNG };';
 
 // Minimale Browser-Attrappe, damit app.js ohne Fehler geladen werden kann
 const leer = function () { return null; };
@@ -30,7 +30,7 @@ kontext.window = kontext;
 kontext.globalThis = kontext;
 vm.createContext(kontext);
 vm.runInContext(quelltext, kontext);
-const { TEXTE, JOKER_ANZAHL } = kontext.__export;
+const { TEXTE, JOKER_ANZAHL, fuelleTipp, P1_VERSCHIEBUNG } = kontext.__export;
 
 const texte = [];
 function dazu(art, text) {
@@ -45,7 +45,7 @@ function dazu(art, text) {
   // Tipps (alle Stufen)
   const listen = [t.tipps].concat(t.tippsStufen ? Object.keys(t.tippsStufen).map(function (k) { return t.tippsStufen[k]; }) : []);
   listen.forEach(function (liste) {
-    liste.forEach(function (tipp, i) { dazu('normal', 'Tipp ' + (i + 1) + ': ' + tipp); });
+    liste.forEach(function (tipp, i) { dazu('normal', 'Tipp ' + (i + 1) + ': ' + fuelleTipp(tipp, P1_VERSCHIEBUNG)); });
   });
 });
 for (let n = 0; n <= JOKER_ANZAHL; n++) dazu('normal', 'Noch kein Tipp freigeschaltet. Ihr habt ' + n + ' Joker.');

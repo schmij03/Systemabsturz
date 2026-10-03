@@ -35,8 +35,25 @@
     <h2>Steuerung</h2>
     <p id="sync-info" class="klein"></p>
 
+    <div class="karte einstellungen">
+      <h3>1. Spiel einstellen</h3>
+      <label class="zeile">Schwierigkeit <select id="stufe-wahl" class="stufe-wahl"></select></label>
+      <p class="klein">Die Schwierigkeit bestimmt das Labyrinth in Protokoll 2 und den Netzwerkplan in Protokoll 3 (inklusive Tipps). Druckt das passende Teamset. Leicht: Gang mit Ecken, 5 Blöcke, kleines Netzwerk. Mittel: Rechte-Hand-Regel, 9 Blöcke. Schwer: Rechte-Hand-Regel mit infizierten Feldern, «und» und «nicht», 15 Blöcke, grosses Netzwerk mit drei roten Servern.</p>
+
+      <h4>Code für Protokoll 1 (Zahlenschloss von Kiste 1)</h4>
+      <p class="klein">Stellt hier den dreistelligen Code eures Zahlenschlosses ein. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET SIEBEN ZWEI NEUN ...») und mit dem Startsignal an die Tablets geschickt. Der Code selbst wird nicht übertragen, nur der Geheimtext und ein Hash.</p>
+      <div class="p1-einstellung">
+        <label>Code <input id="p1-code" class="pin-klein" inputmode="numeric" maxlength="3" placeholder="z. B. 418" autocomplete="off"></label>
+        <label>Verschiebung <select id="p1-verschiebung" class="stufe-wahl"></select></label>
+        <button type="button" id="p1-uebernehmen" class="knopf primaer">Übernehmen (PIN)</button>
+        <button type="button" id="p1-standard" class="knopf">Standard</button>
+      </div>
+      <p id="p1-status" class="klein"></p>
+      <div id="p1-vorschau" class="p1-vorschau" hidden></div>
+    </div>
+
     <div class="karte ablauf">
-      <h3>Spielablauf</h3>
+      <h3>2. Spielablauf</h3>
       <ol>
         <li>Material bereitlegen: pro Team ein Auftragsblatt, eine Chiffrierscheibe (Protokoll 1) und einen Netzwerkplan (Protokoll 3), siehe «Material drucken».</li>
         <li>«▶ Spiel starten»: Der Beamer wechselt in den Vollbildmodus und das Hackervideo läuft (fehlt <code>videos/intro.mp4</code>, spricht NULLBYTE mit Maske und Stimme).</li>
@@ -44,8 +61,6 @@
         <li>Am Ende der Anweisung startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben. Der Beitrittscode bleibt klein auf der Leinwand sichtbar.</li>
       </ol>
       <p class="klein">Direkter Link für die Tablets: <code id="anmelde-link"></code></p>
-      <label class="zeile">Schwierigkeit Labyrinth (Protokoll 2) <select id="stufe-wahl" class="stufe-wahl"></select></label>
-      <p class="klein">Leicht: Gang mit Ecken, nur «vorne frei?», 5 Blöcke. Mittel: Rechte-Hand-Regel, 9 Blöcke. Schwer: Rechte-Hand-Regel mit infizierten Feldern, «und» und «nicht», 15 Blöcke. Die Stufe wird mit dem Startsignal an die Tablets geschickt.</p>
       <div class="knopf-reihe">
         <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
         <button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben (ohne Intro)</button>
@@ -84,12 +99,19 @@
     </div>
 
     <div class="karte">
-      <h3>Material drucken</h3>
-      <p>Pro Team je ein Exemplar ausdrucken (A4, 100 % bzw. «Tatsächliche Grösse», damit die Chiffrierscheibe passt):</p>
+      <h3>Material herunterladen und drucken</h3>
+      <p><strong>Teamsets</strong> (Auftrag, Protokoll 1 mit Chiffrierscheibe, Protokoll 2, Protokoll 3 mit Netzwerkplan), pro Team ein Exemplar der gewählten Stufe:</p>
+      <table class="material-tabelle">
+        <tr><th>Stufe</th><th>PDF</th><th>Word</th></tr>
+        <tr data-material="Leicht"><td>Leicht</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Leicht.docx" download>Teamset Leicht (.docx)</a></td></tr>
+        <tr data-material="Mittel"><td>Mittel</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Mittel.docx" download>Teamset Mittel (.docx)</a></td></tr>
+        <tr data-material="Schwer"><td>Schwer</td><td class="pdf-zelle"></td><td><a href="material/Systemabsturz_Teamset_Schwer.docx" download>Teamset Schwer (.docx)</a></td></tr>
+      </table>
+      <p><strong>Einzelblätter zum Drucken</strong> (A4, «Tatsächliche Grösse»), passend zur gewählten Stufe und zum eingestellten Code:</p>
       <div class="knopf-reihe">
         <a class="knopf link-knopf" href="druck/auftrag.html" target="_blank" rel="noopener">Auftragsblatt</a>
-        <a class="knopf link-knopf" href="druck/protokoll1.html" target="_blank" rel="noopener">Protokoll 1: Chiffrierscheibe</a>
-        <a class="knopf link-knopf" href="druck/protokoll3.html" target="_blank" rel="noopener">Protokoll 3: Netzwerkplan</a>
+        <a class="knopf link-knopf" href="druck/protokoll1.html" target="_blank" rel="noopener">Protokoll 1: Chiffrierscheibe und Nachricht</a>
+        <a class="knopf link-knopf" id="link-netzwerk" href="druck/protokoll3.html" target="_blank" rel="noopener">Protokoll 3: Netzwerkplan</a>
       </div>
     </div>
 
@@ -122,7 +144,10 @@
         <label>Code Kiste 2 <input id="gen-kiste2" inputmode="numeric"></label>
         <label>Override-Code Protokoll 3 <input id="gen-p3" inputmode="numeric"></label>
         <label>Erklärung Protokoll 3 <input id="gen-p3info"></label>
-        <label>Fallen Protokoll 3 (mit Komma) <input id="gen-fallen"></label>
+        <label>Verschiebung Protokoll 1 (1 bis 25) <input id="gen-verschiebung" inputmode="numeric" placeholder="4"></label>
+        <label>Fallen Protokoll 3 Leicht (mit Komma) <input id="gen-fallen-leicht"></label>
+        <label>Fallen Protokoll 3 Mittel (mit Komma) <input id="gen-fallen"></label>
+        <label>Fallen Protokoll 3 Schwer (mit Komma) <input id="gen-fallen-schwer"></label>
         <label>Neue PIN (leer = bisherige) <input id="gen-pin" inputmode="numeric"></label>
       </div>
       <button type="button" id="generator-knopf" class="knopf primaer">Konfiguration erzeugen (PIN)</button>
@@ -181,6 +206,7 @@
   </div>
 
   <script src="js/maze.js"></script>
+  <script src="js/netzwerke.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
