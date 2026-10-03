@@ -8,7 +8,7 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
-const CACHE_NAME = 'systemabsturz-v27';
+const CACHE_NAME = 'systemabsturz-v28';
 
 const DATEIEN = [
   './',

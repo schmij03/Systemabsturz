@@ -16,7 +16,7 @@
 const SPIELLEITUNG_PIN = '4711';
 
 /** Spieldauer in Minuten, falls keine Endzeit über ?ende=HH:MM gesetzt ist */
-const SPIELDAUER_MINUTEN = 45;
+const SPIELDAUER_MINUTEN = 40;
 
 /** Punktesystem */
 const START_PUNKTE = 100;
@@ -269,7 +269,7 @@ const TEXTE = {
     'Noten, Stundenpläne, Fotos, alle Dateien: Wir haben alles verschlüsselt.',
     'Soeben{UM_ZEIT} haben wir euch eine Nachricht geschickt. Niemand hat sie verstanden.',
     'Drei Sicherheitsprotokolle schützen den Override. Kryptografie. Algorithmen. Netzwerke.',
-    'Ihr glaubt, ihr könnt sie knacken? Ihr habt 45 Minuten.',
+    'Ihr glaubt, ihr könnt sie knacken? Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten.',
     'Danach löschen wir alles. Für immer.',
     'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
   ],
@@ -280,7 +280,7 @@ const TEXTE = {
   szenen: {
     intro: {
       titel: 'ALARM: SCHULNETZ GESPERRT',
-      text: 'Soeben{UM_ZEIT} ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Ihr Ziel: Sie wollen beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. Schwache Passwörter, offene Computer, unvorsichtige Klicks. Darum haben sie das Netz gesperrt und drohen, in 45 Minuten alle Daten der Schule zu löschen.'
+      text: 'Soeben{UM_ZEIT} ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Ihr Ziel: Sie wollen beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. Schwache Passwörter, offene Computer, unvorsichtige Klicks. Darum haben sie das Netz gesperrt und drohen, in ' + SPIELDAUER_MINUTEN + ' Minuten alle Daten der Schule zu löschen.'
     },
     auftrag: {
       titel: 'EUER AUFTRAG',

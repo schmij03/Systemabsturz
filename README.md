@@ -2,7 +2,7 @@
 
 Ein digitales Escape Game für die Sekundarstufe I (12 bis 15 Jahre) zu Kryptografie, Algorithmen und Netzwerken.
 
-**Story:** Die fiktive Hackergruppe NULLBYTE hat das Schulnetz gesperrt. Vier Teams spielen parallel, jedes Team hat ein Tablet oder einen Laptop mit dem «Notfall-Terminal» der Schule (im Folgenden «Tablet» für beide Geräte). In 45 Minuten knacken die Teams drei Sicherheitsprotokolle und lösen den Override aus, bevor NULLBYTE alle Daten löscht.
+**Story:** Die fiktive Hackergruppe NULLBYTE hat das Schulnetz gesperrt. Vier Teams spielen parallel, jedes Team hat ein Tablet oder einen Laptop mit dem «Notfall-Terminal» der Schule (im Folgenden «Tablet» für beide Geräte). In 40 Minuten knacken die Teams drei Sicherheitsprotokolle und lösen den Override aus, bevor NULLBYTE alle Daten löscht.
 
 Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht keinen Server, keine Datenbank und keinen Build-Schritt und läuft direkt auf GitHub Pages.
 
@@ -67,7 +67,7 @@ Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Sp
 Das Spiel hat keinen eigenen Server. Das Startsignal läuft deshalb über den freien Benachrichtigungsdienst [ntfy.sh](https://ntfy.sh): Die Spielleitung sendet eine kurze Nachricht an einen Kanal, dessen Name den Beitrittscode enthält, und die wartenden Tablets fragen alle 3 Sekunden nach. Übertragen werden nur der Beitrittscode und die Endzeit, **keine Namen, keine Punkte, keine Personendaten**. Tablets, die sich erst nach dem Start anmelden oder neu laden, erhalten das Signal ebenfalls (es bleibt 6 Stunden abrufbar).
 
 * Voraussetzung: Beamer-Laptop und Tablets haben Internet, und das Schulnetz blockiert ntfy.sh nicht. Am besten vor der Lektion einmal testen.
-* **Ohne Internet:** Auf jedem Tablet «Spielleitung: manuell starten (PIN)» tippen. Der Countdown startet dann mit 45:00 (oder synchron, wenn der Tablet-Link `?ende=HH:MM` verwendet wurde).
+* **Ohne Internet:** Auf jedem Tablet «Spielleitung: manuell starten (PIN)» tippen. Der Countdown startet dann mit 40:00 (oder synchron, wenn der Tablet-Link `?ende=HH:MM` verwendet wurde).
 * Server und Kanalname stehen oben in `js/app.js` (`SIGNAL_SERVER`, `SIGNAL_PRAEFIX`). Wer will, kann einen eigenen ntfy-Server betreiben und dort eintragen.
 
 ### Alternative: synchronisieren über die Uhrzeit
@@ -164,7 +164,7 @@ Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im
 
 Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 
-* `js/app.js`: PIN, Spieldauer, Joker-Kosten (Standard 20 Punkte), Botschaft von NULLBYTE, Stimmen fürs Vorlesen, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
+* `js/app.js`: PIN, Spieldauer, Joker-Kosten (Standard 20 Punkte), Spieldauer `SPIELDAUER_MINUTEN` (Standard 40 Minuten), Botschaft von NULLBYTE, Stimmen fürs Vorlesen, Punkte, Anzahl Joker, Gratis-Tipp-Zeit, Hashes der Codes, Story-Texte und Tipps.
 * `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`, voreingestellt «mittel»). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 
