@@ -20,6 +20,8 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `lib/blockly/` | Lokale Kopie von Blockly 13.3.0 (Apache 2.0) für den Offline-Betrieb |
 | `sounds/` | Platzhalter für Töne (sonst synthetische Töne), siehe `sounds/README.md` |
 | `videos/` | Platz für das Hackervideo `intro.mp4`, siehe `videos/README.md` |
+| `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
+| `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
 | `sw.js` | Service Worker: speichert alles für den Offline-Betrieb |
 | `TESTPLAN.md` | Kurzer Testplan vor dem Einsatz |
 
@@ -91,8 +93,20 @@ Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also 
 ### NULLBYTE und das Vorlesen
 
 * **Botschaft von NULLBYTE:** Fehlt `videos/intro.mp4`, erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
-* **Vorlesen (Text-to-Speech):** Die Botschaft wird mit tiefer Hackerstimme vorgelesen, die Story-Texte mit normaler Stimme. Im Terminal haben die Story-Texte und der Help-Desk einen Knopf 🔊. Verwendet wird die Sprachausgabe des Browsers (Web Speech API), bevorzugt eine Stimme für Deutsch (Schweiz), sonst Deutsch (Deutschland). Es braucht keine Internetverbindung, sofern das Gerät eine deutsche Stimme installiert hat. Tonhöhe und Tempo lassen sich in `js/app.js` unter `STIMMEN` anpassen.
-* Auf dem iPad gibt es Sprachausgabe nur nach einer Berührung und nur, wenn der Stummschalter aus ist. Weitere Stimmen lassen sich unter Einstellungen, Bedienungshilfen, Gesprochene Inhalte, Stimmen laden.
+* **Vorlesen (Text-to-Speech):** Alle festen Texte (Botschaft von NULLBYTE, Story-Szenen, Story-Texte und Tipps aller Protokolle und Stufen) liegen als fertige Sprachaufnahmen in `audio/tts/`. Sie wurden mit der neuronalen Stimme **«Thorsten»** (Thorsten-Voice, Lizenz CC0) und der freien Sprachsynthese Piper erzeugt. NULLBYTE spricht mit der Variante «wütend», tiefer gestimmt und mit Roboter-Effekt. Vorteile: natürliche Aussprache, auf jedem Gerät gleich, ohne Internet, ohne Kosten und ohne Datenschutzfragen. Im Terminal haben die Story-Texte und der Help-Desk einen Knopf 🔊, auf dem Beamer wird automatisch vorgelesen.
+* **Ersatz:** Fehlt für einen Text eine Aufnahme (zum Beispiel nach einer Textänderung), liest die Sprachausgabe des Browsers vor. Dabei werden neuronale Stimmen bevorzugt (in Edge «Microsoft … Online (Natural)», auf dem iPad «Premium» oder «Erweitert», sofern installiert), zuerst Deutsch (Schweiz), dann Deutsch (Deutschland).
+* Auf dem iPad gibt es Ton nur nach einer Berührung und nur, wenn der Stummschalter aus ist.
+
+#### Sprachaufnahmen neu erzeugen (nach Textänderungen)
+
+1. Python 3 und ffmpeg installieren, dann `pip install piper-tts numpy`.
+2. Die beiden Stimmen herunterladen und in `werkzeuge/stimmen/` entpacken:
+   * https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten-high.tar.bz2
+   * https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten_emotional-medium.tar.bz2
+3. Im Projektordner `python3 werkzeuge/tts_erzeugen.py` ausführen. Das Skript liest die Texte direkt aus `js/app.js`, erzeugt nur fehlende Aufnahmen, löscht veraltete und schreibt `audio/tts/verzeichnis.json`.
+4. Aussprache anpassen: In `werkzeuge/tts_erzeugen.py` steht die Liste `AUSSPRACHE` (zum Beispiel «NULLBYTE» wird als «Nullbeit» gesprochen). Mit `--alle` werden alle Aufnahmen neu erzeugt.
+
+Warum keine Online-Dienste wie ElevenLabs, OpenAI oder Google? Diese brauchen einen geheimen API-Schlüssel. Auf GitHub Pages wäre er für alle sichtbar und könnte missbraucht werden. Ausserdem würden Texte an fremde Server geschickt. Wer trotzdem eine andere Stimme will, kann die MP3-Dateien in `audio/tts/` mit beliebigen Werkzeugen ersetzen, solange die Dateinamen gleich bleiben.
 
 ### Bei 00:00
 
@@ -125,4 +139,4 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 
 «Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, steht unter der Lizenz [Creative Commons Namensnennung, Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de).
 
-Enthaltene Fremdsoftware: [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache License 2.0, siehe `lib/blockly/LICENSE`).
+Enthaltene Fremdsoftware und Medien: [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache License 2.0, siehe `lib/blockly/LICENSE`). Sprachaufnahmen erzeugt mit [Piper](https://github.com/rhasspy/piper) (MIT) und der Stimme [Thorsten-Voice](https://github.com/thorstenMueller/Thorsten-Voice) von Thorsten Müller (CC0).

@@ -407,14 +407,26 @@ const Ton = (function () {
     document.addEventListener(ev, entsperren, { passive: true });
   });
 
-  return { entsperren: entsperren, spiele: spiele, setzeStumm: setzeStumm };
+  function kontext() { return ctx; }
+
+  return { entsperren: entsperren, spiele: spiele, setzeStumm: setzeStumm, kontext: kontext };
 })();
 
 /* ===================================================================
-   VORLESEN (Text-to-Speech über die Web Speech API des Browsers)
+   VORLESEN (Text-to-Speech)
+   -------------------------------------------------------------------
+   1. Wahl: vorab erzeugte Aufnahmen mit der neuronalen Stimme
+      «Thorsten» (Piper, CC0) aus audio/tts/. Sie klingen natürlich,
+      sind auf allen Geräten gleich und funktionieren offline.
+      Erzeugt werden sie mit werkzeuge/tts_erzeugen.py (siehe README).
+   2. Ersatz: die Sprachausgabe des Browsers (Web Speech API), falls
+      für einen Text keine Aufnahme existiert (z. B. geänderter Text).
    =================================================================== */
 
-/** Stimmen: «hacker» klingt tief und langsam, «normal» für Story und Tipps */
+/** Ordner und Verzeichnis der vorab erzeugten Aufnahmen */
+const TTS_ORDNER = 'audio/tts/';
+
+/** Browserstimme (Ersatz): «hacker» tief und langsam, «normal» für Story und Tipps */
 const STIMMEN = {
   hacker: { tonhoehe: 0.2, tempo: 0.82 },
   normal: { tonhoehe: 1, tempo: 0.95 }
@@ -423,28 +435,86 @@ const STIMMEN = {
 const Sprache = (function () {
   'use strict';
 
-  const verfuegbar = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  const browserTts = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
   let stimme = null;
+  let verzeichnis = null;        // Text-Schlüssel -> Dateiname
+  let quelle = null;             // laufende Aufnahme (Web Audio)
+  let audioElement = null;       // Ersatz, falls Web Audio fehlt
+  let lauf = 0;                  // bricht ältere Vorlese-Aufträge ab
+  let spricht = false;
 
-  /* Beste deutsche Stimme wählen: zuerst Schweiz, dann Deutschland, dann jede deutsche */
-  function waehleStimme() {
-    if (!verfuegbar) return;
-    const alle = window.speechSynthesis.getVoices();
-    stimme = alle.find(function (v) { return /^de[-_]CH/i.test(v.lang); }) ||
-      alle.find(function (v) { return /^de[-_]DE/i.test(v.lang); }) ||
-      alle.find(function (v) { return /^de/i.test(v.lang); }) || null;
+  // Verzeichnis der Aufnahmen laden (fehlt es, gilt nur die Browserstimme)
+  const bereit = fetch(TTS_ORDNER + 'verzeichnis.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { verzeichnis = j && j.dateien ? j.dateien : null; })
+    .catch(function () { verzeichnis = null; });
+
+  /** Schlüssel eines Textes: FNV-1a über UTF-8, gleich wie in tts_erzeugen.py */
+  function schluessel(text, art) {
+    const daten = new TextEncoder().encode(art + '|' + String(text).trim());
+    let h = 0x811c9dc5;
+    for (let i = 0; i < daten.length; i++) {
+      h ^= daten[i];
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return ('0000000' + h.toString(16)).slice(-8);
   }
 
-  if (verfuegbar) {
+  /* Beste deutsche Browserstimme: neuronale Stimmen (Natural, Online,
+     Premium, Enhanced) bevorzugt, zuerst Schweiz, dann Deutschland. */
+  function waehleStimme() {
+    if (!browserTts) return;
+    const deutsch = window.speechSynthesis.getVoices().filter(function (v) { return /^de/i.test(v.lang); });
+    function punkte(v) {
+      let p = 0;
+      if (/natural|neural|online|premium|enhanced|erweitert|google/i.test(v.name)) p += 10;
+      if (/^de[-_]CH/i.test(v.lang)) p += 3;
+      else if (/^de[-_]DE/i.test(v.lang)) p += 2;
+      if (v.localService === false) p += 1;
+      return p;
+    }
+    deutsch.sort(function (a, b) { return punkte(b) - punkte(a); });
+    stimme = deutsch[0] || null;
+  }
+  if (browserTts) {
     waehleStimme();
     window.speechSynthesis.addEventListener('voiceschanged', waehleStimme);
   }
 
-  /** Liest einen Text vor. Liefert ein Promise, das am Ende erfüllt wird. */
-  function sprich(text, art) {
+  /* Spielt eine Aufnahme ab. Liefert true, wenn es eine gab. */
+  async function spieleAufnahme(datei, meinLauf) {
+    const url = TTS_ORDNER + datei;
+    const ctx = Ton.kontext();
+    if (ctx) {
+      const antwort = await fetch(url);
+      if (!antwort.ok) return false;
+      const daten = await antwort.arrayBuffer();
+      const puffer = await new Promise(function (ok, fehler) { ctx.decodeAudioData(daten, ok, fehler); });
+      if (meinLauf !== lauf) return true;
+      if (ctx.state === 'suspended') await ctx.resume();
+      return new Promise(function (fertig) {
+        const q = ctx.createBufferSource();
+        q.buffer = puffer;
+        q.connect(ctx.destination);
+        q.onended = function () { if (quelle === q) quelle = null; fertig(true); };
+        quelle = q;
+        q.start(0);
+      });
+    }
     return new Promise(function (fertig) {
-      if (!verfuegbar || !text) { fertig(); return; }
-      stopp();
+      audioElement = audioElement || new Audio();
+      audioElement.src = url;
+      audioElement.onended = function () { fertig(true); };
+      audioElement.onerror = function () { fertig(false); };
+      const p = audioElement.play();
+      if (p && p.catch) p.catch(function () { fertig(false); });
+    });
+  }
+
+  /* Browserstimme als Ersatz */
+  function sprichBrowser(text, art) {
+    return new Promise(function (fertig) {
+      if (!browserTts || !text) { fertig(); return; }
       if (!stimme) waehleStimme();
       const e = STIMMEN[art] || STIMMEN.normal;
       // Zeichen, die schlecht klingen, entfernen
@@ -466,24 +536,55 @@ const Sprache = (function () {
     });
   }
 
-  function stopp() {
-    if (verfuegbar) window.speechSynthesis.cancel();
+  /** Liest einen Text (oder eine Liste von Texten nacheinander) vor.
+      Liefert ein Promise, das am Ende erfüllt wird. */
+  async function sprich(texte, art) {
+    art = art || 'normal';
+    stopp();
+    const meinLauf = ++lauf;
+    spricht = true;
+    await bereit;
+    const liste = Array.isArray(texte) ? texte : [texte];
+    for (const text of liste) {
+      if (meinLauf !== lauf || !text) break;
+      const datei = verzeichnis && verzeichnis[schluessel(text, art)];
+      let gespielt = false;
+      if (datei) {
+        try { gespielt = await spieleAufnahme(datei, meinLauf); } catch (e) { gespielt = false; }
+      }
+      if (!gespielt && meinLauf === lauf) await sprichBrowser(text, art);
+    }
+    if (meinLauf === lauf) spricht = false;
   }
 
-  /** Erstellt einen Vorlese-Knopf. text kann eine Funktion sein. */
+  function stopp() {
+    lauf++;
+    spricht = false;
+    if (quelle) { try { quelle.stop(); } catch (e) { /* schon beendet */ } quelle = null; }
+    if (audioElement) audioElement.pause();
+    if (browserTts) window.speechSynthesis.cancel();
+  }
+
+  /** Erstellt einen Vorlese-Knopf. text kann eine Funktion sein (Text oder Liste). */
   function knopf(text, art, beschriftung) {
     const b = erstelle('button', 'knopf vorlesen-knopf', beschriftung || '🔊 Vorlesen');
     b.type = 'button';
     b.setAttribute('aria-label', 'Text vorlesen');
-    if (!verfuegbar) b.hidden = true;
     b.addEventListener('click', function () {
-      if (window.speechSynthesis.speaking) { stopp(); return; }
+      Ton.entsperren();
+      if (spricht) { stopp(); return; }
       sprich(typeof text === 'function' ? text() : text, art);
     });
     return b;
   }
 
-  return { verfuegbar: verfuegbar, sprich: sprich, stopp: stopp, knopf: knopf };
+  return {
+    verfuegbar: true,            // Aufnahmen oder Browserstimme
+    sprich: sprich,
+    stopp: stopp,
+    knopf: knopf,
+    schluessel: schluessel
+  };
 })();
 
 /* ===================================================================
@@ -944,7 +1045,7 @@ function initTerminal() {
     const p = aktuellesProtokoll();
     const frei = tippsFuer(p).slice(0, s.tippStufe[p]);
     if (!frei.length) return 'Noch kein Tipp freigeschaltet. Ihr habt ' + (JOKER_ANZAHL - s.jokerEingeloest) + ' Joker.';
-    return frei.map(function (t, i) { return 'Tipp ' + (i + 1) + ': ' + t; }).join(' ');
+    return frei.map(function (t, i) { return 'Tipp ' + (i + 1) + ': ' + t; });
   }, 'normal', '🔊 Tipps vorlesen'));
   aktualisiereKopf();
   aktualisiereTabs();
