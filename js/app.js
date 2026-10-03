@@ -1,0 +1,1377 @@
+/* =====================================================================
+   Systemabsturz: Escape Game für Zyklus 3
+   Notfall-Terminal der Schule (Hauptlogik für alle drei Seiten)
+   ---------------------------------------------------------------------
+   Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
+
+   ANPASSEN: Alle wichtigen Einstellungen stehen gleich hier oben.
+   Codes werden NIE im Klartext gespeichert, sondern als SHA-256-Hash.
+   Neue Hashes erzeugt ihr auf spielleitung.html im Bereich
+   «Konfiguration erzeugen» (nach Eingabe der PIN).
+   ===================================================================== */
+
+/* ---------------------------- KONSTANTEN ---------------------------- */
+
+/** PIN der Spielleitung für Reset und Lösungen */
+const SPIELLEITUNG_PIN = '4711';
+
+/** Spieldauer in Minuten, falls keine Endzeit über ?ende=HH:MM gesetzt ist */
+const SPIELDAUER_MINUTEN = 45;
+
+/** Punktesystem */
+const START_PUNKTE = 100;
+const PUNKTE_PRO_PROTOKOLL = 20;
+const JOKER_ANZAHL = 3;
+const JOKER_KOSTEN = 10;
+const BONUS_PUNKTE = 10;
+const PUNKTE_PRO_RESTMINUTE = 1;
+
+/** Nach so vielen Minuten ohne Lösung erscheint Tipp-Stufe 1 gratis */
+const GRATIS_TIPP_MINUTEN = 5;
+
+/** Wartezeit nach einer falschen Code-Eingabe (Schutz vor Durchprobieren) */
+const SPERRE_NACH_FEHLER_MS = 2000;
+
+/** Salz für alle Hashes. Wird es geändert, müssen alle Hashes neu erzeugt werden. */
+const SALZ = 'SYSTEMABSTURZ|';
+
+/** SHA-256-Hashes der Lösungen (Wert = SHA-256 von SALZ + Code) */
+const HASHES = {
+  protokoll1: '93e6f5b9a141d8e670f4d9f4347f3b9ebfe49151ada6418067689b9b29f17de8',
+  bonus: '2a3cb8ba6b05f0675283ce45ffb61056a32e67c7a6eef8b467f31702a8a766aa',
+  signaturen: '671033ca39e74b17f33a3621a5fd01f96fa8ea3683cd4bcf8754d0e196e40626',
+  protokoll3: '6c01916c12bd0a1a72370b81ad09dd6c13eca4a371cc8facd0864f4108c34c96',
+  /* Falsche Wege über infizierte Server */
+  protokoll3Fallen: [
+    'e2ab51fa94aa74457dc321fb41cf5ef65d23ef312fe2ef0ffe5ead2ec0bfb974',
+    'a1746c9d1c45b920ffd20e3a964d0fa20e88fd7b03095fb4062d21cfe6026f8c',
+    '2d72ee4079defc942a592b9d6c33a36de2f695b3b457f35506880e24b8eab090'
+  ]
+};
+
+/** Code für Sicherheitskiste 2, verschlüsselt mit den Signaturen als Schlüssel */
+const KISTE2_VERSCHLUESSELT = '813e87';
+
+/** Lösungsliste für die Spielleitung, verschlüsselt mit der PIN als Schlüssel */
+const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d75671b18077f0a2ed9c3ca11055edc252c688af4e9ee9799f062b19899a8c15b4fdab963a999fd257228fd1268d3124388c4717846fcedd1a9854cef6ad453cff058d8ef981ad7f6030556d03c3e043016d2eb1e467323c02b258c6994465731c4d956cbb4ecdeac53e529eeeb92b98bb675db187cbc0db19c441654e2a86e340bb0f08b401b51ee0cb14f58b52c815d9d0c4adfb1b098cab66fcd8a1c790e8f5a4b1ed7c465052aa09b7271fcb3bcfb9f99f37d5e6be18ae40c87499920b1e4bd0dc5816e596ee43936059e4d47d515e20adb959e016f37ac16abbe3f16fb5d360c8c57316b7aba394baf5983c9a9c765705eb75ee27cff04fe162dfe9d90f7b2c99244f368b44ddd49bb67f0e11e3b7db2180605a23847be2a0ffacf223a93e7c5441bce489c869224218ef176ae88d06dd9601d9f22ef1b703038066f5be7ae23e8648e2bc08087e58e4dc9093ef381a08cd4999916a7796c55c158e9dc1396e74a7da9acd8525f3a69eb59d91c55e051eeebcef8849e747cc83d2a2bb458a67395b8d0b9c33629c240844c493def7a0983f2f00b71e43cbb5f89e804d0ff3804dfd0ae7215370c96c83adb34ea29de6214feda368af6f8f3c17d3420bd322c060a8e9c46321aaa82';
+
+/** Speicherort im Browser (localStorage) */
+const SPEICHER_TEAM = 'systemabsturz-spielstand';
+const SPEICHER_LEITUNG = 'systemabsturz-spielleitung';
+
+/* ------------------------------ TEXTE ------------------------------- */
+
+const TEXTE = {
+  protokolle: {
+    1: {
+      titel: 'Protokoll 1: Kryptografie',
+      kurz: 'Kryptografie',
+      story: 'Diese Nachricht erschien um 08:13 Uhr auf allen Bildschirmen. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code ein.',
+      nachricht: 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI',
+      hinweis: 'Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen.',
+      tipps: [
+        'Lest den Hinweis zu den Hackern noch einmal. Welches Wort kennt ihr bereits?',
+        'Das letzte Wort RYPPFCXI bedeutet NULLBYTE. Welcher Buchstabe wird zu welchem?',
+        'Dreht die Scheibe so, dass innen E unter dem äusseren A steht.'
+      ]
+    },
+    2: {
+      titel: 'Protokoll 2: Algorithmen',
+      kurz: 'Algorithmen',
+      story: 'Stark, Kiste 1 ist offen! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
+      tipps: [
+        'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
+        'Ihr braucht eine Wiederholung und darin «falls dann sonst». Eine Bedingung mit «und» ist nur wahr, wenn beide Teile stimmen. Ein rotes Feld ist nie erlaubt.',
+        'Erste Prüfung: rechts frei und nicht rechts infiziert, dann drehe rechts und gehe vor. Sonst prüft ihr vorne. Sonst dreht ihr links.'
+      ]
+    },
+    3: {
+      titel: 'Protokoll 3: Netzwerke',
+      kurz: 'Netzwerke',
+      story: 'Virus gefunden, Kiste 2 ist offen! Repariert das Routing auf eurem Netzwerkplan und gebt die Summe als Override-Code ein.',
+      tipps: [
+        'Streicht zuerst alle Verbindungen zu den roten Servern durch.',
+        'Zählt die Verbindungen. Der beste Weg braucht genau vier.',
+        'Der Weg führt über Server C. Vergesst nicht, A und Z mitzuzählen.'
+      ]
+    }
+  },
+  bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
+  /* Texte für die Beamer-Ansicht der Spielleitung */
+  szenen: {
+    intro: {
+      titel: 'ALARM: SCHULNETZ GESPERRT',
+      text: 'Heute Morgen um 08:13 Uhr ist das Schulnetz zusammengebrochen. Auf allen Bildschirmen erschien dieselbe verschlüsselte Nachricht. Absender: die Hackergruppe NULLBYTE. Sie hat das Netz gesperrt und droht, in 45 Minuten alle Daten der Schule zu löschen.'
+    },
+    auftrag: {
+      titel: 'EUER AUFTRAG',
+      text: 'Ihr seid die Notfall-Teams der Schule. Jedes Team hat ein Notfall-Terminal. Knackt die drei Sicherheitsprotokolle: Kryptografie, Algorithmen und Netzwerke. Jedes gelöste Protokoll öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus und rettet das System.'
+    },
+    regeln: {
+      titel: 'REGELN',
+      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet 10 Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
+    },
+    gerettet: {
+      titel: 'SYSTEM WIEDERHERGESTELLT',
+      text: 'Der Override hat funktioniert. NULLBYTE ist ausgesperrt, alle Daten sind gerettet. Danke, Notfall-Teams: Ihr habt die Schule gerettet!'
+    }
+  }
+};
+
+/* ===================================================================
+   KRYPTOGRAFIE: SHA-256 (Web Crypto API mit Ersatz in reinem JavaScript)
+   =================================================================== */
+
+const Krypto = (function () {
+  'use strict';
+
+  function utf8(text) {
+    return new TextEncoder().encode(text);
+  }
+
+  function hex(bytes) {
+    let s = '';
+    for (let i = 0; i < bytes.length; i++) s += bytes[i].toString(16).padStart(2, '0');
+    return s;
+  }
+
+  function vonHex(text) {
+    const out = new Uint8Array(text.length / 2);
+    for (let i = 0; i < out.length; i++) out[i] = parseInt(text.substr(i * 2, 2), 16);
+    return out;
+  }
+
+  /* Ersatz-Implementierung für Geräte ohne Web Crypto (z. B. Aufruf über http
+     im lokalen Netz, wo crypto.subtle nicht verfügbar ist). */
+  const K = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+  ];
+
+  function sha256Js(daten) {
+    const laenge = daten.length;
+    const bloecke = Math.ceil((laenge + 9) / 64);
+    const m = new Uint8Array(bloecke * 64);
+    m.set(daten);
+    m[laenge] = 0x80;
+    const bits = laenge * 8;
+    const dv = new DataView(m.buffer);
+    dv.setUint32(m.length - 4, bits >>> 0);
+    dv.setUint32(m.length - 8, Math.floor(bits / 0x100000000));
+    const h = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+    const w = new Uint32Array(64);
+    const rotr = function (x, n) { return (x >>> n) | (x << (32 - n)); };
+    for (let b = 0; b < bloecke; b++) {
+      for (let i = 0; i < 16; i++) w[i] = dv.getUint32(b * 64 + i * 4);
+      for (let i = 16; i < 64; i++) {
+        const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+        const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) >>> 0;
+      }
+      let [a, bb, c, d, e, f, g, hh] = h;
+      for (let i = 0; i < 64; i++) {
+        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+        const ch = (e & f) ^ (~e & g);
+        const t1 = (hh + S1 + ch + K[i] + w[i]) >>> 0;
+        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+        const maj = (a & bb) ^ (a & c) ^ (bb & c);
+        const t2 = (S0 + maj) >>> 0;
+        hh = g; g = f; f = e; e = (d + t1) >>> 0;
+        d = c; c = bb; bb = a; a = (t1 + t2) >>> 0;
+      }
+      h[0] = (h[0] + a) >>> 0; h[1] = (h[1] + bb) >>> 0; h[2] = (h[2] + c) >>> 0; h[3] = (h[3] + d) >>> 0;
+      h[4] = (h[4] + e) >>> 0; h[5] = (h[5] + f) >>> 0; h[6] = (h[6] + g) >>> 0; h[7] = (h[7] + hh) >>> 0;
+    }
+    const out = new Uint8Array(32);
+    const odv = new DataView(out.buffer);
+    for (let i = 0; i < 8; i++) odv.setUint32(i * 4, h[i]);
+    return out;
+  }
+
+  /** SHA-256 als Bytes (Promise). */
+  async function sha256(text) {
+    const daten = utf8(text);
+    if (window.crypto && window.crypto.subtle) {
+      try {
+        return new Uint8Array(await window.crypto.subtle.digest('SHA-256', daten));
+      } catch (e) { /* weiter mit Ersatz */ }
+    }
+    return sha256Js(daten);
+  }
+
+  /** Hash eines Codes, wie er in HASHES steht. */
+  async function hashCode(code) {
+    return hex(await sha256(SALZ + String(code).trim()));
+  }
+
+  /** Vergleicht eine Eingabe mit einem gespeicherten Hash. */
+  async function pruefe(code, hash) {
+    return (await hashCode(code)) === hash;
+  }
+
+  /* Einfache Verschlüsselung (XOR mit SHA-256-Schlüsselstrom), damit
+     Kisten-Codes und Lösungen nicht im Klartext im Quellcode stehen. */
+  async function schluesselstrom(schluessel, laenge) {
+    const strom = new Uint8Array(Math.ceil(laenge / 32) * 32);
+    for (let i = 0; i * 32 < laenge; i++) {
+      strom.set(await sha256(SALZ + 'schluessel|' + schluessel + '|' + i), i * 32);
+    }
+    return strom;
+  }
+
+  async function verschluessle(text, schluessel) {
+    const daten = utf8(text);
+    const strom = await schluesselstrom(schluessel, daten.length);
+    for (let i = 0; i < daten.length; i++) daten[i] ^= strom[i];
+    return hex(daten);
+  }
+
+  async function entschluessle(hexText, schluessel) {
+    if (!hexText || hexText.length % 2) return null;
+    const daten = vonHex(hexText);
+    const strom = await schluesselstrom(schluessel, daten.length);
+    for (let i = 0; i < daten.length; i++) daten[i] ^= strom[i];
+    try {
+      return new TextDecoder('utf-8', { fatal: true }).decode(daten);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  return { hashCode: hashCode, pruefe: pruefe, verschluessle: verschluessle, entschluessle: entschluessle, sha256Js: sha256Js, hex: hex };
+})();
+
+/* ===================================================================
+   TÖNE: Dateien aus sounds/ oder synthetisch über die Web Audio API
+   =================================================================== */
+
+const Ton = (function () {
+  'use strict';
+
+  const NAMEN = ['erfolg', 'fehler', 'alarm', 'klick', 'fanfare'];
+  let ctx = null;
+  const puffer = {};      // geladene Audiodateien (falls vorhanden)
+  let geladen = false;
+  let stumm = false;
+
+  /** Muss bei einer Nutzerinteraktion aufgerufen werden (Browser-Regel). */
+  function entsperren() {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      ctx = new AC();
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    // Stiller Puffer: entsperrt Ton zuverlässig auf iPad/iPhone
+    try {
+      const b = ctx.createBuffer(1, 1, 22050);
+      const q = ctx.createBufferSource();
+      q.buffer = b;
+      q.connect(ctx.destination);
+      q.start(0);
+    } catch (e) { /* egal */ }
+    if (!geladen) {
+      geladen = true;
+      NAMEN.forEach(ladeDatei);
+    }
+  }
+
+  /** Lädt sounds/<name>.mp3. Leere Platzhalter werden ignoriert. */
+  function ladeDatei(name) {
+    if (location.protocol === 'file:') return;
+    fetch('sounds/' + name + '.mp3')
+      .then(function (r) { return r.ok ? r.arrayBuffer() : null; })
+      .then(function (daten) {
+        if (!daten || daten.byteLength < 500) return null;
+        return new Promise(function (ok, fehler) { ctx.decodeAudioData(daten, ok, fehler); });
+      })
+      .then(function (b) { if (b) puffer[name] = b; })
+      .catch(function () { /* synthetischer Ton als Ersatz */ });
+  }
+
+  function ton(frequenz, start, dauer, typ, lautstaerke, frequenzEnde) {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = typ || 'square';
+    o.frequency.setValueAtTime(frequenz, start);
+    if (frequenzEnde) o.frequency.linearRampToValueAtTime(frequenzEnde, start + dauer);
+    const v = lautstaerke || 0.15;
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(v, start + 0.01);
+    g.gain.setValueAtTime(v, start + dauer * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dauer);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start(start);
+    o.stop(start + dauer + 0.02);
+  }
+
+  const SYNTH = {
+    klick: function (t) { ton(1400, t, 0.04, 'square', 0.06); },
+    erfolg: function (t) {
+      ton(660, t, 0.12, 'square', 0.12);
+      ton(880, t + 0.12, 0.12, 'square', 0.12);
+      ton(1320, t + 0.24, 0.25, 'square', 0.12);
+    },
+    fehler: function (t) {
+      ton(220, t, 0.18, 'sawtooth', 0.15, 180);
+      ton(150, t + 0.2, 0.3, 'sawtooth', 0.15, 110);
+    },
+    alarm: function (t) {
+      for (let i = 0; i < 4; i++) {
+        ton(600, t + i * 0.36, 0.18, 'sawtooth', 0.14, 900);
+        ton(900, t + i * 0.36 + 0.18, 0.18, 'sawtooth', 0.14, 600);
+      }
+    },
+    fanfare: function (t) {
+      const noten = [523, 659, 784, 1047];
+      noten.forEach(function (f, i) { ton(f, t + i * 0.14, 0.14, 'square', 0.12); });
+      [523, 659, 784, 1047].forEach(function (f) { ton(f, t + 0.6, 0.8, 'triangle', 0.1); });
+      ton(1047, t + 1.45, 0.12, 'square', 0.1);
+      ton(1319, t + 1.6, 0.6, 'square', 0.1);
+    }
+  };
+
+  function spiele(name) {
+    if (stumm || !ctx) return;
+    if (ctx.state === 'suspended') ctx.resume();
+    if (puffer[name]) {
+      const q = ctx.createBufferSource();
+      q.buffer = puffer[name];
+      q.connect(ctx.destination);
+      q.start(0);
+      return;
+    }
+    if (SYNTH[name]) SYNTH[name](ctx.currentTime + 0.01);
+  }
+
+  function setzeStumm(wert) { stumm = wert; }
+
+  // Jede erste Berührung einer Seite entsperrt den Ton (auch nach Neuladen)
+  ['pointerdown', 'touchend', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, entsperren, { passive: true });
+  });
+
+  return { entsperren: entsperren, spiele: spiele, setzeStumm: setzeStumm };
+})();
+
+/* ===================================================================
+   HILFSFUNKTIONEN
+   =================================================================== */
+
+function $(selektor, wurzel) { return (wurzel || document).querySelector(selektor); }
+function $$(selektor, wurzel) { return Array.prototype.slice.call((wurzel || document).querySelectorAll(selektor)); }
+
+function erstelle(tag, klasse, text) {
+  const e = document.createElement(tag);
+  if (klasse) e.className = klasse;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+/** Liest ?ende=HH:MM und liefert den Zeitpunkt (heute) in ms oder null. */
+function endeAusUrl() {
+  const p = new URLSearchParams(location.search).get('ende');
+  if (!p) return null;
+  const m = /^(\d{1,2})[:.h](\d{2})$/.exec(p.trim());
+  if (!m) return null;
+  const h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10);
+  if (h > 23 || min > 59) return null;
+  const d = new Date();
+  d.setHours(h, min, 0, 0);
+  return { zeit: d.getTime(), text: String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0') };
+}
+
+/** Hängt den aktuellen ?ende-Parameter an einen Link an. */
+function mitParameter(seite) {
+  const p = new URLSearchParams(location.search).get('ende');
+  return p ? seite + '?ende=' + encodeURIComponent(p) : seite;
+}
+
+/** Formatiert Millisekunden als MM:SS (oder H:MM:SS). */
+function formatZeit(ms) {
+  if (ms <= 0) return '00:00';
+  const total = Math.ceil(ms / 1000);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  const mm = String(m).padStart(2, '0');
+  const ss = String(s).padStart(2, '0');
+  return h > 0 ? h + ':' + mm + ':' + ss : mm + ':' + ss;
+}
+
+function ladeJson(schluessel) {
+  try {
+    const t = localStorage.getItem(schluessel);
+    return t ? JSON.parse(t) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function speichereJson(schluessel, wert) {
+  try {
+    localStorage.setItem(schluessel, JSON.stringify(wert));
+  } catch (e) { /* privater Modus: Spiel läuft trotzdem, aber ohne Speicherung */ }
+}
+
+/* ------------------------- Dialoge und Meldungen -------------------- */
+
+/** Zeigt einen Dialog. knoepfe: [{text, wert, klasse}]. Liefert Promise mit wert. */
+function dialog(titel, inhalt, knoepfe, optionen) {
+  optionen = optionen || {};
+  return new Promise(function (aufloesen) {
+    const hintergrund = erstelle('div', 'dialog-hintergrund');
+    const box = erstelle('div', 'dialog' + (optionen.warnung ? ' warnung' : ''));
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.appendChild(erstelle('h2', '', titel));
+    if (typeof inhalt === 'string') box.appendChild(erstelle('p', '', inhalt));
+    else if (inhalt) box.appendChild(inhalt);
+    const leiste = erstelle('div', 'dialog-knoepfe');
+    (knoepfe || [{ text: 'OK', wert: true, klasse: 'primaer' }]).forEach(function (k) {
+      const b = erstelle('button', 'knopf ' + (k.klasse || ''), k.text);
+      b.type = 'button';
+      b.addEventListener('click', function () {
+        Ton.spiele('klick');
+        let wert = k.wert;
+        if (typeof wert === 'function') wert = wert(box);
+        document.body.removeChild(hintergrund);
+        aufloesen(wert);
+      });
+      leiste.appendChild(b);
+    });
+    box.appendChild(leiste);
+    hintergrund.appendChild(box);
+    document.body.appendChild(hintergrund);
+    const fokus = box.querySelector('input') || box.querySelector('.primaer') || box.querySelector('button');
+    if (fokus) setTimeout(function () { fokus.focus(); }, 50);
+  });
+}
+
+/** Fragt die PIN der Spielleitung ab. Liefert Promise<string|null>. */
+function fragePin(titel) {
+  const inhalt = erstelle('div');
+  inhalt.appendChild(erstelle('p', '', 'Nur für die Spielleitung. Bitte PIN eingeben.'));
+  const feld = erstelle('input', 'pin-feld');
+  feld.type = 'password';
+  feld.inputMode = 'numeric';
+  feld.autocomplete = 'off';
+  feld.setAttribute('aria-label', 'PIN');
+  inhalt.appendChild(feld);
+  return dialog(titel || 'Spielleitung', inhalt, [
+    { text: 'Abbrechen', wert: null },
+    { text: 'OK', wert: function () { return feld.value; }, klasse: 'primaer' }
+  ]);
+}
+
+let toastTimer = null;
+/** Kurze Einblendung am unteren Bildschirmrand. */
+function toast(text, art) {
+  let t = $('#toast');
+  if (!t) {
+    t = erstelle('div', 'toast');
+    t.id = 'toast';
+    t.setAttribute('role', 'status');
+    document.body.appendChild(t);
+  }
+  t.textContent = text;
+  t.className = 'toast sichtbar ' + (art || '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.className = 'toast'; }, 4500);
+}
+
+/* ------------------------------ Ziffernfeld ------------------------- */
+
+/**
+ * Erstellt ein Ziffernfeld mit Anzeige.
+ * optionen: { stellen, beschriftung, beiBestaetigen(code) -> Promise }
+ */
+function erstelleZiffernfeld(container, optionen) {
+  const stellen = optionen.stellen || 3;
+  let eingabe = '';
+  let gesperrt = false;
+
+  const wurzel = erstelle('div', 'ziffernfeld');
+  const anzeige = erstelle('div', 'ziffern-anzeige');
+  anzeige.setAttribute('aria-live', 'polite');
+  const meldung = erstelle('div', 'ziffern-meldung');
+  meldung.setAttribute('role', 'status');
+  const tasten = erstelle('div', 'ziffern-tasten');
+
+  function zeichneAnzeige() {
+    anzeige.innerHTML = '';
+    for (let i = 0; i < stellen; i++) {
+      anzeige.appendChild(erstelle('span', 'ziffer' + (i < eingabe.length ? ' voll' : ''), eingabe[i] || '_'));
+    }
+  }
+
+  function taste(text, klasse, aktion, label) {
+    const b = erstelle('button', 'taste ' + (klasse || ''), text);
+    b.type = 'button';
+    if (label) b.setAttribute('aria-label', label);
+    b.addEventListener('click', function () {
+      if (gesperrt) return;
+      Ton.spiele('klick');
+      aktion();
+    });
+    tasten.appendChild(b);
+    return b;
+  }
+
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach(function (z) {
+    taste(z, '', function () { if (eingabe.length < stellen) { eingabe += z; zeichneAnzeige(); } });
+  });
+  taste('Löschen', 'loeschen', function () { eingabe = eingabe.slice(0, -1); zeichneAnzeige(); }, 'Letzte Ziffer löschen');
+  taste('0', '', function () { if (eingabe.length < stellen) { eingabe += '0'; zeichneAnzeige(); } });
+  const ok = taste('OK', 'bestaetigen', function () {
+    if (eingabe.length < stellen) {
+      setzeMeldung('Bitte ' + stellen + ' Ziffern eingeben.', 'warnung');
+      return;
+    }
+    const code = eingabe;
+    sperre(true);
+    Promise.resolve(optionen.beiBestaetigen(code)).then(function (ergebnis) {
+      if (ergebnis === 'fertig') return; // Feld bleibt gesperrt
+      eingabe = '';
+      zeichneAnzeige();
+      setTimeout(function () { sperre(false); }, ergebnis === 'falsch' ? SPERRE_NACH_FEHLER_MS : 0);
+    });
+  }, 'Bestätigen');
+  ok.textContent = 'Bestätigen';
+
+  function setzeMeldung(text, art) {
+    meldung.textContent = text || '';
+    meldung.className = 'ziffern-meldung ' + (art || '');
+  }
+
+  function sperre(wert) {
+    gesperrt = wert;
+    wurzel.classList.toggle('gesperrt', wert);
+  }
+
+  if (optionen.beschriftung) wurzel.appendChild(erstelle('div', 'ziffern-beschriftung', optionen.beschriftung));
+  wurzel.appendChild(anzeige);
+  wurzel.appendChild(tasten);
+  wurzel.appendChild(meldung);
+  container.appendChild(wurzel);
+  zeichneAnzeige();
+
+  // Tastatur (für Tests am Computer)
+  wurzel.tabIndex = 0;
+  wurzel.addEventListener('keydown', function (e) {
+    if (gesperrt) return;
+    if (/^[0-9]$/.test(e.key) && eingabe.length < stellen) { eingabe += e.key; zeichneAnzeige(); }
+    else if (e.key === 'Backspace') { eingabe = eingabe.slice(0, -1); zeichneAnzeige(); }
+    else if (e.key === 'Enter') ok.click();
+  });
+
+  return { setzeMeldung: setzeMeldung, sperre: sperre, element: wurzel };
+}
+
+/* ===================================================================
+   SPIELSTAND (pro Gerät im localStorage)
+   =================================================================== */
+
+function neuerSpielstand(team, endzeit, endeText) {
+  const jetzt = Date.now();
+  return {
+    version: 1,
+    team: team,
+    startzeit: jetzt,
+    endzeit: endzeit,
+    endeAusUrl: endeText || null,
+    geloest: { 1: false, 2: false, 3: false },
+    protokollStart: { 1: jetzt, 2: null, 3: null },
+    punkte: START_PUNKTE,
+    jokerEingeloest: 0,
+    tippStufe: { 1: 0, 2: 0, 3: 0 },   // freigeschaltete Tipps pro Protokoll
+    gratisTipp: { 1: false, 2: false, 3: false },
+    bonus: null,                        // null | 'richtig' | 'falsch'
+    kiste2: null,                       // entschlüsselter Code nach Protokoll 2
+    override: false,
+    restBeiOverride: null,
+    geloescht: false,
+    programm: null                      // Blockly-Programm (Protokoll 2)
+  };
+}
+
+function ladeSpielstand() { return ladeJson(SPEICHER_TEAM); }
+function speichereSpielstand(s) { speichereJson(SPEICHER_TEAM, s); }
+
+/* ===================================================================
+   SEITE: index.html (Teamname eingeben, Spiel starten)
+   =================================================================== */
+
+function initStartseite() {
+  const stand = ladeSpielstand();
+  const ende = endeAusUrl();
+  const formular = $('#start-formular');
+  const laeuft = $('#spiel-laeuft');
+
+  $('#ende-info').textContent = ende
+    ? 'Countdown synchronisiert: Das Spiel endet um ' + ende.text + ' Uhr.'
+    : 'Der Countdown startet mit ' + SPIELDAUER_MINUTEN + ':00 beim Klick auf «Spiel starten».';
+
+  if (stand && stand.team) {
+    formular.hidden = true;
+    laeuft.hidden = false;
+    $('#laufendes-team').textContent = stand.team;
+    $('#weiter').addEventListener('click', function () {
+      Ton.entsperren();
+      location.href = mitParameter('terminal.html');
+    });
+  }
+
+  formular.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = $('#teamname').value.trim().replace(/\s+/g, ' ');
+    if (name.length < 2) {
+      $('#start-meldung').textContent = 'Bitte gebt einen Teamnamen ein (mindestens 2 Zeichen).';
+      return;
+    }
+    Ton.entsperren();   // Klick auf «Spiel starten» entsperrt den Ton
+    Ton.spiele('klick');
+    const endzeit = ende ? ende.zeit : Date.now() + SPIELDAUER_MINUTEN * 60000;
+    speichereSpielstand(neuerSpielstand(name, endzeit, ende ? ende.text : null));
+    setTimeout(function () { location.href = mitParameter('terminal.html'); }, 150);
+  });
+
+  $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
+}
+
+/** Setzt den Spielstand dieses Geräts zurück (nur mit PIN). */
+async function resetTablet() {
+  const pin = await fragePin('Tablet zurücksetzen');
+  if (pin === null) return;
+  if (pin !== SPIELLEITUNG_PIN) {
+    Ton.spiele('fehler');
+    toast('Falsche PIN.', 'warnung');
+    return;
+  }
+  const ja = await dialog('Spielstand löschen?', 'Teamname, Punkte, gelöste Protokolle und Joker auf diesem Tablet werden gelöscht.', [
+    { text: 'Abbrechen', wert: false },
+    { text: 'Löschen', wert: true, klasse: 'gefahr' }
+  ], { warnung: true });
+  if (!ja) return;
+  try { localStorage.removeItem(SPEICHER_TEAM); } catch (e) { /* egal */ }
+  location.href = mitParameter('index.html');
+}
+
+/* ===================================================================
+   SEITE: terminal.html (Spielansicht)
+   =================================================================== */
+
+const Terminal = {
+  stand: null,
+  aktivesTab: 1,
+  timer: null,
+  warnungFuenfMinuten: false,
+  algorithmenGestartet: false
+};
+
+function initTerminal() {
+  const stand = ladeSpielstand();
+  if (!stand || !stand.team) {
+    location.replace(mitParameter('index.html'));
+    return;
+  }
+  // Endzeit aus der URL hat Vorrang (Synchronisation durch die Spielleitung)
+  const ende = endeAusUrl();
+  if (ende && !stand.override && stand.endeAusUrl !== ende.text) {
+    stand.endzeit = ende.zeit;
+    stand.endeAusUrl = ende.text;
+  }
+  Terminal.stand = stand;
+  speichereSpielstand(stand);
+
+  $('#team-name').textContent = stand.team;
+  $('#helpdesk-knopf').addEventListener('click', oeffneHelpDesk);
+  $('#helpdesk-schliessen').addEventListener('click', schliesseHelpDesk);
+  $('#helpdesk-hintergrund').addEventListener('click', schliesseHelpDesk);
+  $('#joker-knopf').addEventListener('click', jokerEinloesen);
+  $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
+  $$('[data-gehe-zu]').forEach(function (k) {
+    k.addEventListener('click', function () {
+      Ton.spiele('klick');
+      zeigeTab(parseInt(k.dataset.geheZu, 10));
+    });
+  });
+  $$('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      if (t.disabled) return;
+      Ton.spiele('klick');
+      zeigeTab(parseInt(t.dataset.protokoll, 10));
+    });
+  });
+
+  baueProtokoll1();
+  baueProtokoll2();
+  baueProtokoll3();
+  aktualisiereKopf();
+  aktualisiereTabs();
+  zeigeTab(aktuellesProtokoll());
+
+  if (stand.override) zeigeSieg(false);
+  tick();
+  Terminal.timer = setInterval(tick, 250);
+}
+
+/** Das erste noch nicht gelöste Protokoll (3, falls alles gelöst ist). */
+function aktuellesProtokoll() {
+  const g = Terminal.stand.geloest;
+  if (!g[1]) return 1;
+  if (!g[2]) return 2;
+  return 3;
+}
+
+function restzeit() {
+  const s = Terminal.stand;
+  if (s.override) return s.restBeiOverride;
+  return s.endzeit - Date.now();
+}
+
+function speichere() { speichereSpielstand(Terminal.stand); }
+
+/* ------------------------------ Kopfzeile --------------------------- */
+
+function aktualisiereKopf() {
+  const s = Terminal.stand;
+  $('#punkte').textContent = s.punkte;
+  const rest = JOKER_ANZAHL - s.jokerEingeloest;
+  const joker = $('#joker');
+  joker.innerHTML = '';
+  for (let i = 0; i < JOKER_ANZAHL; i++) {
+    joker.appendChild(erstelle('span', 'joker-punkt' + (i < rest ? ' voll' : ''), i < rest ? '◆' : '◇'));
+  }
+  joker.setAttribute('aria-label', rest + ' Joker übrig');
+}
+
+function tick() {
+  const s = Terminal.stand;
+  const rest = restzeit();
+  const uhr = $('#countdown');
+  uhr.textContent = formatZeit(rest);
+  uhr.classList.toggle('knapp', !s.override && rest <= 5 * 60000);
+  uhr.classList.toggle('gestoppt', s.override);
+
+  if (s.override) return;
+
+  if (!Terminal.warnungFuenfMinuten && rest <= 5 * 60000 && rest > 4.9 * 60000) {
+    Terminal.warnungFuenfMinuten = true;
+    Ton.spiele('alarm');
+    toast('WARNUNG: Noch 5 Minuten bis zur Löschung!', 'warnung');
+  }
+
+  if (rest <= 0) {
+    if (!s.geloescht) {
+      s.geloescht = true;
+      speichere();
+      Ton.spiele('alarm');
+    }
+    zeigeGeloescht();
+    return;
+  }
+
+  // Gratis-Tipp nach 5 Minuten ohne Lösung im aktuellen Protokoll
+  const p = aktuellesProtokoll();
+  if (!s.geloest[p] && !s.gratisTipp[p] && s.protokollStart[p]) {
+    if (Date.now() - s.protokollStart[p] >= GRATIS_TIPP_MINUTEN * 60000) {
+      s.gratisTipp[p] = true;
+      if (s.tippStufe[p] === 0) {
+        s.tippStufe[p] = 1;
+        toast('Gratis-Tipp freigeschaltet! Öffnet den Help-Desk.', 'info');
+        $('#helpdesk-knopf').classList.add('blinkt');
+        Ton.spiele('klick');
+      }
+      speichere();
+      aktualisiereHelpDesk();
+    }
+  }
+}
+
+/** Bei 00:00: SYSTEM GELÖSCHT, Eingaben gesperrt, Punkte bleiben sichtbar. */
+function zeigeGeloescht() {
+  const o = $('#geloescht');
+  if (!o.hidden) return;
+  o.hidden = false;
+  $('#geloescht-punkte').textContent = Terminal.stand.punkte;
+  $('#geloescht-team').textContent = Terminal.stand.team;
+  schliesseHelpDesk();
+  if (window.Algorithmen) window.Algorithmen.stoppe();
+  document.body.classList.add('spiel-gesperrt');
+  clearInterval(Terminal.timer);
+  $('#countdown').textContent = '00:00';
+}
+
+function spielGesperrt() {
+  return Terminal.stand.geloescht || restzeit() <= 0;
+}
+
+/* -------------------------------- Tabs ------------------------------ */
+
+function aktualisiereTabs() {
+  const g = Terminal.stand.geloest;
+  $$('.tab').forEach(function (t) {
+    const p = parseInt(t.dataset.protokoll, 10);
+    const frei = p === 1 || g[p - 1];
+    t.disabled = !frei;
+    t.classList.toggle('geloest', !!g[p]);
+    t.querySelector('.tab-status').textContent = g[p] ? '✔' : (frei ? '▶' : '🔒');
+    t.setAttribute('aria-label', TEXTE.protokolle[p].titel + (g[p] ? ', gelöst' : (frei ? '' : ', gesperrt')));
+  });
+}
+
+function zeigeTab(p) {
+  Terminal.aktivesTab = p;
+  $$('.tab').forEach(function (t) {
+    const aktiv = parseInt(t.dataset.protokoll, 10) === p;
+    t.classList.toggle('aktiv', aktiv);
+    t.setAttribute('aria-selected', aktiv ? 'true' : 'false');
+  });
+  $$('.protokoll').forEach(function (el) { el.hidden = el.id !== 'protokoll-' + p; });
+  if (p === 2) starteAlgorithmen();
+  aktualisiereHelpDesk();
+}
+
+/** Schaltet das nächste Protokoll frei. */
+function protokollGeloest(p) {
+  const s = Terminal.stand;
+  if (s.geloest[p]) return;
+  s.geloest[p] = true;
+  s.punkte += PUNKTE_PRO_PROTOKOLL;
+  if (p < 3) s.protokollStart[p + 1] = Date.now();
+  speichere();
+  aktualisiereKopf();
+  aktualisiereTabs();
+  aktualisiereHelpDesk();
+  $('#helpdesk-knopf').classList.remove('blinkt');
+}
+
+/* ----------------------------- Protokoll 1 -------------------------- */
+
+function baueProtokoll1() {
+  const t = TEXTE.protokolle[1];
+  const wurzel = $('#protokoll-1');
+  $('.story', wurzel).textContent = t.story;
+  $('.geheimnachricht', wurzel).textContent = t.nachricht;
+  $('.hinweis', wurzel).textContent = t.hinweis;
+
+  const feld = erstelleZiffernfeld($('.eingabe', wurzel), {
+    stellen: 3,
+    beschriftung: 'Code eingeben',
+    beiBestaetigen: async function (code) {
+      if (spielGesperrt()) return 'fertig';
+      if (await Krypto.pruefe(code, HASHES.protokoll1)) {
+        Ton.spiele('erfolg');
+        Terminal.stand.kiste1 = code;
+        protokollGeloest(1);
+        zeigeErfolg1(true);
+        return 'fertig';
+      }
+      Ton.spiele('fehler');
+      feld.setzeMeldung('ZUGRIFF VERWEIGERT', 'fehler');
+      return 'falsch';
+    }
+  });
+  wurzel._feld = feld;
+  if (Terminal.stand.geloest[1]) zeigeErfolg1(false);
+}
+
+function zeigeErfolg1(neu) {
+  const wurzel = $('#protokoll-1');
+  const s = Terminal.stand;
+  $('.eingabe', wurzel).hidden = true;
+  const erfolg = $('.erfolg', wurzel);
+  erfolg.hidden = false;
+  $('.erfolg-text', erfolg).textContent = 'PROTOKOLL 1 GEKNACKT. Code für Sicherheitskiste 1: ' + (s.kiste1 || '???');
+  if (neu) erfolg.classList.add('neu');
+  baueBonus();
+}
+
+/** Bonusfrage nach Protokoll 1 (nur ein Versuch). */
+function baueBonus() {
+  const box = $('#bonus');
+  const s = Terminal.stand;
+  box.hidden = false;
+  $('.bonus-frage', box).textContent = TEXTE.bonusFrage;
+  const inhalt = $('.bonus-inhalt', box);
+  inhalt.innerHTML = '';
+  if (s.bonus) {
+    inhalt.appendChild(erstelle('p', s.bonus === 'richtig' ? 'ok' : 'fehler',
+      s.bonus === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : 'Leider falsch. Überlegt später: Welche Einstellung verändert die Nachricht gar nicht?'));
+    return;
+  }
+  inhalt.appendChild(erstelle('p', 'klein', 'Freiwillig, nur ein Versuch. Richtig gibt es ' + BONUS_PUNKTE + ' Extrapunkte.'));
+  erstelleZiffernfeld(inhalt, {
+    stellen: 2,
+    beiBestaetigen: async function (code) {
+      if (spielGesperrt() || s.bonus) return 'fertig';
+      const richtig = await Krypto.pruefe(code, HASHES.bonus);
+      s.bonus = richtig ? 'richtig' : 'falsch';
+      if (richtig) s.punkte += BONUS_PUNKTE;
+      speichere();
+      aktualisiereKopf();
+      Ton.spiele(richtig ? 'erfolg' : 'fehler');
+      baueBonus();
+      return 'fertig';
+    }
+  });
+}
+
+/* ----------------------------- Protokoll 2 -------------------------- */
+
+function baueProtokoll2() {
+  const wurzel = $('#protokoll-2');
+  $('.story', wurzel).textContent = TEXTE.protokolle[2].story;
+  if (Terminal.stand.geloest[2]) zeigeErfolg2(false);
+}
+
+function starteAlgorithmen() {
+  if (Terminal.algorithmenGestartet || !window.Algorithmen) return;
+  Terminal.algorithmenGestartet = true;
+  window.Algorithmen.init({
+    programm: Terminal.stand.programm,
+    speichereProgramm: function (daten) {
+      Terminal.stand.programm = daten;
+      speichere();
+    },
+    gesperrt: spielGesperrt,
+    ton: Ton.spiele,
+    /* Wird aufgerufen, wenn ANTI-V das Ziel erreicht. Liefert die Meldung. */
+    zielErreicht: async function (gesammelt) {
+      const schluessel = gesammelt.join(',');
+      if (await Krypto.pruefe(schluessel, HASHES.signaturen)) {
+        const kiste = await Krypto.entschluessle(KISTE2_VERSCHLUESSELT, schluessel);
+        Terminal.stand.kiste2 = kiste;
+        const neu = !Terminal.stand.geloest[2];
+        protokollGeloest(2);
+        Ton.spiele('erfolg');
+        zeigeErfolg2(neu);
+        return { ok: true, text: erfolgstext2() };
+      }
+      Ton.spiele('fehler');
+      return { ok: false, text: 'Ziel erreicht, aber Signaturen unvollständig. ANTI-V muss den richtigen Weg nehmen.' };
+    }
+  });
+}
+
+function erfolgstext2() {
+  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: ' + (Terminal.stand.kiste2 || '???');
+}
+
+function zeigeErfolg2(neu) {
+  const banner = $('#protokoll-2 .erfolg');
+  banner.hidden = false;
+  $('#protokoll-2 .story').hidden = true;
+  $('.erfolg-text', banner).textContent = erfolgstext2();
+  if (neu) {
+    banner.classList.add('neu');
+    $('.erfolg-weiter', banner).hidden = false;
+  }
+}
+
+/* ----------------------------- Protokoll 3 -------------------------- */
+
+function baueProtokoll3() {
+  const wurzel = $('#protokoll-3');
+  $('.story', wurzel).textContent = TEXTE.protokolle[3].story;
+  const feld = erstelleZiffernfeld($('.eingabe', wurzel), {
+    stellen: 3,
+    beschriftung: 'Override-Code',
+    beiBestaetigen: async function (code) {
+      if (spielGesperrt()) return 'fertig';
+      if (await Krypto.pruefe(code, HASHES.protokoll3)) {
+        Ton.spiele('fanfare');
+        protokollGeloest(3);
+        zeigeBuzzer();
+        return 'fertig';
+      }
+      const hash = await Krypto.hashCode(code);
+      if (HASHES.protokoll3Fallen.indexOf(hash) >= 0) {
+        Ton.spiele('alarm');
+        feld.setzeMeldung('ACHTUNG: Euer Weg führt über einen infizierten Server!', 'fehler');
+      } else {
+        Ton.spiele('fehler');
+        feld.setzeMeldung('OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.', 'fehler');
+      }
+      return 'falsch';
+    }
+  });
+  if (Terminal.stand.geloest[3] && !Terminal.stand.override) zeigeBuzzer();
+  $('#buzzer').addEventListener('click', overrideAusloesen);
+}
+
+function zeigeBuzzer() {
+  const wurzel = $('#protokoll-3');
+  $('.eingabe', wurzel).hidden = true;
+  $('.buzzer-bereich', wurzel).hidden = false;
+}
+
+function overrideAusloesen() {
+  const s = Terminal.stand;
+  if (s.override || !s.geloest[3] || spielGesperrt()) return;
+  const rest = Math.max(0, s.endzeit - Date.now());
+  s.override = true;
+  s.restBeiOverride = rest;
+  s.restMinutenPunkte = Math.floor(rest / 60000) * PUNKTE_PRO_RESTMINUTE;
+  s.punkte += s.restMinutenPunkte;
+  speichere();
+  Ton.spiele('fanfare');
+  aktualisiereKopf();
+  tick();
+  zeigeSieg(true);
+}
+
+function zeigeSieg(neu) {
+  const s = Terminal.stand;
+  const o = $('#sieg');
+  o.hidden = false;
+  $('#sieg-team').textContent = s.team;
+  $('#sieg-zeit').textContent = formatZeit(s.restBeiOverride);
+  $('#sieg-bonus').textContent = s.restMinutenPunkte || 0;
+  $('#sieg-punkte').textContent = s.punkte;
+  if (neu) o.classList.add('neu');
+  $('#protokoll-3 .buzzer-bereich').hidden = true;
+  $('#protokoll-3 .eingabe').hidden = true;
+}
+
+/* ------------------------------ Help-Desk --------------------------- */
+
+function oeffneHelpDesk() {
+  Ton.spiele('klick');
+  $('#helpdesk-knopf').classList.remove('blinkt');
+  aktualisiereHelpDesk();
+  $('#helpdesk').classList.add('offen');
+  $('#helpdesk').setAttribute('aria-hidden', 'false');
+  $('#helpdesk-hintergrund').hidden = false;
+}
+
+function schliesseHelpDesk() {
+  $('#helpdesk').classList.remove('offen');
+  $('#helpdesk').setAttribute('aria-hidden', 'true');
+  $('#helpdesk-hintergrund').hidden = true;
+}
+
+function aktualisiereHelpDesk() {
+  if (!Terminal.stand) return;
+  const s = Terminal.stand;
+  const p = aktuellesProtokoll();
+  const t = TEXTE.protokolle[p];
+  $('#helpdesk-titel').textContent = t.titel;
+  const liste = $('#tipp-liste');
+  liste.innerHTML = '';
+  t.tipps.forEach(function (tipp, i) {
+    const li = erstelle('li', 'tipp' + (i < s.tippStufe[p] ? ' frei' : ''));
+    li.appendChild(erstelle('strong', '', 'Stufe ' + (i + 1) + ': '));
+    li.appendChild(document.createTextNode(i < s.tippStufe[p] ? tipp : 'gesperrt'));
+    if (i === 0 && s.gratisTipp[p] && i < s.tippStufe[p]) li.appendChild(erstelle('span', 'gratis', ' (gratis)'));
+    liste.appendChild(li);
+  });
+  const rest = JOKER_ANZAHL - s.jokerEingeloest;
+  $('#joker-rest').textContent = rest;
+  const knopf = $('#joker-knopf');
+  const info = $('#joker-info');
+  if (s.geloest[p] && p === 3) {
+    knopf.hidden = true;
+    info.textContent = 'Alle Protokolle gelöst.';
+  } else if (s.tippStufe[p] >= t.tipps.length) {
+    knopf.hidden = true;
+    info.textContent = 'Alle Tipps zu diesem Protokoll sind freigeschaltet.';
+  } else if (rest <= 0) {
+    knopf.hidden = true;
+    info.textContent = 'Keine Joker mehr. Wendet euch an die Spielleitung.';
+  } else {
+    knopf.hidden = false;
+    knopf.textContent = 'Joker einlösen: Tipp Stufe ' + (s.tippStufe[p] + 1) + ' (minus ' + JOKER_KOSTEN + ' Punkte)';
+    info.textContent = s.tippStufe[p] === 0 && !s.gratisTipp[p]
+      ? 'Wenn ihr ' + GRATIS_TIPP_MINUTEN + ' Minuten lang nicht weiterkommt, erscheint Stufe 1 gratis.'
+      : '';
+  }
+}
+
+async function jokerEinloesen() {
+  const s = Terminal.stand;
+  const p = aktuellesProtokoll();
+  if (spielGesperrt()) return;
+  if (s.jokerEingeloest >= JOKER_ANZAHL) {
+    toast('Keine Joker mehr. Wendet euch an die Spielleitung.', 'warnung');
+    return;
+  }
+  const rest = JOKER_ANZAHL - s.jokerEingeloest;
+  const ja = await dialog('Joker einlösen?',
+    'Ihr erhaltet Tipp Stufe ' + (s.tippStufe[p] + 1) + ' zu ' + TEXTE.protokolle[p].titel + '. Das kostet ' + JOKER_KOSTEN + ' Punkte. Ihr habt noch ' + rest + (rest === 1 ? ' Joker.' : ' Joker.'),
+    [{ text: 'Abbrechen', wert: false }, { text: 'Ja, Joker einlösen', wert: true, klasse: 'primaer' }]);
+  if (!ja || spielGesperrt()) return;
+  if (s.tippStufe[p] >= TEXTE.protokolle[p].tipps.length || s.jokerEingeloest >= JOKER_ANZAHL) return;
+  s.jokerEingeloest += 1;
+  s.punkte -= JOKER_KOSTEN;
+  s.tippStufe[p] += 1;
+  speichere();
+  aktualisiereKopf();
+  aktualisiereHelpDesk();
+}
+
+/* ===================================================================
+   SEITE: spielleitung.html (Beamer-Ansicht)
+   =================================================================== */
+
+const Leitung = { stand: null, loesungenOffen: false };
+
+function initSpielleitung() {
+  let stand = ladeJson(SPEICHER_LEITUNG) || { endzeit: null, gestoppt: null };
+  const ende = endeAusUrl();
+  if (ende) {
+    stand.endzeit = ende.zeit;
+    stand.gestoppt = null;
+  }
+  Leitung.stand = stand;
+  speichereJson(SPEICHER_LEITUNG, stand);
+
+  $('#sync-info').textContent = ende
+    ? 'Synchronisiert: Countdown bis ' + ende.text + ' Uhr.'
+    : 'Nicht synchronisiert. Startet den Countdown hier oder öffnet die Seite mit ?ende=HH:MM.';
+
+  // Szenen (Story-Texte)
+  $$('[data-szene]').forEach(function (k) {
+    k.addEventListener('click', function () { Ton.spiele('klick'); zeigeSzene(k.dataset.szene); });
+  });
+  zeigeSzene('intro');
+
+  $('#start-countdown').addEventListener('click', function () {
+    Ton.entsperren();
+    if (Leitung.stand.endzeit && Leitung.stand.endzeit > Date.now() && !Leitung.stand.gestoppt) {
+      toast('Der Countdown läuft bereits.', 'info');
+      return;
+    }
+    Leitung.stand.endzeit = Date.now() + SPIELDAUER_MINUTEN * 60000;
+    Leitung.stand.gestoppt = null;
+    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+  });
+
+  $('#reset-countdown').addEventListener('click', async function () {
+    const pin = await fragePin('Countdown zurücksetzen');
+    if (pin === null) return;
+    if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
+    Leitung.stand = { endzeit: null, gestoppt: null };
+    speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    $('#gerettet').hidden = true;
+    zeigeSzene('intro');
+    // Parameter entfernen, sonst setzt ein Neuladen die alte Endzeit
+    history.replaceState(null, '', location.pathname);
+    $('#sync-info').textContent = 'Zurückgesetzt. Startet den Countdown neu oder öffnet die Seite mit ?ende=HH:MM.';
+  });
+
+  $('#hackervideo').addEventListener('click', zeigeVideo);
+  $('#video-schliessen').addEventListener('click', schliesseVideo);
+  $('#system-gerettet').addEventListener('click', function () {
+    Ton.entsperren();
+    if (Leitung.stand.endzeit && !Leitung.stand.gestoppt) {
+      Leitung.stand.gestoppt = Math.max(0, Leitung.stand.endzeit - Date.now());
+      speichereJson(SPEICHER_LEITUNG, Leitung.stand);
+    }
+    $('#gerettet').hidden = false;
+    Ton.spiele('fanfare');
+  });
+  $('#gerettet').addEventListener('click', function () { $('#gerettet').hidden = true; });
+
+  $('#loesungen-knopf').addEventListener('click', zeigeLoesungen);
+  $('#vollbild').addEventListener('click', function () {
+    const d = document.documentElement;
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (d.requestFullscreen) d.requestFullscreen();
+    else if (d.webkitRequestFullscreen) d.webkitRequestFullscreen();
+  });
+
+  // Link-Generator für die Tablets
+  const zeitFeld = $('#link-zeit');
+  const vorschlag = new Date(Date.now() + (SPIELDAUER_MINUTEN + 5) * 60000);
+  zeitFeld.value = String(vorschlag.getHours()).padStart(2, '0') + ':' + String(Math.ceil(vorschlag.getMinutes() / 5) * 5 % 60).padStart(2, '0');
+  if (ende) zeitFeld.value = ende.text;
+  function aktualisiereLinks() {
+    const basis = location.href.replace(/[^/]*$/, '');
+    const z = zeitFeld.value;
+    $('#link-tablet').textContent = basis + 'index.html?ende=' + z;
+    $('#link-beamer').textContent = basis + 'spielleitung.html?ende=' + z;
+  }
+  zeitFeld.addEventListener('input', aktualisiereLinks);
+  aktualisiereLinks();
+  $('#link-oeffnen').addEventListener('click', function () {
+    location.href = 'spielleitung.html?ende=' + encodeURIComponent(zeitFeld.value);
+  });
+  $$('.kopieren').forEach(function (k) {
+    k.addEventListener('click', function () {
+      const text = $(k.dataset.ziel).textContent;
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { toast('Link kopiert.', 'info'); });
+    });
+  });
+
+  $('#generator-knopf').addEventListener('click', erzeugeKonfiguration);
+
+  setInterval(tickLeitung, 250);
+  tickLeitung();
+}
+
+function tickLeitung() {
+  const s = Leitung.stand;
+  const uhr = $('#gross-countdown');
+  let rest;
+  if (!s.endzeit) rest = SPIELDAUER_MINUTEN * 60000;
+  else if (s.gestoppt !== null && s.gestoppt !== undefined) rest = s.gestoppt;
+  else rest = s.endzeit - Date.now();
+  uhr.textContent = formatZeit(rest);
+  uhr.classList.toggle('lang', uhr.textContent.length > 5);
+  uhr.classList.toggle('knapp', !!s.endzeit && !s.gestoppt && rest <= 5 * 60000);
+  uhr.classList.toggle('abgelaufen', !!s.endzeit && !s.gestoppt && rest <= 0);
+  uhr.classList.toggle('wartet', !s.endzeit);
+  $('#gross-label').textContent = !s.endzeit ? 'BEREIT' : (s.gestoppt !== null && s.gestoppt !== undefined ? 'GESTOPPT' : (rest <= 0 ? 'SYSTEM GELÖSCHT' : 'BIS ZUR LÖSCHUNG'));
+}
+
+function zeigeSzene(name) {
+  const sz = TEXTE.szenen[name];
+  if (!sz) return;
+  $('#szene-titel').textContent = sz.titel;
+  $('#szene-text').textContent = sz.text;
+  $$('[data-szene]').forEach(function (k) { k.classList.toggle('aktiv', k.dataset.szene === name); });
+}
+
+function zeigeVideo() {
+  Ton.entsperren();
+  const box = $('#video-box');
+  const video = $('#hacker-video');
+  const ersatz = $('#video-ersatz');
+  box.hidden = false;
+  ersatz.hidden = true;
+  video.hidden = false;
+  video.currentTime = 0;
+  const p = video.play();
+  if (p && p.catch) p.catch(function () { zeigeVideoErsatz(); });
+  video.onerror = zeigeVideoErsatz;
+  if (video.error || video.networkState === 3) zeigeVideoErsatz();
+}
+
+/* Ersatz, solange videos/intro.mp4 fehlt: Hackertext tippt sich selbst */
+function zeigeVideoErsatz() {
+  const video = $('#hacker-video');
+  const ersatz = $('#video-ersatz');
+  if (!ersatz.hidden) return;
+  video.hidden = true;
+  ersatz.hidden = false;
+  const text = '> VERBINDUNG HERGESTELLT\n> HIER SPRICHT NULLBYTE.\n> EUER SCHULNETZ GEHÖRT JETZT UNS.\n> ALLE DATEN SIND VERSCHLÜSSELT.\n> IN 45 MINUTEN WIRD ALLES GELÖSCHT.\n> VIEL GLÜCK. IHR WERDET ES BRAUCHEN.\n> NULLBYTE';
+  const ziel = $('#ersatz-text');
+  ziel.textContent = '';
+  let i = 0;
+  Ton.spiele('alarm');
+  clearInterval(ersatz._timer);
+  ersatz._timer = setInterval(function () {
+    ziel.textContent = text.slice(0, ++i);
+    if (i >= text.length) clearInterval(ersatz._timer);
+  }, 55);
+}
+
+function schliesseVideo() {
+  const video = $('#hacker-video');
+  video.pause();
+  clearInterval($('#video-ersatz')._timer);
+  $('#video-box').hidden = true;
+}
+
+async function zeigeLoesungen() {
+  const box = $('#loesungen');
+  if (Leitung.loesungenOffen) {
+    box.hidden = true;
+    Leitung.loesungenOffen = false;
+    $('#loesungen-knopf').textContent = 'Lösungen anzeigen';
+    return;
+  }
+  const pin = await fragePin('Lösungen anzeigen');
+  if (pin === null) return;
+  if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
+  const text = await Krypto.entschluessle(LOESUNGEN_VERSCHLUESSELT, pin);
+  let l = null;
+  try { l = JSON.parse(text); } catch (e) { l = null; }
+  const liste = $('#loesungen-liste');
+  liste.innerHTML = '';
+  if (!l) {
+    liste.appendChild(erstelle('p', 'fehler', 'Die Lösungen konnten nicht entschlüsselt werden. Wurde die PIN geändert? Erzeugt die Konfiguration unten neu.'));
+  } else {
+    [
+      ['Protokoll 1 (Code Kiste 1)', l.p1],
+      ['Protokoll 1 Erklärung', l.p1info],
+      ['Bonusfrage', l.bonus],
+      ['Protokoll 2 Signaturen', l.signaturen],
+      ['Code Kiste 2', l.kiste2],
+      ['Protokoll 3 (Override)', l.p3],
+      ['Protokoll 3 Erklärung', l.p3info],
+      ['Protokoll 3 Fallen (infizierte Server)', l.fallen]
+    ].forEach(function (z) {
+      if (!z[1]) return;
+      liste.appendChild(erstelle('dt', '', z[0]));
+      liste.appendChild(erstelle('dd', '', z[1]));
+    });
+  }
+  box.hidden = false;
+  Leitung.loesungenOffen = true;
+  $('#loesungen-knopf').textContent = 'Lösungen verbergen';
+}
+
+/** Erzeugt die Konstanten für app.js aus neuen Codes (Bereich «Konfiguration erzeugen»). */
+async function erzeugeKonfiguration() {
+  const pin = await fragePin('Konfiguration erzeugen');
+  if (pin === null) return;
+  if (pin !== SPIELLEITUNG_PIN) { toast('Falsche PIN.', 'warnung'); return; }
+  const w = function (id) { return $('#gen-' + id).value.trim(); };
+  const neuePin = w('pin') || SPIELLEITUNG_PIN;
+  const sig = w('signaturen').split(/[^0-9]+/).filter(Boolean).join(',');
+  const fallen = w('fallen').split(/[^0-9]+/).filter(Boolean);
+  const loesungen = {
+    p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
+    signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
+    p3: w('p3'), p3info: w('p3info'), fallen: fallen.join(', ')
+  };
+  const zeilen = [];
+  zeilen.push("const SPIELLEITUNG_PIN = '" + neuePin + "';");
+  zeilen.push('');
+  zeilen.push('const HASHES = {');
+  zeilen.push("  protokoll1: '" + await Krypto.hashCode(loesungen.p1) + "',");
+  zeilen.push("  bonus: '" + await Krypto.hashCode(loesungen.bonus) + "',");
+  zeilen.push("  signaturen: '" + await Krypto.hashCode(sig) + "',");
+  zeilen.push("  protokoll3: '" + await Krypto.hashCode(loesungen.p3) + "',");
+  zeilen.push('  /* Falsche Wege über infizierte Server */');
+  zeilen.push('  protokoll3Fallen: [');
+  const fh = [];
+  for (const f of fallen) fh.push("    '" + await Krypto.hashCode(f) + "'");
+  zeilen.push(fh.join(',\n'));
+  zeilen.push('  ]');
+  zeilen.push('};');
+  zeilen.push('');
+  zeilen.push("const KISTE2_VERSCHLUESSELT = '" + await Krypto.verschluessle(loesungen.kiste2, sig) + "';");
+  zeilen.push('');
+  zeilen.push("const LOESUNGEN_VERSCHLUESSELT = '" + await Krypto.verschluessle(JSON.stringify(loesungen), neuePin) + "';");
+  $('#generator-ausgabe').value = zeilen.join('\n');
+  $('#generator-ausgabe').hidden = false;
+  toast('Konfiguration erzeugt. Ersetzt die entsprechenden Zeilen oben in js/app.js.', 'info');
+}
+
+/* ===================================================================
+   START: je nach Seite die passende Initialisierung
+   =================================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+  const seite = document.body.dataset.seite;
+  if (seite === 'start') initStartseite();
+  else if (seite === 'terminal') initTerminal();
+  else if (seite === 'spielleitung') initSpielleitung();
+
+  // Offline-Fähigkeit: Service Worker speichert alle Dateien im Cache
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* egal */ });
+  }
+});

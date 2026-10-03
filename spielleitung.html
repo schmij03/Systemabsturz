@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050a07">
+  <meta name="robots" content="noindex">
+  <title>Systemabsturz: Spielleitung</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23050a07'/%3E%3Ctext x='2' y='12' font-size='11' font-family='monospace' fill='%233ddc84'%3E%3E_%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-seite="spielleitung" class="seite-leitung">
+
+  <!-- Beamer-Bühne -->
+  <section class="buehne">
+    <div class="buehne-kopf">
+      <span class="label">SCHULNETZ: NOTFALL-MODUS</span>
+      <span class="label rot blinkt-langsam">● NULLBYTE AKTIV</span>
+    </div>
+    <div id="gross-label" class="gross-label">BEREIT</div>
+    <div id="gross-countdown" class="gross-countdown">45:00</div>
+    <div class="szene">
+      <h2 id="szene-titel"></h2>
+      <p id="szene-text"></p>
+    </div>
+    <a href="#steuerung" class="zur-steuerung">Steuerung ▾</a>
+  </section>
+
+  <!-- Steuerung für die Lehrperson -->
+  <section id="steuerung" class="steuerung">
+    <h2>Steuerung</h2>
+    <p id="sync-info" class="klein"></p>
+
+    <div class="knopf-reihe">
+      <button type="button" class="knopf" data-szene="intro">Story: Alarm</button>
+      <button type="button" class="knopf" data-szene="auftrag">Story: Auftrag</button>
+      <button type="button" class="knopf" data-szene="regeln">Story: Regeln</button>
+      <button type="button" class="knopf" data-szene="gerettet">Story: Gerettet</button>
+    </div>
+    <div class="knopf-reihe">
+      <button type="button" id="hackervideo" class="knopf gefahr">Hackervideo</button>
+      <button type="button" id="start-countdown" class="knopf primaer">Countdown starten (45:00)</button>
+      <button type="button" id="system-gerettet" class="knopf primaer">System gerettet</button>
+      <button type="button" id="vollbild" class="knopf">Vollbild</button>
+      <button type="button" id="reset-countdown" class="knopf">Reset (PIN)</button>
+    </div>
+
+    <div class="karte">
+      <h3>Countdown synchronisieren</h3>
+      <p>Alle Geräte zählen auf dieselbe Uhrzeit herunter. Wählt das Spielende und öffnet auf jedem Tablet den Tablet-Link.</p>
+      <label class="zeile">Spielende <input type="time" id="link-zeit" step="60"></label>
+      <p class="link-zeile"><span class="label">Tablets:</span> <code id="link-tablet"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-tablet">Kopieren</button></p>
+      <p class="link-zeile"><span class="label">Beamer:</span> <code id="link-beamer"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-beamer">Kopieren</button></p>
+      <button type="button" id="link-oeffnen" class="knopf">Beamer mit dieser Endzeit öffnen</button>
+    </div>
+
+    <div class="karte">
+      <h3>Team-Tablets zurücksetzen</h3>
+      <ol>
+        <li>Auf dem Tablet unten rechts auf «Spielleitung» tippen (auf der Startseite «Spielleitung: Reset»).</li>
+        <li>PIN eingeben und «Löschen» bestätigen. Der Spielstand dieses Tablets wird gelöscht.</li>
+        <li>Für die nächste Runde den Tablet-Link mit der neuen Endzeit öffnen, dann den Teamnamen eingeben.</li>
+      </ol>
+      <p class="klein">Der Spielstand liegt nur im Browser des jeweiligen Tablets (localStorage). Die Spielleitung sieht die Punkte nicht zentral, die Teams melden ihren Endpunktestand.</p>
+    </div>
+
+    <div class="karte">
+      <h3>Lösungen</h3>
+      <button type="button" id="loesungen-knopf" class="knopf">Lösungen anzeigen</button>
+      <div id="loesungen" hidden>
+        <dl id="loesungen-liste" class="loesungen-liste"></dl>
+      </div>
+    </div>
+
+    <details class="karte">
+      <summary><h3>Konfiguration erzeugen (Codes ändern)</h3></summary>
+      <p>Hier erzeugt ihr neue Hashes, wenn ihr das Spiel mit eigenen Codes spielen wollt. Die Ausgabe ersetzt die entsprechenden Konstanten oben in <code>js/app.js</code>. Die Eingaben werden nirgends gespeichert.</p>
+      <div class="generator">
+        <label>Code Protokoll 1 (Kiste 1) <input id="gen-p1" inputmode="numeric"></label>
+        <label>Erklärung Protokoll 1 <input id="gen-p1info"></label>
+        <label>Bonusantwort <input id="gen-bonus" inputmode="numeric"></label>
+        <label>Signaturen Protokoll 2 (mit Komma) <input id="gen-signaturen"></label>
+        <label>Code Kiste 2 <input id="gen-kiste2" inputmode="numeric"></label>
+        <label>Override-Code Protokoll 3 <input id="gen-p3" inputmode="numeric"></label>
+        <label>Erklärung Protokoll 3 <input id="gen-p3info"></label>
+        <label>Fallen Protokoll 3 (mit Komma) <input id="gen-fallen"></label>
+        <label>Neue PIN (leer = bisherige) <input id="gen-pin" inputmode="numeric"></label>
+      </div>
+      <button type="button" id="generator-knopf" class="knopf primaer">Konfiguration erzeugen (PIN)</button>
+      <textarea id="generator-ausgabe" class="generator-ausgabe" rows="16" readonly hidden></textarea>
+      <p class="klein">Wenn ihr das Labyrinth ändert, passt ihr es in <code>js/maze.js</code> an und erzeugt hier die neuen Signaturen.</p>
+    </details>
+
+    <p class="klein"><a href="index.html">Zur Startseite der Teams</a></p>
+  </section>
+
+  <footer class="fuss">
+    <span>«Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, Lizenz <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
+  </footer>
+
+  <!-- Hackervideo (Platzhalter: videos/intro.mp4) -->
+  <div id="video-box" class="overlay video-box" hidden>
+    <video id="hacker-video" src="videos/intro.mp4" playsinline preload="none" controls></video>
+    <div id="video-ersatz" class="video-ersatz" hidden>
+      <pre id="ersatz-text"></pre>
+      <p class="klein">Platzhalter: Legt eure Videodatei als <code>videos/intro.mp4</code> ab.</p>
+    </div>
+    <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
+  </div>
+
+  <!-- Schlussszene -->
+  <div id="gerettet" class="overlay sieg" hidden>
+    <div class="overlay-box">
+      <h1>SYSTEM WIEDERHERGESTELLT</h1>
+      <p class="gross-text">NULLBYTE ist ausgesperrt. Ihr habt die Schule gerettet!</p>
+      <p class="klein">Tippen zum Schliessen</p>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

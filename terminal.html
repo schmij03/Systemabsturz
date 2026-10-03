@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050a07">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Systemabsturz: Terminal</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23050a07'/%3E%3Ctext x='2' y='12' font-size='11' font-family='monospace' fill='%233ddc84'%3E%3E_%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-seite="terminal" class="seite-terminal">
+
+  <!-- Kopfzeile: Teamname, Countdown, Punkte, Joker, Help-Desk -->
+  <header class="kopf">
+    <div class="kopf-feld kopf-team">
+      <span class="label">NOTFALL-TERMINAL</span>
+      <span id="team-name" class="wert"></span>
+    </div>
+    <div class="kopf-feld kopf-uhr">
+      <span class="label">LÖSCHUNG IN</span>
+      <span id="countdown" class="wert" aria-live="off">--:--</span>
+    </div>
+    <div class="kopf-feld">
+      <span class="label">PUNKTE</span>
+      <span id="punkte" class="wert"></span>
+    </div>
+    <div class="kopf-feld">
+      <span class="label">JOKER</span>
+      <span id="joker" class="wert joker"></span>
+    </div>
+    <button type="button" id="helpdesk-knopf" class="knopf helpdesk-knopf">? Help-Desk</button>
+  </header>
+
+  <!-- Protokoll-Auswahl -->
+  <nav class="tabs" role="tablist" aria-label="Sicherheitsprotokolle">
+    <button type="button" class="tab" role="tab" data-protokoll="1"><span class="tab-status"></span> 1 Kryptografie</button>
+    <button type="button" class="tab" role="tab" data-protokoll="2"><span class="tab-status"></span> 2 Algorithmen</button>
+    <button type="button" class="tab" role="tab" data-protokoll="3"><span class="tab-status"></span> 3 Netzwerke</button>
+  </nav>
+
+  <main class="inhalt">
+
+    <!-- Protokoll 1: Kryptografie -->
+    <section id="protokoll-1" class="protokoll p1" role="tabpanel" hidden>
+      <div class="spalte-text">
+        <h2>Protokoll 1: Kryptografie</h2>
+        <p class="story"></p>
+        <div class="nachricht-box">
+          <div class="label">EINGEHENDE NACHRICHT, 08:13 UHR</div>
+          <p class="geheimnachricht"></p>
+        </div>
+        <p class="hinweis"></p>
+      </div>
+      <div class="spalte-eingabe">
+        <div class="eingabe"></div>
+        <div class="erfolg" hidden>
+          <p class="erfolg-text"></p>
+          <button type="button" class="knopf primaer" data-gehe-zu="2">Weiter zu Protokoll 2</button>
+        </div>
+        <div id="bonus" class="bonus" hidden>
+          <h3>Bonusfrage</h3>
+          <p class="bonus-frage"></p>
+          <div class="bonus-inhalt"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Protokoll 2: Algorithmen -->
+    <section id="protokoll-2" class="protokoll p2" role="tabpanel" hidden>
+      <p class="story kompakt"></p>
+      <div class="erfolg kompakt" hidden>
+        <p class="erfolg-text"></p>
+        <button type="button" class="knopf primaer erfolg-weiter" data-gehe-zu="3" hidden>Weiter zu Protokoll 3</button>
+      </div>
+      <div class="p2-raster">
+        <div class="p2-blockly">
+          <div id="blockly"></div>
+          <div id="blockly-sperre" hidden>Programm läuft. Zum Ändern zuerst «Pause» drücken.</div>
+        </div>
+        <div class="p2-labyrinth">
+          <div class="signatur-leiste">Signaturen: <span id="signaturen"></span></div>
+          <div class="svg-box"><svg id="labyrinth" xmlns="http://www.w3.org/2000/svg"></svg></div>
+          <div class="algo-knoepfe">
+            <button type="button" id="algo-start" class="knopf primaer">▶ Programm starten</button>
+            <button type="button" id="algo-schritt" class="knopf">Schritt für Schritt</button>
+            <button type="button" id="algo-reset" class="knopf">Zurücksetzen</button>
+          </div>
+          <label class="tempo">Tempo <span class="klein">langsam</span><input type="range" id="algo-tempo"><span class="klein">schnell</span></label>
+          <div id="algo-meldung" class="algo-meldung" role="status"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Protokoll 3: Netzwerke -->
+    <section id="protokoll-3" class="protokoll p3" role="tabpanel" hidden>
+      <div class="spalte-text">
+        <h2>Protokoll 3: Netzwerke</h2>
+        <p class="story"></p>
+        <p class="hinweis">Gebt den Code immer dreistellig ein. Zahlen unter 100 mit führender Null, zum Beispiel 042.</p>
+      </div>
+      <div class="spalte-eingabe">
+        <div class="eingabe"></div>
+        <div class="buzzer-bereich" hidden>
+          <p class="ok gross-text">OVERRIDE-CODE AKZEPTIERT</p>
+          <button type="button" id="buzzer" class="buzzer">OVERRIDE AUSLÖSEN</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="fuss">
+    <span>«Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, Lizenz <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
+    <button type="button" class="knopf klein-knopf reset-knopf">Spielleitung</button>
+  </footer>
+
+  <!-- Help-Desk -->
+  <div id="helpdesk-hintergrund" class="helpdesk-hintergrund" hidden></div>
+  <aside id="helpdesk" class="helpdesk" aria-hidden="true" aria-labelledby="helpdesk-titel">
+    <div class="helpdesk-kopf">
+      <span class="label">HELP-DESK</span>
+      <button type="button" id="helpdesk-schliessen" class="knopf" aria-label="Help-Desk schliessen">Schliessen ✕</button>
+    </div>
+    <h2 id="helpdesk-titel"></h2>
+    <ol id="tipp-liste" class="tipp-liste"></ol>
+    <p>Verbleibende Joker: <strong id="joker-rest"></strong></p>
+    <button type="button" id="joker-knopf" class="knopf primaer"></button>
+    <p id="joker-info" class="klein"></p>
+  </aside>
+
+  <!-- Bei 00:00 -->
+  <div id="geloescht" class="overlay geloescht" hidden>
+    <div class="overlay-box">
+      <h1 class="glitch" data-text="SYSTEM GELÖSCHT">SYSTEM GELÖSCHT</h1>
+      <p>NULLBYTE hat alle Daten gelöscht. Die Eingaben sind gesperrt.</p>
+      <p class="gross-text"><span id="geloescht-team"></span>: <span id="geloescht-punkte"></span> Punkte</p>
+      <button type="button" class="knopf klein-knopf reset-knopf">Spielleitung</button>
+    </div>
+  </div>
+
+  <!-- Nach dem Override -->
+  <div id="sieg" class="overlay sieg" hidden>
+    <div class="overlay-box">
+      <h1>SYSTEM WIEDERHERGESTELLT</h1>
+      <p class="gross-text">Ihr habt die Schule gerettet!</p>
+      <dl class="sieg-werte">
+        <dt>Team</dt><dd id="sieg-team"></dd>
+        <dt>Restzeit</dt><dd id="sieg-zeit"></dd>
+        <dt>Zeitbonus</dt><dd><span id="sieg-bonus"></span> Punkte</dd>
+        <dt>Endpunktestand</dt><dd id="sieg-punkte" class="gross-zahl"></dd>
+      </dl>
+      <button type="button" class="knopf klein-knopf reset-knopf">Spielleitung</button>
+    </div>
+  </div>
+
+  <script src="js/maze.js"></script>
+  <script src="js/blocks.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
