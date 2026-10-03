@@ -18,7 +18,7 @@
       <span class="label rot blinkt-langsam">● NULLBYTE AKTIV</span>
     </div>
     <div id="buehne-anmeldung" class="buehne-anmeldung">
-      <span class="label">ANMELDUNG FÜR NOTFALL-TEAMS: TEAMNAME UND SPIELCODE EINGEBEN</span>
+      <span class="label">ANMELDUNG FÜR NOTFALL-TEAMS: TEAMNAME UND BEITRITTSCODE EINGEBEN</span>
       <span class="spielcode-wert buehne-code"></span>
     </div>
     <div id="gross-label" class="gross-label">BEREIT</div>
@@ -38,17 +38,19 @@
     <div class="karte ablauf">
       <h3>Spielablauf</h3>
       <ol>
-        <li>Teams öffnen auf den Tablets die Startseite und geben Teamname und Spielcode <strong class="spielcode-wert"></strong> ein. Die Tablets warten dann auf euch.<br><span class="klein">Direkter Link: <code id="anmelde-link"></code></span></li>
-        <li>«Spiel starten» zeigt das Hackervideo (oder die Botschaft von NULLBYTE mit Maske und Stimme).</li>
-        <li>Nach dem Intro startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben.</li>
+        <li>Material bereitlegen: pro Team ein Auftragsblatt, eine Chiffrierscheibe (Protokoll 1) und einen Netzwerkplan (Protokoll 3), siehe «Material drucken».</li>
+        <li>«▶ Spiel starten»: Der Beamer wechselt in den Vollbildmodus und das Hackervideo läuft (fehlt <code>videos/intro.mp4</code>, spricht NULLBYTE mit Maske und Stimme).</li>
+        <li>Direkt nach dem Video erscheint die Spielanweisung mit dem Beitrittscode <strong class="spielcode-wert"></strong> darüber und wird vorgelesen. Jetzt das Material verteilen. Die Teams melden sich auf den Tablets an und warten.</li>
+        <li>Am Ende der Anweisung startet der Countdown und alle Tablets erhalten automatisch ihre Aufgaben. Der Beitrittscode bleibt klein auf der Leinwand sichtbar.</li>
       </ol>
+      <p class="klein">Direkter Link für die Tablets: <code id="anmelde-link"></code></p>
       <label class="zeile">Schwierigkeit Labyrinth (Protokoll 2) <select id="stufe-wahl" class="stufe-wahl"></select></label>
       <p class="klein">Leicht: Gang mit Ecken, nur «vorne frei?», 5 Blöcke. Mittel: Rechte-Hand-Regel, 9 Blöcke. Schwer: Rechte-Hand-Regel mit infizierten Feldern, «und» und «nicht», 15 Blöcke. Die Stufe wird mit dem Startsignal an die Tablets geschickt.</p>
       <div class="knopf-reihe">
         <button type="button" id="spiel-starten" class="knopf primaer gross-knopf">▶ Spiel starten</button>
         <button type="button" id="start-countdown" class="knopf">Aufgaben sofort freigeben (ohne Intro)</button>
         <button type="button" id="signal-erneut" class="knopf">Startsignal erneut senden</button>
-        <button type="button" id="neuer-code" class="knopf">Neuer Spielcode</button>
+        <button type="button" id="neuer-code" class="knopf">Neuer Beitrittscode</button>
       </div>
       <p id="ablauf-status" class="ablauf-status" role="status"></p>
     </div>
@@ -79,6 +81,16 @@
       <p class="link-zeile"><span class="label">Tablets:</span> <code id="link-tablet"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-tablet">Kopieren</button></p>
       <p class="link-zeile"><span class="label">Beamer:</span> <code id="link-beamer"></code> <button type="button" class="knopf klein-knopf kopieren" data-ziel="#link-beamer">Kopieren</button></p>
       <button type="button" id="link-oeffnen" class="knopf">Beamer mit dieser Endzeit öffnen</button>
+    </div>
+
+    <div class="karte">
+      <h3>Material drucken</h3>
+      <p>Pro Team je ein Exemplar ausdrucken (A4, 100 % bzw. «Tatsächliche Grösse», damit die Chiffrierscheibe passt):</p>
+      <div class="knopf-reihe">
+        <a class="knopf link-knopf" href="druck/auftrag.html" target="_blank" rel="noopener">Auftragsblatt</a>
+        <a class="knopf link-knopf" href="druck/protokoll1.html" target="_blank" rel="noopener">Protokoll 1: Chiffrierscheibe</a>
+        <a class="knopf link-knopf" href="druck/protokoll3.html" target="_blank" rel="noopener">Protokoll 3: Netzwerkplan</a>
+      </div>
     </div>
 
     <div class="karte">
@@ -137,8 +149,25 @@
     </div>
     <div class="video-knoepfe">
       <button type="button" id="nochmals-vorlesen" class="knopf">Botschaft nochmals abspielen</button>
-      <button type="button" id="video-freigeben" class="knopf primaer">Aufgaben jetzt freigeben ▶</button>
+      <button type="button" id="video-freigeben" class="knopf primaer">Weiter zur Spielanweisung ▶</button>
       <button type="button" id="video-schliessen" class="knopf">Schliessen ✕</button>
+    </div>
+  </div>
+
+  <!-- Spielanweisung nach dem Video, darüber der Beitrittscode -->
+  <div id="anweisung" class="overlay anweisung" hidden>
+    <div class="anweisung-box">
+      <div class="anweisung-code">
+        <span class="label">BEITRITTSCODE FÜR DIE TABLETS</span>
+        <span class="spielcode-wert anweisung-codewert"></span>
+        <span class="anweisung-url">Notfall-Terminal: <strong class="anmelde-kurz"></strong></span>
+      </div>
+      <h1 id="anweisung-titel"></h1>
+      <div id="anweisung-text" class="anweisung-text"></div>
+      <div class="anweisung-knoepfe">
+        <button type="button" id="anweisung-nochmals" class="knopf klein-knopf">Nochmals vorlesen</button>
+        <button type="button" id="anweisung-freigeben" class="knopf klein-knopf">Aufgaben jetzt freigeben ▶</button>
+      </div>
     </div>
   </div>
 

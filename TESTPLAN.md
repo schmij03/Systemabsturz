@@ -4,14 +4,18 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 ## Vorbereitung und Spielstart
 
-1. `spielleitung.html` auf dem Beamer-Laptop öffnen. Erwartung: Auf der Leinwand steht ein Spielcode aus fünf Buchstaben.
-2. Auf dem Testtablet `index.html` öffnen, Teamnamen und Spielcode eingeben, «Spiel starten». Erwartung: «Warten auf die Spielleitung», Status «Verbunden. Warte auf das Startsignal». Die Aufgaben sind nicht sichtbar.
-3. «Wir sind bereit» tippen. Erwartung: «Bereit ✓ Ton ist eingeschaltet.»
-4. Auf dem Laptop «▶ Spiel starten». Erwartung: Video oder Botschaft von NULLBYTE mit Maske und Stimme. Danach startet der Beamer-Countdown, die Story «Euer Auftrag» erscheint, Status «Aufgaben freigegeben».
-5. Erwartung auf dem Tablet innerhalb weniger Sekunden: «AUFGABEN EMPFANGEN», dann Protokoll 1 mit Countdown (gleich wie auf dem Beamer), 100 Punkte, drei Joker.
+1. Auf `spielleitung.html` unter «Material drucken» alle drei Blätter öffnen und drucken. Erwartung: je genau eine A4-Seite, die Chiffrierscheiben in voller Grösse, der Netzwerkplan farbig.
+2. «▶ Spiel starten». Erwartung: Vollbild, Video oder Botschaft von NULLBYTE mit Maske und Stimme.
+3. Nach dem Video (oder «Weiter zur Spielanweisung ▶»): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben.
+4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
+5. Ende der Anweisung. Erwartung Beamer: Countdown läuft, Story «Euer Auftrag», Beitrittscode klein oben. Erwartung Tablet nach wenigen Sekunden: «AUFGABEN EMPFANGEN», dann Protokoll 1 mit demselben Countdown, 100 Punkte, drei Joker.
 6. Ein zweites Tablet erst jetzt anmelden. Erwartung: Es startet sofort mit derselben Restzeit.
 7. Notfall ohne Internet: WLAN auf einem Tablet ausschalten, anmelden. Erwartung: rote Meldung «Keine Verbindung». «Spielleitung: manuell starten (PIN)» startet das Tablet.
 8. Lautstärke prüfen: Beim Tippen auf das Ziffernfeld ist ein Klick zu hören.
+
+## Netzwerkplan (Protokoll 3) prüfen
+
+Kürzester Weg ohne rote Server: A, B, C, E, Z (vier Verbindungen), Summe 12 + 23 + 31 + 19 + 24 = **109**. Die Fallen: A, G, Z ergibt 065; A, B, H, Z ergibt 079; A, F, G, Z ergibt 111.
 
 ## Protokoll 1
 

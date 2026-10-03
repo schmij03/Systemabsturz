@@ -54,11 +54,12 @@ AUSSPRACHE = [
     (r'Override', 'Ower-Reid'),
     (r'Countdown', 'Kaunt-Daun'),
     (r'\bServern?\b', lambda m: m.group(0).replace('Server', 'Sörver')),
-    (r'\bTeams?\b', lambda m: m.group(0).replace('Team', 'Tiem')),
+    (r'Team', 'Tiem'),
     (r'Gratis-Handy', 'Gratis-Händi'),
     (r'\bCodes?\b', lambda m: m.group(0).replace('Code', 'Kohd')),
     (r'Chiffrierscheibe', 'Schiffrierscheibe'),
     (r'Joker', 'Dschoker'),
+    (r'\bTablets?\b', lambda m: m.group(0).replace('Tablet', 'Täblet')),
 ]
 
 

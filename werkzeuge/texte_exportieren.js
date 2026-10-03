@@ -56,6 +56,9 @@ Object.keys(TEXTE.szenen).forEach(function (k) {
   dazu('normal', sz.titel + '. ' + sz.text);
 });
 
+// Spielanweisung nach dem Video (Absatz für Absatz)
+TEXTE.spielanweisung.absaetze.forEach(function (absatz) { dazu('normal', absatz); });
+
 // Botschaft von NULLBYTE (Hackerstimme)
 TEXTE.nullbyte.forEach(function (zeile) { dazu('hacker', zeile); });
 
