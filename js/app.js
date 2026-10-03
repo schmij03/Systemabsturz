@@ -1866,6 +1866,12 @@ function initSpielleitung() {
     if (e.key === 'Escape') { e.preventDefault(); $('#video-schliessen').click(); }
     else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); $('#video-freigeben').click(); }
   });
+  // Tastatur während der Spielanweisung (Knöpfe sind dort ebenfalls unsichtbar)
+  document.addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || $('#anweisung').hidden || !$('#video-box').hidden) return;
+    if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); $('#anweisung-freigeben').click(); }
+    else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); $('#anweisung-nochmals').click(); }
+  });
   $('#video-schliessen').addEventListener('click', function () {
     const warAblauf = Leitung.ablauf;
     schliesseVideo();

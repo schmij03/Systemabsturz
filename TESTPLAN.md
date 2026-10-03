@@ -6,7 +6,7 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 1. Auf `spielleitung.html` unter «Material drucken» alle drei Blätter öffnen und drucken. Erwartung: je genau eine A4-Seite, die Chiffrierscheiben in voller Grösse, der Netzwerkplan farbig.
 2. «▶ Spiel starten». Erwartung: Vollbild, Video oder Botschaft von NULLBYTE mit Maske und Stimme.
-3. Nach dem Video (oder «Weiter zur Spielanweisung ▶»): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben.
+3. Nach dem Video (oder Taste → bzw. Leertaste): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben. Es sind keine Knöpfe sichtbar. Taste R liest nochmals vor, → oder Enter gibt die Aufgaben sofort frei.
 4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
 5. Ende der Anweisung. Erwartung Beamer: Countdown läuft, Story «Euer Auftrag», Beitrittscode klein oben. Erwartung Tablet nach wenigen Sekunden: «AUFGABEN EMPFANGEN», dann Protokoll 1 mit demselben Countdown, 100 Punkte, drei Joker.
 6. Ein zweites Tablet erst jetzt anmelden. Erwartung: Es startet sofort mit derselben Restzeit.

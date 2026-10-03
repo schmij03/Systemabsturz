@@ -621,8 +621,7 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .anweisung-absatz { margin: 0; padding: 1vh 1.4vw; font-family: var(--sans); font-size: clamp(1rem, min(2vw, 3.4vh), 1.85rem); line-height: 1.4; color: var(--text-schwach); border-left: 6px solid transparent; border-radius: 0 8px 8px 0; transition: all 0.3s; }
 .anweisung-absatz.aktiv { color: #fff; background: rgba(61, 220, 132, 0.12); border-left-color: var(--gruen); }
 .anweisung-absatz.gelesen { color: var(--text); }
-.anweisung-knoepfe { display: flex; justify-content: flex-end; gap: 10px; margin-top: 2vh; opacity: 0.45; }
-.anweisung-knoepfe:hover { opacity: 1; }
+.anweisung-knoepfe { display: none !important; }
 .buehne-anmeldung.klein { padding: 4px 18px; margin-bottom: 1vh; border-style: solid; }
 .buehne-anmeldung.klein .buehne-code { font-size: clamp(1.6rem, 3.5vw, 3rem); }
 .buehne-anmeldung.klein .label::after { content: " (Nachzügler)"; }
