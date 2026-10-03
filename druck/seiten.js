@@ -222,7 +222,7 @@ var Druck = (function () {
 
   /** Liest druck.css als Text (für den Download) */
   function ladeCss() {
-    return fetch('druck.css').then(function (r) { return r.text(); }).catch(function () {
+    return fetch('druck.css').then(function (r) { if (!r.ok) throw new Error('CSS nicht erreichbar'); return r.text(); }).catch(function () {
       var css = '';
       Array.prototype.forEach.call(document.styleSheets, function (sheet) {
         try { Array.prototype.forEach.call(sheet.cssRules, function (r) { css += r.cssText + '\n'; }); } catch (e) { /* nicht lesbar */ }
@@ -271,3 +271,4 @@ var Druck = (function () {
 
   return { start: start, html: html, eigenstaendig: eigenstaendig, adresse: adresse, seite: seite, esc: esc, linien: linien, herunterladen: herunterladen };
 })();
+

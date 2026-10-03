@@ -97,7 +97,7 @@ var Leitfaden = (function () {
     var ober = 'SPIELLEITUNG  |  LÖSUNGEN  |  NICHT AUF DEN BEAMER';
     if (!l) {
       return seite(st, ober, 'Lösungen Stufe ' + STUFEN[st].name,
-        '<div class="kasten wissen"><span class="label">GESCHÜTZT</span>Die Lösungen werden erst nach Eingabe der PIN der Spielleitung eingefügt (oben in der Leiste «PIN» eingeben, «Lösungen einfügen»). So stehen sie nicht öffentlich im Internet.</div>');
+        '<div class="kasten wissen"><span class="label">GESCHÜTZT</span>Die Lösungen werden erst nach Eingabe der PIN der Spielleitung eingefügt (oben in der Leiste «PIN» eingeben, «Lösungen einfügen»). Das verhindert versehentliches Einblenden. Die PIN ist kein Schutz vor dem Auslesen des Quellcodes.</div>');
     }
     var leitung = ladeJson(SPEICHER_LEITUNG) || {};
     var eigen = leitung.p1 && leitung.p1.code;
@@ -202,3 +202,4 @@ var Leitfaden = (function () {
 
   return { start: start, html: html };
 })();
+
