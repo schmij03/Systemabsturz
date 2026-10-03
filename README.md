@@ -22,7 +22,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
 | `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
-| `material/` | Teamsets pro Stufe als eigenständige HTML-Dateien, Download auf der Spielleitungsseite |
+| `material/` | Teamsets pro Stufe als eigenständige HTML-Dateien (Vorrat zum direkten Verlinken) |
 | `js/netzwerke.js` | Netzwerkpläne für Protokoll 3 pro Stufe mit Lösung |
 | `js/unterrichtsinfo.js` | Fenster «Einsatz im Unterricht» in der Spielleitung: Lehrplanbezüge, Einsatzideen, Differenzierung (Texte oben in der Datei) |
 | `druck/` | Druckmaterial: komplettes Teamset (`teamset.html`) und Einzelblätter, Inhalt in `seiten.js`, Gestaltung in `druck.css` |
@@ -49,7 +49,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
    * Seiten 2 bis 4 **Protokoll 1:** «Die Nachricht von NULLBYTE» mit Feldern für Geheimtext, Verschiebung, Klartext, Code und Bonusfrage, dann die grosse Scheibe (172 mm, Klartext) und die kleine Scheibe (142 mm, Geheimtext) mit Bauanleitung. Am besten auf festes Papier.
    * Seite 5 **Protokoll 2:** Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Planungsfeld und Signaturen.
    * Seiten 6 und 7 **Protokoll 3:** «Routing reparieren» mit Auftrag und Lösungsfeldern, dann der Netzwerkplan im Querformat mit Legende.
-   * Ansehen und drucken: `druck/teamset.html?stufe=leicht` (passt sich an Stufe und eingestellten Code an, Knopf «Als HTML herunterladen»). Fertige Dateien zum Herunterladen: `material/Systemabsturz_Teamset_<Stufe>.html` (eigenständig, ohne Skripte, auch offline). Einzelblätter: `druck/auftrag.html`, `druck/protokoll1.html` (Geheimtext optional eindruckbar), `druck/protokoll2.html`, `druck/protokoll3.html`.
+   * Kachel **«Gesamtes Dossier»** öffnet `druck/teamset.html`: Die Stufe der Spielleitung ist vorgewählt und lässt sich oben im Dossier umstellen, gleich wie bei den Einzelblättern. Das Dossier passt sich an den eingestellten Code an und hat den Knopf «Als HTML herunterladen» (eigenständige Datei, ohne Skripte, auch offline). Fertige Dateien liegen zusätzlich in `material/Systemabsturz_Teamset_<Stufe>.html`. Einzelblätter: `druck/auftrag.html`, `druck/protokoll1.html` (Geheimtext optional eindruckbar), `druck/protokoll2.html`, `druck/protokoll3.html`.
    * Druckeinstellung A4, «Tatsächliche Grösse» (100 %), farbig. Der Netzwerkplan druckt automatisch quer.
    * Inhalt aller Blätter: `druck/seiten.js`, Gestaltung: `druck/druck.css`. Nach Änderungen die Download-Dateien mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, Schwierigkeit für Protokoll 2 wählen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
