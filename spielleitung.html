@@ -45,6 +45,7 @@
         <button type="button" id="kopf-start" class="knopf primaer">▶ Spiel starten</button>
         <button type="button" id="vollbild" class="knopf">⛶ Vollbild</button>
         <a href="#" id="zur-buehne" class="knopf link-knopf">▲ Beamer-Ansicht</a>
+        <button type="button" id="unterrichtsinfo-knopf" class="knopf">ⓘ Unterrichtsinfo</button>
       </div>
       <p id="ablauf-status" class="ablauf-status" role="status"></p>
     </header>
@@ -269,8 +270,24 @@
     </div>
   </div>
 
+  <!-- Unterrichtsinfo: erscheint beim Öffnen, nur für die Lehrperson (Inhalt in js/unterrichtsinfo.js) -->
+  <div id="unterrichtsinfo" class="info-overlay" hidden>
+    <div id="unterrichtsinfo-box" class="info-fenster" role="dialog" aria-modal="true" aria-labelledby="unterrichtsinfo-titel" aria-describedby="unterrichtsinfo-untertitel">
+      <button type="button" id="unterrichtsinfo-schliessen" class="info-x" aria-label="Fenster schliessen">✕</button>
+      <p id="unterrichtsinfo-hinweis" class="info-hinweis"></p>
+      <h2 id="unterrichtsinfo-titel"></h2>
+      <p id="unterrichtsinfo-untertitel" class="info-untertitel"></p>
+      <div id="unterrichtsinfo-inhalt" class="info-inhalt"></div>
+      <div class="info-knoepfe">
+        <button type="button" id="unterrichtsinfo-drucken" class="knopf">Drucken oder als PDF sichern</button>
+        <button type="button" id="unterrichtsinfo-weiter" class="knopf primaer">Weiter zur Spielleitung ▶</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/maze.js"></script>
   <script src="js/netzwerke.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/unterrichtsinfo.js"></script>
 </body>
 </html>
