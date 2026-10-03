@@ -8,7 +8,7 @@
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
-const CACHE_NAME = 'systemabsturz-v19';
+const CACHE_NAME = 'systemabsturz-v20';
 
 const DATEIEN = [
   './',
@@ -96,8 +96,6 @@ function speichern(anfrage, antwort) {
 self.addEventListener('fetch', function (e) {
   const anfrage = e.request;
   if (anfrage.method !== 'GET' || new URL(anfrage.url).origin !== self.location.origin) return;
-  // Videos nicht cachen (gross, werden in Teilen geladen)
-  if (anfrage.url.indexOf('/videos/') >= 0) return;
 
   if (anfrage.mode === 'navigate') {
     e.respondWith(new Promise(function (fertig) {

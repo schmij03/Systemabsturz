@@ -12,14 +12,13 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 |---|---|
 | `index.html` | Startseite: Teamname eingeben, Spiel starten |
 | `terminal.html` | Spielansicht der Teams mit den drei Protokollen, Countdown, Help-Desk und Punkten |
-| `spielleitung.html` | Beamer-Ansicht oben (grosser Countdown, Story-Texte, Hackervideo, Schlussszene), darunter die Steuerung mit Kopfleiste und vier Reitern: «1 Vorbereiten», «2 Spiel durchführen», «3 Nach dem Spiel», «Lösungen und Extras» |
+| `spielleitung.html` | Beamer-Ansicht oben (grosser Countdown, Story-Texte, Botschaft von NULLBYTE, Schlussszene), darunter die Steuerung mit Kopfleiste und vier Reitern: «1 Vorbereiten», «2 Spiel durchführen», «3 Nach dem Spiel», «Lösungen und Extras» |
 | `css/style.css` | Gestaltung im Terminal-Look |
 | `js/app.js` | Hauptlogik, **alle Einstellungen oben in der Datei** (PIN, Spieldauer, Punkte, Hashes, Texte, Tipps) |
 | `js/blocks.js` | Protokoll 2: Scratch-Blöcke mit Blockly und eigener Interpreter |
 | `js/maze.js` | Protokoll 2: drei Labyrinthe (Schwierigkeitsstufen), Signaturen, Blocklimit, Energie und Darstellung von ANTI-V |
 | `lib/blockly/` | Lokale Kopie von Blockly 13.3.0 (Apache 2.0) für den Offline-Betrieb |
 | `sounds/` | Platzhalter für Töne (sonst synthetische Töne), siehe `sounds/README.md` |
-| `videos/` | Platz für das Hackervideo `intro.mp4`, siehe `videos/README.md` |
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
 | `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
@@ -50,10 +49,10 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
    * **Protokoll 2** (`druck/protokoll2.html`, 1 Seite wie im Teamset): Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Feld zum Planen des Programms und für die Signaturen. Werte und Blöcke kommen direkt aus `js/maze.js`, passen also immer zur gewählten Stufe.
    * **Protokoll 3: Netzwerkplan** (`druck/protokoll3.html`): Netzwerk mit Servern und Kennzahlen, farbig im Querformat drucken.
 2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, Schwierigkeit für Protokoll 2 wählen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
-3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und das **Hackervideo** läuft (fehlt `videos/intro.mp4`, spricht NULLBYTE mit Maske und Hackerstimme).
-4. **Spielanweisung:** Direkt nach dem Video erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein und tippen auf «Wir sind bereit». Die Tablets warten verdeckt.
+3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und **NULLBYTE meldet sich** mit Maske, getipptem Text und Hackerstimme.
+4. **Spielanweisung:** Direkt nach der Botschaft erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein und tippen auf «Wir sind bereit». Die Tablets warten verdeckt.
 5. **Aufgaben erhalten:** Am Ende der Anweisung startet automatisch der Countdown auf dem Beamer und alle Tablets erhalten innerhalb weniger Sekunden ihre Aufgaben («Aufgaben empfangen», Protokoll 1). Der Beitrittscode bleibt klein auf der Leinwand, damit Nachzügler noch einsteigen können (sie starten sofort mit derselben Restzeit).
-6. Abkürzen: Während des Videos sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. Danach in der Anweisung «Aufgaben jetzt freigeben ▶», in der Steuerung «Aufgaben sofort freigeben (ohne Intro)».
+6. Abkürzen: Während der Botschaft sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. In der Anweisung gibt <kbd>→</kbd> oder <kbd>Enter</kbd> die Aufgaben sofort frei, in der Steuerung unter «Probleme?» «Aufgaben sofort freigeben».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
 Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode) und die Tablets zurücksetzen.
@@ -118,7 +117,7 @@ Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also 
 
 ### NULLBYTE und das Vorlesen
 
-* **Botschaft von NULLBYTE:** Fehlt `videos/intro.mp4`, erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
+* **Botschaft von NULLBYTE:** Beim Spielstart (oder mit dem Knopf «Botschaft von NULLBYTE») erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
 * **Vorlesen (Text-to-Speech):** Alle festen Texte (Botschaft von NULLBYTE, Story-Szenen, Story-Texte und Tipps aller Protokolle und Stufen) liegen als fertige Sprachaufnahmen in `audio/tts/`. Sie wurden mit der neuronalen Stimme **«Thorsten»** (Thorsten-Voice, Lizenz CC0) und der freien Sprachsynthese Piper erzeugt. NULLBYTE spricht mit der Variante «wütend», tiefer gestimmt und mit Roboter-Effekt. Vorteile: natürliche Aussprache, auf jedem Gerät gleich, ohne Internet, ohne Kosten und ohne Datenschutzfragen. Im Terminal haben die Story-Texte und der Help-Desk einen Knopf 🔊, auf dem Beamer wird automatisch vorgelesen.
 * **Ersatz:** Fehlt für einen Text eine Aufnahme (zum Beispiel nach einer Textänderung), liest die Sprachausgabe des Browsers vor. Dabei werden neuronale Stimmen bevorzugt (in Edge «Microsoft … Online (Natural)», auf dem iPad «Premium» oder «Erweitert», sofern installiert), zuerst Deutsch (Schweiz), dann Deutsch (Deutschland).
 * Auf dem iPad gibt es Ton nur nach einer Berührung und nur, wenn der Stummschalter aus ist.
