@@ -5,81 +5,89 @@
    Lösung (nur für die Spielleitung). Die Teamsets (Word/PDF) zeigen
    dieselben Pläne. Auf allen Stufen ist der Override-Code 109,
    geprüft wird er nur als Hash in js/app.js.
-   Leicht: 11 Server, 3 infiziert, alle Wege brauchen 4 Verbindungen.
-   Mittel: 14 Server, 4 infiziert, sauberer Weg 5 Verbindungen, eine
-           verlockende Abkürzung mit 4 Verbindungen ist infiziert.
-   Schwer: 18 Server, 5 infiziert, sauberer Weg 6 Verbindungen, alle
-           Wege mit 5 Verbindungen sind infiziert.
-
-   Wer einen Plan ändert, prüft mit werkzeuge (oder von Hand):
-   genau ein kürzester Weg ohne rote Server, Summe = Override-Code.
+   Leicht: 14 Server, 4 infiziert, 25 Verbindungen, richtiger Weg 6 Verbindungen.
+   Mittel: 18 Server, 5 infiziert, 32 Verbindungen, richtiger Weg 7 Verbindungen.
+   Schwer: 22 Server, 7 infiziert, 38 Verbindungen, richtiger Weg 9 Verbindungen.
+   Gerade Wege quer durchs Netz sind alle infiziert, der saubere Weg
+   muss Umwege nach oben oder unten machen.
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 
 const NETZWERKE = {
   leicht: {
     server: {
-      A: { kennzahl: 12, x: 90, y: 450 },
-      B: { kennzahl: 17, x: 270, y: 170 },
-      C: { kennzahl: 26, x: 500, y: 100, infiziert: true },
-      D: { kennzahl: 23, x: 730, y: 170 },
-      Z: { kennzahl: 24, x: 910, y: 450 },
-      E: { kennzahl: 15, x: 300, y: 450 },
-      F: { kennzahl: 29, x: 500, y: 450, infiziert: true },
-      G: { kennzahl: 18, x: 700, y: 450 },
-      H: { kennzahl: 21, x: 270, y: 730 },
-      I: { kennzahl: 34, x: 500, y: 800 },
-      J: { kennzahl: 31, x: 730, y: 730, infiziert: true }
+      A: { kennzahl: 12, x: 70, y: 320 },
+      B: { kennzahl: 31, x: 250, y: 90, infiziert: true },
+      C: { kennzahl: 23, x: 440, y: 90 },
+      D: { kennzahl: 10, x: 630, y: 90 },
+      E: { kennzahl: 15, x: 820, y: 90 },
+      F: { kennzahl: 13, x: 250, y: 320 },
+      G: { kennzahl: 12, x: 440, y: 320 },
+      H: { kennzahl: 30, x: 630, y: 320, infiziert: true },
+      I: { kennzahl: 9, x: 820, y: 320, infiziert: true },
+      J: { kennzahl: 27, x: 250, y: 550 },
+      K: { kennzahl: 29, x: 440, y: 550 },
+      L: { kennzahl: 25, x: 630, y: 550 },
+      M: { kennzahl: 31, x: 820, y: 550, infiziert: true },
+      Z: { kennzahl: 24, x: 970, y: 320 }
     },
-    verbindungen: ['A-B', 'B-C', 'C-D', 'D-Z', 'A-E', 'E-F', 'F-G', 'G-Z', 'A-H', 'H-I', 'I-J', 'J-Z', 'B-E', 'E-H', 'I-G', 'D-G', 'C-F', 'F-I'],
-    loesung: 'A, H, I, G, Z (4 Verbindungen): 12 + 21 + 34 + 18 + 24 = 109',
-    fallen: 'Alle anderen Wege mit 4 Verbindungen führen über rote Server: A, B, C, D, Z = 102; A, E, F, G, Z = 098; A, H, I, J, Z = 122'
+    verbindungen: ['A-B', 'A-F', 'A-J', 'B-C', 'B-F', 'B-G', 'C-D', 'C-G', 'C-H', 'D-E', 'E-I', 'E-Z', 'F-G', 'F-J', 'F-K', 'G-H', 'G-K', 'G-L', 'H-I', 'H-L', 'H-M', 'I-Z', 'K-L', 'L-M', 'M-Z'],
+    loesung: 'A, F, G, C, D, E, Z (6 Verbindungen): 12 + 13 + 12 + 23 + 10 + 15 + 24 = 109',
+    fallen: 'Verlockende Abkürzungen mit weniger als 6 Verbindungen sind infiziert, zum Beispiel 100, 115, 117, 118, 122, 129'
   },
   mittel: {
     server: {
-      A: { kennzahl: 12, x: 80, y: 450 },
-      Z: { kennzahl: 24, x: 920, y: 450 },
-      B: { kennzahl: 16, x: 250, y: 130 },
-      C: { kennzahl: 22, x: 420, y: 130 },
-      D: { kennzahl: 27, x: 590, y: 130, infiziert: true },
-      E: { kennzahl: 19, x: 760, y: 130 },
-      F: { kennzahl: 14, x: 250, y: 450 },
-      G: { kennzahl: 33, x: 420, y: 450, infiziert: true },
-      H: { kennzahl: 16, x: 590, y: 450 },
-      I: { kennzahl: 28, x: 760, y: 450, infiziert: true },
-      J: { kennzahl: 25, x: 250, y: 770 },
-      K: { kennzahl: 19, x: 420, y: 770, infiziert: true },
-      L: { kennzahl: 31, x: 590, y: 770 },
-      M: { kennzahl: 15, x: 760, y: 770 }
+      A: { kennzahl: 12, x: 70, y: 380 },
+      B: { kennzahl: 14, x: 250, y: 80 },
+      C: { kennzahl: 22, x: 440, y: 80 },
+      D: { kennzahl: 14, x: 630, y: 80 },
+      E: { kennzahl: 27, x: 820, y: 80, infiziert: true },
+      F: { kennzahl: 20, x: 250, y: 280 },
+      G: { kennzahl: 9, x: 440, y: 280 },
+      H: { kennzahl: 17, x: 630, y: 280 },
+      I: { kennzahl: 26, x: 820, y: 280, infiziert: true },
+      J: { kennzahl: 27, x: 250, y: 480 },
+      K: { kennzahl: 21, x: 440, y: 480, infiziert: true },
+      L: { kennzahl: 14, x: 630, y: 480 },
+      M: { kennzahl: 27, x: 820, y: 480, infiziert: true },
+      N: { kennzahl: 26, x: 250, y: 680 },
+      O: { kennzahl: 15, x: 440, y: 680, infiziert: true },
+      P: { kennzahl: 14, x: 630, y: 680 },
+      Q: { kennzahl: 5, x: 820, y: 680 },
+      Z: { kennzahl: 24, x: 970, y: 380 }
     },
-    verbindungen: ['A-B', 'B-C', 'C-D', 'D-E', 'E-Z', 'A-F', 'F-G', 'G-H', 'H-I', 'I-Z', 'A-J', 'J-K', 'K-L', 'L-M', 'M-Z', 'B-F', 'F-J', 'C-G', 'C-H', 'H-D', 'H-L', 'H-E', 'E-I', 'L-I', 'G-K', 'J-G', 'D-Z'],
-    loesung: 'A, B, C, H, E, Z (5 Verbindungen): 12 + 16 + 22 + 16 + 19 + 24 = 109',
-    fallen: 'Verlockend kurz, aber infiziert: A, B, C, D, Z = 101 (4 Verbindungen); weitere Wege über rote Server mit 5 Verbindungen: 115, 117, 118, 120, 126, 127, 129, 132, 137, 138, 139, 143'
+    verbindungen: ['A-B', 'A-J', 'A-N', 'B-C', 'B-F', 'B-G', 'C-D', 'C-G', 'D-H', 'E-H', 'E-Z', 'F-G', 'F-K', 'G-H', 'G-K', 'H-I', 'H-L', 'I-M', 'I-Z', 'J-K', 'J-N', 'K-L', 'K-O', 'L-M', 'L-P', 'M-P', 'M-Q', 'M-Z', 'N-O', 'O-P', 'P-Q', 'Q-Z'],
+    loesung: 'A, B, G, H, L, P, Q, Z (7 Verbindungen): 12 + 14 + 9 + 17 + 14 + 14 + 5 + 24 = 109',
+    fallen: 'Verlockende Abkürzungen mit weniger als 7 Verbindungen sind infiziert, zum Beispiel 096, 102, 103, 117, 118, 121'
   },
   schwer: {
     server: {
-      A: { kennzahl: 12, x: 70, y: 410 },
-      Z: { kennzahl: 24, x: 930, y: 410 },
-      B: { kennzahl: 14, x: 220, y: 80 },
-      C: { kennzahl: 17, x: 400, y: 80 },
-      D: { kennzahl: 21, x: 580, y: 80, infiziert: true },
-      E: { kennzahl: 26, x: 760, y: 80 },
-      F: { kennzahl: 18, x: 220, y: 300 },
-      G: { kennzahl: 23, x: 400, y: 300, infiziert: true },
-      H: { kennzahl: 11, x: 580, y: 300 },
-      I: { kennzahl: 29, x: 760, y: 300, infiziert: true },
-      J: { kennzahl: 13, x: 220, y: 520 },
-      K: { kennzahl: 27, x: 400, y: 520 },
-      L: { kennzahl: 19, x: 580, y: 520, infiziert: true },
-      M: { kennzahl: 16, x: 760, y: 520 },
-      N: { kennzahl: 22, x: 220, y: 740 },
-      O: { kennzahl: 25, x: 400, y: 740, infiziert: true },
-      P: { kennzahl: 28, x: 580, y: 740 },
-      Q: { kennzahl: 15, x: 760, y: 740 }
+      A: { kennzahl: 12, x: 70, y: 380 },
+      B: { kennzahl: 19, x: 230, y: 80, infiziert: true },
+      C: { kennzahl: 4, x: 400, y: 80, infiziert: true },
+      D: { kennzahl: 20, x: 570, y: 80 },
+      E: { kennzahl: 17, x: 740, y: 80 },
+      F: { kennzahl: 20, x: 910, y: 80, infiziert: true },
+      G: { kennzahl: 21, x: 230, y: 280 },
+      H: { kennzahl: 7, x: 400, y: 280 },
+      I: { kennzahl: 16, x: 570, y: 280 },
+      J: { kennzahl: 16, x: 740, y: 280 },
+      K: { kennzahl: 8, x: 910, y: 280 },
+      L: { kennzahl: 11, x: 230, y: 480, infiziert: true },
+      M: { kennzahl: 9, x: 400, y: 480 },
+      N: { kennzahl: 10, x: 570, y: 480, infiziert: true },
+      O: { kennzahl: 17, x: 740, y: 480, infiziert: true },
+      P: { kennzahl: 4, x: 910, y: 480 },
+      Q: { kennzahl: 4, x: 230, y: 680 },
+      R: { kennzahl: 6, x: 400, y: 680 },
+      S: { kennzahl: 7, x: 570, y: 680 },
+      T: { kennzahl: 9, x: 740, y: 680, infiziert: true },
+      U: { kennzahl: 21, x: 910, y: 680 },
+      Z: { kennzahl: 24, x: 1060, y: 380 }
     },
-    verbindungen: ['A-B', 'A-F', 'A-J', 'A-N', 'B-C', 'C-D', 'D-E', 'E-Z', 'F-G', 'G-H', 'H-I', 'I-Z', 'J-K', 'K-L', 'L-M', 'N-O', 'O-P', 'P-Q', 'Q-Z', 'B-F', 'C-G', 'G-K', 'K-O', 'D-H', 'H-L', 'L-P', 'E-I', 'I-M', 'M-Q', 'F-K', 'C-H', 'J-N', 'H-M'],
-    loesung: 'A, B, C, H, M, Q, Z (6 Verbindungen): 12 + 14 + 17 + 11 + 16 + 15 + 24 = 109',
-    fallen: 'Alle Wege mit 5 Verbindungen sind infiziert: A, B, C, H, I, Z = 107; A, B, C, D, E, Z = 114; A, F, G, H, I, Z = 117; A, N, O, P, Q, Z = 126; dazu viele infizierte Wege mit 6 Verbindungen (119 bis 149)'
+    verbindungen: ['A-B', 'A-L', 'A-Q', 'B-C', 'B-G', 'C-D', 'D-E', 'D-H', 'D-I', 'E-F', 'E-I', 'E-J', 'F-J', 'F-Z', 'G-H', 'G-L', 'H-I', 'H-M', 'H-N', 'I-J', 'J-K', 'J-O', 'K-P', 'K-Z', 'M-N', 'M-S', 'N-O', 'N-S', 'O-P', 'O-S', 'P-T', 'P-U', 'P-Z', 'Q-R', 'R-S', 'S-T', 'T-U', 'U-Z'],
+    loesung: 'A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen): 12 + 4 + 6 + 7 + 9 + 7 + 16 + 16 + 8 + 24 = 109',
+    fallen: 'Verlockende Abkürzungen mit weniger als 9 Verbindungen sind infiziert, zum Beispiel 066, 074, 082, 083, 084, 087'
   }
 };
 
@@ -138,7 +146,7 @@ function netzwerkAnalyse(stufe) {
   const kurz = Math.min.apply(null, sauber.map(function (w) { return w.length - 1; }));
   const beste = sauber.filter(function (w) { return w.length - 1 === kurz; });
   const code = summe(beste[0]);
-  const fallen = Array.from(new Set(wege.filter(function (w) { return infiziert(w) && w.length - 1 <= kurz; }).map(summe)))
+  const fallen = Array.from(new Set(wege.filter(function (w) { return infiziert(w) && w.length - 1 < kurz; }).map(summe)))
     .filter(function (z) { return z !== code; }).sort(function (a, b) { return a - b; })
     .map(function (z) { return String(z).padStart(3, '0'); });
   return { weg: beste[0], eindeutig: beste.length === 1, verbindungen: kurz, code: String(code).padStart(3, '0'), fallen: fallen };

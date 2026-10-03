@@ -46,55 +46,98 @@ const HASHES = {
   bonus: '2a3cb8ba6b05f0675283ce45ffb61056a32e67c7a6eef8b467f31702a8a766aa',
   signaturen: '671033ca39e74b17f33a3621a5fd01f96fa8ea3683cd4bcf8754d0e196e40626',
   protokoll3: '6c01916c12bd0a1a72370b81ad09dd6c13eca4a371cc8facd0864f4108c34c96',
-  /* Fallen: Summen von Wegen über infizierte Server, die nicht länger
-     sind als der richtige Weg (pro Stufe, siehe js/netzwerke.js).
+  /* Fallen: Summen von infizierten Wegen, die kürzer sind als der
+     richtige Weg (verlockende Abkürzungen, pro Stufe, js/netzwerke.js).
      Neu berechnen: node werkzeuge/netzwerke_pruefen.js --hashes */
   protokoll3Fallen: {
     leicht: [
-      '6d0a1d285584603ab85e41e2c631b0827a3591f4deb4ca8e87fbe7fa485f8a44',
-      '1caccf7d5033264d58d327b2741d5a36938f39fdedca8adbd826ceb99009febc',
-      'f5d628fbb6c1f556109dcb0bf43c5ae87d7acddc0c3188721c6997f7a5af4283'
-    ],
-    mittel: [
-      '9d5b1261d943622247ffaa564b6bb7bfef4dde0740db6924b0be5ffc1b5ed359',
+      '26a5fbf1ee06446605ddabd2a9d2d9f05f98b58f5f25af500a0c5efd016f396a',
       '210f3aed08830124a2e205ee22677b6925eeaa045e54868f5d463fe9bc253787',
       'c8382f7e15a87bf0616c8e541a68d5ca09814f1a2f149d9d07d69deb8228487a',
       '8bc13d9262e8715e63e3caa1bb23b360ea3e93b29040ef17ef4fad1752f3de04',
-      'c219d914425e28d00919da86ebce879f705c845a78eee33436e1df8ec79b772c',
-      '2b2cc29a1b670301effba9625d8d478f60d1c69af041080e87d26a8ec35c33b3',
-      '5792a97df9b8c0ebecad7ba1f8a3d4a5e49fb4c3b51cb4278474e43e6306476f',
+      'f5d628fbb6c1f556109dcb0bf43c5ae87d7acddc0c3188721c6997f7a5af4283',
       'c6821638e689d555dbe27721a8af8776f0be16f6f4f757d583bcee62f72434a4',
+      'a883f5e1cf68313b28f756182faf71ea12c88f3e3a3f16031d1ba6068cd6a7b7',
+      'd9a1fdff45367bc1c415f5fe9f8cfbd195bb00d1342129f2b9585b0cc11cdbef',
+      '9a6bc718a23e13b7b8634bb1e4352be1b2e1fdbcab8ea0ef59504e7969b24b6e',
+      '58faab6d97ab9e5dc3a58debef6ad324c0e0ee1d9ed28f9c4bdae717992e8b01'
+    ],
+    mittel: [
+      'ab2d3d0296d093cd74dda99ac0e05ad00600a49dbcd33645ae4653f0477d59c0',
+      '1caccf7d5033264d58d327b2741d5a36938f39fdedca8adbd826ceb99009febc',
+      'ad3481bd70c1e83dece9f6621aa1bd2cb58cdf9833bbee6d36c10ed5a4648394',
+      'c8382f7e15a87bf0616c8e541a68d5ca09814f1a2f149d9d07d69deb8228487a',
+      '8bc13d9262e8715e63e3caa1bb23b360ea3e93b29040ef17ef4fad1752f3de04',
+      '585d6d0b794a578ebd7b66c713a23d2b08d4a329b4b5e44b1ff6fd1601e7b561',
+      'f5d628fbb6c1f556109dcb0bf43c5ae87d7acddc0c3188721c6997f7a5af4283',
+      'fb1a808db5d2b92077b9fd6daf544384b5a7fb75c0cdab45f1e1f4e8dd8a4191',
+      'bc7f31ac8aeb9d258c76b4777ebf3d8e6c74844c4f5adae20c19d82783de1990',
+      'c927e85579385ec615025c10a1b39ce3c06af9f83b2d94c469f0a8b0bef76a66',
+      'c6821638e689d555dbe27721a8af8776f0be16f6f4f757d583bcee62f72434a4',
+      'dccdda9a0f897d5d25b9c8eecf9a6c674f4d22c49c6242616e1689229ac99aae',
       '38e6311336de831e106b52b529ac6cefbf49b270800bf43ca6e275a876f1ab9f',
+      '64ff5473b982d89e81b4b579a28836a4d171399767c5fa84f72414893f6dafa0',
       '5dbefc2c5dd4da21471d777c4349dfdf617934d939949caafec2f0e8ee4b3d59',
-      'fdfc5a5d96a62fd4d45186bdff945353d9be7b878b616a66b2f613d5ac45d805',
       '7d97679fc32edf3df1096bc2d608baac478c90ebe6b029b1106c633a8c29ffd6',
-      '818692191c878b3afb755ef77531bce09b73a6cd0e605f751734c9e33ab37431'
+      '9a6bc718a23e13b7b8634bb1e4352be1b2e1fdbcab8ea0ef59504e7969b24b6e',
+      '7062a8ddee96d736430cd520fe5e173fadf32d8420982d067f30b79e60e8ce00',
+      '10a83a5373ac5bb4df928138b50885fbfba0c0408a3f83bb410550eaa007a1af',
+      'ddd819f0411e4cbe36f6c00d0d6852adbc454a3b854aa7fc52aaca1b832bc5be',
+      'b39bba864c0af61a84e546dc8e94315b011e1c3542dde64f8045bcfaf10019de',
+      '58faab6d97ab9e5dc3a58debef6ad324c0e0ee1d9ed28f9c4bdae717992e8b01'
     ],
     schwer: [
-      'da164ed8ee1e5581e3c23e6ea2c0d0f12d9f9bf2833d09373c4e6254b44a7025',
+      '3029a11dd6e25c27ef00857ced10ae27f990a8943064460d3deb54ca6ccdb3c1',
+      '73e4a74c3f63432fdc6ba6c763fd7950319f97413e543d3267bf6b8f6e101224',
+      'af6435c64ba510f9958b57eee8363c2b48e893309177db6c29d385945f8fca8b',
+      '5386a8d5633c138bba68f8e8b134c0002b4822e82f7dcdcdc502804a8dc0d802',
+      '47b5bd9db41c90892b337c60f2c1e871449f3ed8b6cf5d04f12e4ad7e49b2889',
+      '40f7804afb1ddff5d443688108ed9dba52032f2a6c85ae750f75a02c4e2d1da6',
+      'ae889b596281fd046ee0f22732bcbcfa56b405f1e461da9261bb3a0beef328cb',
+      '65c7a0190ddcac1c22dadb65ffa4ae31e8c3651df38e0895518ea8af8930d3e0',
+      'eaf3040ef42cec797107897941a35bb2403816e0ff47f62e7dbfe694c2eab4e7',
+      '5866551265014d02d5ae3832c14b4c44ec124f594bcff45913427378c55a0419',
+      '6d0a1d285584603ab85e41e2c631b0827a3591f4deb4ca8e87fbe7fa485f8a44',
+      'f323da148d1e449f02a14a6e154cd8496fa2906222a989d19c0b647d25b6c73b',
+      '1e1becf3921489c99ab9d6d5de63112ae0339cbd0af7224266694abc55b8637d',
+      '18fbf6a34e3c01a1c42dd46059ef5351f6595e7f2e07aa5d6f38479d4907e6c7',
+      'f62babbe07e2a6b963b2e44d0fde2c0e67107d5bf0d85f9506752fa01cba8692',
+      '30842b6f8845a5bfd3f05b95c2fb995d96a137df69233efd7fe6372b7a682af7',
       '4adb6dfdc491400c8ca7cebda86e292013258e47e6c70b6658d79c714590cb77',
+      '210f3aed08830124a2e205ee22677b6925eeaa045e54868f5d463fe9bc253787',
+      '5ff17840d487208594736cd70b38eae62801c852f9fce8ff73211a7301064a59',
       'c8382f7e15a87bf0616c8e541a68d5ca09814f1a2f149d9d07d69deb8228487a',
       'e839abb5ed1b8015cca6bd1f398771c1a88412674e159af0e31b62fa360904b0',
+      'c219d914425e28d00919da86ebce879f705c845a78eee33436e1df8ec79b772c',
+      '585d6d0b794a578ebd7b66c713a23d2b08d4a329b4b5e44b1ff6fd1601e7b561',
+      'f5d628fbb6c1f556109dcb0bf43c5ae87d7acddc0c3188721c6997f7a5af4283',
       'fb1a808db5d2b92077b9fd6daf544384b5a7fb75c0cdab45f1e1f4e8dd8a4191',
-      'c927e85579385ec615025c10a1b39ce3c06af9f83b2d94c469f0a8b0bef76a66',
+      'bc7f31ac8aeb9d258c76b4777ebf3d8e6c74844c4f5adae20c19d82783de1990',
       '2b2cc29a1b670301effba9625d8d478f60d1c69af041080e87d26a8ec35c33b3',
+      '5792a97df9b8c0ebecad7ba1f8a3d4a5e49fb4c3b51cb4278474e43e6306476f',
       'edd4ac5a332375086be7a461b63838b2e0d2545933e209681d534c6861fdf154',
+      'c6821638e689d555dbe27721a8af8776f0be16f6f4f757d583bcee62f72434a4',
       'dccdda9a0f897d5d25b9c8eecf9a6c674f4d22c49c6242616e1689229ac99aae',
       '8107d344949bd3483fd949dc3a84d824782f89ece525119fd45d1ac5f634e06d',
       '38e6311336de831e106b52b529ac6cefbf49b270800bf43ca6e275a876f1ab9f',
       '4a8daa78b163bacd9366460d186682b1cbb515ee8d863ed3114e4bb8d813ff63',
       'a883f5e1cf68313b28f756182faf71ea12c88f3e3a3f16031d1ba6068cd6a7b7',
       'd9a1fdff45367bc1c415f5fe9f8cfbd195bb00d1342129f2b9585b0cc11cdbef',
+      '64ff5473b982d89e81b4b579a28836a4d171399767c5fa84f72414893f6dafa0',
       'fdfc5a5d96a62fd4d45186bdff945353d9be7b878b616a66b2f613d5ac45d805',
       '7d97679fc32edf3df1096bc2d608baac478c90ebe6b029b1106c633a8c29ffd6',
       '9a6bc718a23e13b7b8634bb1e4352be1b2e1fdbcab8ea0ef59504e7969b24b6e',
-      '7062a8ddee96d736430cd520fe5e173fadf32d8420982d067f30b79e60e8ce00',
       '818692191c878b3afb755ef77531bce09b73a6cd0e605f751734c9e33ab37431',
       'ddd819f0411e4cbe36f6c00d0d6852adbc454a3b854aa7fc52aaca1b832bc5be',
-      'b39bba864c0af61a84e546dc8e94315b011e1c3542dde64f8045bcfaf10019de',
-      '25f373d4f6269480896c69a42e471b1338cc29d10a83010cb73f73e1d12cd3a7'
+      '9c7f305cae8230a94bf8c95df9cff4a65321a32e937d0266dfafd99af541df30',
+      '67cbbed1cad3880f0d11c045bda87811dd52b4eb3c779946d6a3bff3ed2d1825',
+      '4f9746a5097bf600d2a485e861caf1e659602b547a22b2026fa5e70e10b06ef0',
+      '539d806db22b60cc11285bfbde240da1fc24ca54e483564376448f84cd4cdb40',
+      '272a1760c2cc7264369850ce3344445185d0142f3945c6bdbaf288116b80b6cc',
+      '4cf8e4fd534fa3e41f61a5d2474770e91cb8d6fb0ea06e7275d25b991c4427bc'
     ]
-  }};
+  }
+};
 
 /* ------------------------- Protokoll 1 ------------------------------
    Die Nachricht wird aus dem Code erzeugt: {CODE} in der Vorlage wird
@@ -178,20 +221,20 @@ const TEXTE = {
       /* Tipps passend zum Netzwerkplan der Stufe (mittel: «tipps» darunter) */
       tippsStufen: {
         leicht: [
-          'Streicht zuerst alle Verbindungen zu den drei roten Servern durch.',
-          'Alle Wege von A nach Z brauchen mindestens vier Verbindungen. Nur einer davon ist sauber.',
-          'Der saubere Weg führt unten über Server H und Server I. Vergesst nicht, A und Z mitzuzählen.'
+          'Streicht zuerst alle Verbindungen zu den vier roten Servern durch.',
+          'Der direkte Weg durch die Mitte ist versperrt. Der beste saubere Weg braucht genau sechs Verbindungen.',
+          'Der Weg führt über F und G, dann nach oben über C, D und E. Vergesst nicht, A und Z mitzuzählen.'
         ],
         schwer: [
-          'Streicht zuerst alle Verbindungen zu den fünf roten Servern durch. Was übrig bleibt, ist euer Netz.',
-          'Der beste saubere Weg braucht genau sechs Verbindungen. Alle Wege mit fünf Verbindungen führen über rote Server.',
-          'Der Weg führt oben über B und C, dann schräg hinunter über H und M. Vergesst nicht, A und Z mitzuzählen.'
+          'Streicht zuerst alle Verbindungen zu den sieben roten Servern durch. Was übrig bleibt, ist euer Netz.',
+          'Der beste saubere Weg braucht genau neun Verbindungen. Er beginnt ganz unten.',
+          'Der Weg führt unten über Q, R und S, dann hinauf über M, H, I und J bis K. Vergesst nicht, A und Z mitzuzählen.'
         ]
       },
       tipps: [
-        'Streicht zuerst alle Verbindungen zu den vier roten Servern durch.',
-        'Der Weg über Server D sieht kurz aus, aber D ist infiziert. Der beste saubere Weg braucht genau fünf Verbindungen.',
-        'Der Weg führt über die Server B, C, H und E. Vergesst nicht, A und Z mitzuzählen.'
+        'Streicht zuerst alle Verbindungen zu den fünf roten Servern durch.',
+        'Alle kurzen Wege führen über rote Server. Der beste saubere Weg braucht genau sieben Verbindungen.',
+        'Der Weg führt oben über B, schräg zu G, dann über H, L und P bis Q. Vergesst nicht, A und Z mitzuzählen.'
       ]
     }
   },

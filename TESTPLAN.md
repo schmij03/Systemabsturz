@@ -18,16 +18,16 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 und Verschiebung 7 eingeben, «Übernehmen (PIN)». Erwartung: Vorschau zeigt den neuen Geheimtext, Unterschrift UBSSIFAL.
 2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
 3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
-4. Protokoll 3 auf Stufe Leicht: 102 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «unten über Server H und Server I».
+4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
 5. «Standard» stellt Code 729 mit Verschiebung 4 wieder her.
 
 ## Netzwerkpläne (Protokoll 3) prüfen
 
 Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn der kürzeste saubere Weg nicht eindeutig ist).
 
-* Leicht: A, H, I, G, Z = 12 + 21 + 34 + 18 + 24 = **109**. Fallen: 098, 102, 122.
-* Mittel: A, B, C, H, E, Z = 12 + 16 + 22 + 16 + 19 + 24 = **109**. Verlockende Falle: A, B, C, D, Z = 101.
-* Schwer: A, B, C, H, M, Q, Z = 12 + 14 + 17 + 11 + 16 + 15 + 24 = **109**. Fallen mit 5 Verbindungen: 107, 114, 117, 126.
+* Leicht: A, F, G, C, D, E, Z = 12 + 13 + 12 + 23 + 10 + 15 + 24 = **109**. Fallen zum Beispiel 100, 115, 117.
+* Mittel: A, B, G, H, L, P, Q, Z = 12 + 14 + 9 + 17 + 14 + 14 + 5 + 24 = **109**. Fallen zum Beispiel 096, 102, 103.
+* Schwer: A, Q, R, S, M, H, I, J, K, Z = 12 + 4 + 6 + 7 + 9 + 7 + 16 + 16 + 8 + 24 = **109**. Fallen zum Beispiel 066, 074, 104.
 
 ## Protokoll 1
 
@@ -96,7 +96,7 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 
 | Schritt | Erwartung |
 |---|---|
-| 107 (Stufe schwer, Weg über I) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
+| 104 (Stufe schwer, Abkürzung über rote Server) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
 | 123 | «OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.» |
 | 109 | Fanfare, grosser roter Knopf «OVERRIDE AUSLÖSEN» |
 | Knopf drücken | «SYSTEM WIEDERHERGESTELLT. Ihr habt die Schule gerettet!», Restzeit, Zeitbonus, Endpunktestand, Countdown steht still |
