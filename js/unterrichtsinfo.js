@@ -36,7 +36,7 @@ const UNTERRICHTSINFO = {
           '**Fach:** Medien und Informatik, Kompetenzbereich Informatik (MI.2), Zyklus 3 (7. bis 9. Klasse).',
           '**Format:** Escape Game mit vier Teams parallel, je ein Tablet oder Laptop und ein gedrucktes Teamset.',
           '**Drei Protokolle:** Kryptografie (Papier), Algorithmen (Tablet oder Laptop), Netzwerke (Papier). Drei Stufen: leicht, mittel, schwer.',
-          '**Zeitbedarf:** Die Spielzeit beträgt standardmässig 45 Minuten, dazu kommen Einstieg (Botschaft und Anweisung) und Auswertung. Für eine Einzellektion von 45 Minuten die Spieldauer in `js/app.js` verkürzen (zum Beispiel auf 30 Minuten) oder eine Doppellektion einplanen.'
+          '**Zeitbedarf:** Die Spielzeit beträgt standardmässig 40 Minuten, dazu kommen Einstieg (Botschaft und Anweisung) und Auswertung. Für eine Einzellektion von 45 Minuten die Spieldauer in `js/app.js` verkürzen (zum Beispiel auf 30 Minuten) oder eine Doppellektion einplanen.'
         ] }
       ]
     },

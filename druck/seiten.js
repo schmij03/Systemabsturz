@@ -43,7 +43,7 @@ var Druck = (function () {
     return seite({
       ober: 'NOTFALL-TEAM  |  STRENG GEHEIM', titel: 'Systemabsturz: euer Auftrag', teil: 'Auftrag',
       inhalt:
-        '<p><strong>Lage:</strong> Soeben hat die Hackergruppe NULLBYTE das Schulnetz gesperrt. Sie will beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. In 45 Minuten löscht NULLBYTE alle Daten: Noten, Stundenpläne, Fotos. Ihr seid ein Notfall-Team und müsst das System retten.</p>' +
+        '<p><strong>Lage:</strong> Soeben hat die Hackergruppe NULLBYTE das Schulnetz gesperrt. Sie will beweisen, dass an unserer Schule niemand auf Datensicherheit achtet. In ' + SPIELDAUER_MINUTEN + ' Minuten löscht NULLBYTE alle Daten: Noten, Stundenpläne, Fotos. Ihr seid ein Notfall-Team und müsst das System retten.</p>' +
         '<div class="kasten"><p class="zeile"><strong>Teamname:</strong> ________________________________________</p>' +
         '<p class="zeile"><strong>Beitrittscode</strong> (steht auf der Leinwand): __________</p></div>' +
         '<h2>So startet ihr</h2><ol>' +
