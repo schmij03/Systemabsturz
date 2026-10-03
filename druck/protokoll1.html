@@ -3,154 +3,155 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Systemabsturz: Chiffrierscheibe</title>
+  <title>Systemabsturz: Protokoll 1</title>
   <link rel="stylesheet" href="druck.css">
   <style>
-    .scheiben { display: flex; flex-direction: column; align-items: center; gap: 2mm; }
-    .nachricht { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5pt; letter-spacing: 0.12em; word-spacing: 0.35em; line-height: 1.6; }
+    .oberzeile { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em; color: #5f6670; border-bottom: 1.2pt solid #111; padding-bottom: 1mm; margin-bottom: 3mm; }
+    .titelzeile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
+    .titelzeile h1 { font-family: Arial, Helvetica, sans-serif; font-size: 19pt; letter-spacing: 0; margin: 0; }
+    .stufe { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 9pt; color: #fff; background: #111418; padding: 1mm 3mm; border-radius: 1mm; white-space: nowrap; }
+    .wissen { border-left: 3pt solid #c62828; background: #fbeaea; padding: 2.5mm 4mm; margin: 3mm 0 4mm; }
+    .wissen .label { display: block; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 8.5pt; color: #c62828; letter-spacing: 0.08em; margin-bottom: 1mm; }
+    .feld { margin: 3mm 0 1mm; font-weight: 700; }
+    .linie { border-bottom: 0.6pt solid #888; height: 8.5mm; }
+    .geheimtext { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12pt; letter-spacing: 0.1em; word-spacing: 0.3em; line-height: 8.5mm; }
+    .codefelder { display: flex; gap: 3mm; margin-top: 1mm; }
+    .codefelder span { width: 13mm; height: 15mm; border: 1.5pt solid #111; border-radius: 1.5mm; }
+    .bonus { border: 1.2pt dashed #111; border-radius: 2mm; padding: 2.5mm 4mm; margin-top: 5mm; }
+    .bonus strong { display: block; margin-bottom: 1mm; }
+    .scheibe { display: flex; justify-content: center; margin-top: 3mm; }
+    .schere { text-align: center; font-size: 9pt; color: #5f6670; margin-top: 1mm; }
+    .bau ol { margin: 2mm 0 0; padding-left: 6mm; }
+    .bau li { margin-bottom: 1mm; }
+    .druckleiste select { min-height: 44px; font-size: 12pt; }
+    .druckleiste label { display: inline-flex; align-items: center; gap: 6px; }
   </style>
 </head>
 <body>
-  <div class="druckleiste"><button type="button" onclick="window.print()">Drucken</button><span>A4 hoch, «Tatsächliche Grösse» bzw. 100 %. Am besten auf festes Papier.</span></div>
-  <div class="seite">
-    <div class="kopf">
-      <div><h1>PROTOKOLL 1: KRYPTOGRAFIE</h1><div class="mono">Chiffrierscheibe</div></div>
-      <div class="stempel">NULLBYTE</div>
-    </div>
-    <p><strong>Bauanleitung:</strong> Beide Scheiben entlang der gestrichelten Linie ausschneiden. Die kleine Scheibe auf die grosse legen und in der Mitte mit einer Musterklammer verbinden. <strong>Aussen</strong> steht der Klartext, <strong>innen</strong> der Geheimtext.</p>
-    <div class="scheiben">
-      <svg xmlns="http://www.w3.org/2000/svg" width="92.9mm" height="92.9mm" viewBox="0 0 120 120">
-<circle cx="60" cy="60" r="58" fill="#fff" stroke="#111" stroke-width="0.4" stroke-dasharray="2 1.2"/>
-<circle cx="60" cy="60" r="47" fill="none" stroke="#111" stroke-width="0.3"/>
-<line x1="65.67" y1="13.34" x2="66.99" y2="2.42" stroke="#111" stroke-width="0.25"/>
-<text x="60.00" y="7.50" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(0.00 60.00 7.50)">A</text>
-<line x1="76.67" y1="16.05" x2="80.57" y2="5.77" stroke="#111" stroke-width="0.25"/>
-<text x="72.56" y="9.03" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(13.85 72.56 9.03)">B</text>
-<line x1="86.70" y1="21.32" x2="92.95" y2="12.27" stroke="#111" stroke-width="0.25"/>
-<text x="84.40" y="13.51" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(27.69 84.40 13.51)">C</text>
-<line x1="95.18" y1="28.83" x2="103.41" y2="21.54" stroke="#111" stroke-width="0.25"/>
-<text x="94.81" y="20.70" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(41.54 94.81 20.70)">D</text>
-<line x1="101.62" y1="38.16" x2="111.36" y2="33.05" stroke="#111" stroke-width="0.25"/>
-<text x="103.21" y="30.18" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(55.38 103.21 30.18)">E</text>
-<line x1="105.63" y1="48.75" x2="116.31" y2="46.12" stroke="#111" stroke-width="0.25"/>
-<text x="109.09" y="41.38" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(69.23 109.09 41.38)">F</text>
-<line x1="107.00" y1="60.00" x2="118.00" y2="60.00" stroke="#111" stroke-width="0.25"/>
-<text x="112.12" y="53.67" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(83.08 112.12 53.67)">G</text>
-<line x1="105.63" y1="71.25" x2="116.31" y2="73.88" stroke="#111" stroke-width="0.25"/>
-<text x="112.12" y="66.33" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(96.92 112.12 66.33)">H</text>
-<line x1="101.62" y1="81.84" x2="111.36" y2="86.95" stroke="#111" stroke-width="0.25"/>
-<text x="109.09" y="78.62" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(110.77 109.09 78.62)">I</text>
-<line x1="95.18" y1="91.17" x2="103.41" y2="98.46" stroke="#111" stroke-width="0.25"/>
-<text x="103.21" y="89.82" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(124.62 103.21 89.82)">J</text>
-<line x1="86.70" y1="98.68" x2="92.95" y2="107.73" stroke="#111" stroke-width="0.25"/>
-<text x="94.81" y="99.30" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(138.46 94.81 99.30)">K</text>
-<line x1="76.67" y1="103.95" x2="80.57" y2="114.23" stroke="#111" stroke-width="0.25"/>
-<text x="84.40" y="106.49" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(152.31 84.40 106.49)">L</text>
-<line x1="65.67" y1="106.66" x2="66.99" y2="117.58" stroke="#111" stroke-width="0.25"/>
-<text x="72.56" y="110.97" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(166.15 72.56 110.97)">M</text>
-<line x1="54.33" y1="106.66" x2="53.01" y2="117.58" stroke="#111" stroke-width="0.25"/>
-<text x="60.00" y="112.50" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(180.00 60.00 112.50)">N</text>
-<line x1="43.33" y1="103.95" x2="39.43" y2="114.23" stroke="#111" stroke-width="0.25"/>
-<text x="47.44" y="110.97" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(193.85 47.44 110.97)">O</text>
-<line x1="33.30" y1="98.68" x2="27.05" y2="107.73" stroke="#111" stroke-width="0.25"/>
-<text x="35.60" y="106.49" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(207.69 35.60 106.49)">P</text>
-<line x1="24.82" y1="91.17" x2="16.59" y2="98.46" stroke="#111" stroke-width="0.25"/>
-<text x="25.19" y="99.30" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(221.54 25.19 99.30)">Q</text>
-<line x1="18.38" y1="81.84" x2="8.64" y2="86.95" stroke="#111" stroke-width="0.25"/>
-<text x="16.79" y="89.82" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(235.38 16.79 89.82)">R</text>
-<line x1="14.37" y1="71.25" x2="3.69" y2="73.88" stroke="#111" stroke-width="0.25"/>
-<text x="10.91" y="78.62" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(249.23 10.91 78.62)">S</text>
-<line x1="13.00" y1="60.00" x2="2.00" y2="60.00" stroke="#111" stroke-width="0.25"/>
-<text x="7.88" y="66.33" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(263.08 7.88 66.33)">T</text>
-<line x1="14.37" y1="48.75" x2="3.69" y2="46.12" stroke="#111" stroke-width="0.25"/>
-<text x="7.88" y="53.67" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(276.92 7.88 53.67)">U</text>
-<line x1="18.38" y1="38.16" x2="8.64" y2="33.05" stroke="#111" stroke-width="0.25"/>
-<text x="10.91" y="41.38" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(290.77 10.91 41.38)">V</text>
-<line x1="24.82" y1="28.83" x2="16.59" y2="21.54" stroke="#111" stroke-width="0.25"/>
-<text x="16.79" y="30.18" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(304.62 16.79 30.18)">W</text>
-<line x1="33.30" y1="21.32" x2="27.05" y2="12.27" stroke="#111" stroke-width="0.25"/>
-<text x="25.19" y="20.70" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(318.46 25.19 20.70)">X</text>
-<line x1="43.33" y1="16.05" x2="39.43" y2="5.77" stroke="#111" stroke-width="0.25"/>
-<text x="35.60" y="13.51" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(332.31 35.60 13.51)">Y</text>
-<line x1="54.33" y1="13.34" x2="53.01" y2="2.42" stroke="#111" stroke-width="0.25"/>
-<text x="47.44" y="9.03" font-size="7" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(346.15 47.44 9.03)">Z</text>
-<circle cx="60" cy="60" r="1.2" fill="#111"/>
-<text x="60" y="69" font-size="3.6" font-family="Arial" text-anchor="middle">AUSSEN: Klartext</text>
-<text x="60" y="54" font-size="3" font-family="Arial" text-anchor="middle" fill="#555">Hier die kleine Scheibe auflegen</text>
-</svg>
-      <svg xmlns="http://www.w3.org/2000/svg" width="74.3mm" height="74.3mm" viewBox="0 0 96 96">
-<circle cx="48" cy="48" r="46" fill="#fff" stroke="#111" stroke-width="0.4" stroke-dasharray="2 1.2"/>
-<circle cx="48" cy="48" r="35" fill="none" stroke="#111" stroke-width="0.3"/>
-<line x1="52.22" y1="13.26" x2="53.54" y2="2.34" stroke="#111" stroke-width="0.25"/>
-<text x="48.00" y="7.50" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(0.00 48.00 7.50)">A</text>
-<line x1="60.41" y1="15.27" x2="64.31" y2="4.99" stroke="#111" stroke-width="0.25"/>
-<text x="57.69" y="8.68" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(13.85 57.69 8.68)">B</text>
-<line x1="67.88" y1="19.20" x2="74.13" y2="10.14" stroke="#111" stroke-width="0.25"/>
-<text x="66.82" y="12.14" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(27.69 66.82 12.14)">C</text>
-<line x1="74.20" y1="24.79" x2="82.43" y2="17.50" stroke="#111" stroke-width="0.25"/>
-<text x="74.86" y="17.69" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(41.54 74.86 17.69)">D</text>
-<line x1="78.99" y1="31.73" x2="88.73" y2="26.62" stroke="#111" stroke-width="0.25"/>
-<text x="81.33" y="24.99" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(55.38 81.33 24.99)">E</text>
-<line x1="81.98" y1="39.62" x2="92.66" y2="36.99" stroke="#111" stroke-width="0.25"/>
-<text x="85.87" y="33.64" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(69.23 85.87 33.64)">F</text>
-<line x1="83.00" y1="48.00" x2="94.00" y2="48.00" stroke="#111" stroke-width="0.25"/>
-<text x="88.20" y="43.12" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(83.08 88.20 43.12)">G</text>
-<line x1="81.98" y1="56.38" x2="92.66" y2="59.01" stroke="#111" stroke-width="0.25"/>
-<text x="88.20" y="52.88" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(96.92 88.20 52.88)">H</text>
-<line x1="78.99" y1="64.27" x2="88.73" y2="69.38" stroke="#111" stroke-width="0.25"/>
-<text x="85.87" y="62.36" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(110.77 85.87 62.36)">I</text>
-<line x1="74.20" y1="71.21" x2="82.43" y2="78.50" stroke="#111" stroke-width="0.25"/>
-<text x="81.33" y="71.01" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(124.62 81.33 71.01)">J</text>
-<line x1="67.88" y1="76.80" x2="74.13" y2="85.86" stroke="#111" stroke-width="0.25"/>
-<text x="74.86" y="78.31" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(138.46 74.86 78.31)">K</text>
-<line x1="60.41" y1="80.73" x2="64.31" y2="91.01" stroke="#111" stroke-width="0.25"/>
-<text x="66.82" y="83.86" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(152.31 66.82 83.86)">L</text>
-<line x1="52.22" y1="82.74" x2="53.54" y2="93.66" stroke="#111" stroke-width="0.25"/>
-<text x="57.69" y="87.32" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(166.15 57.69 87.32)">M</text>
-<line x1="43.78" y1="82.74" x2="42.46" y2="93.66" stroke="#111" stroke-width="0.25"/>
-<text x="48.00" y="88.50" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(180.00 48.00 88.50)">N</text>
-<line x1="35.59" y1="80.73" x2="31.69" y2="91.01" stroke="#111" stroke-width="0.25"/>
-<text x="38.31" y="87.32" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(193.85 38.31 87.32)">O</text>
-<line x1="28.12" y1="76.80" x2="21.87" y2="85.86" stroke="#111" stroke-width="0.25"/>
-<text x="29.18" y="83.86" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(207.69 29.18 83.86)">P</text>
-<line x1="21.80" y1="71.21" x2="13.57" y2="78.50" stroke="#111" stroke-width="0.25"/>
-<text x="21.14" y="78.31" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(221.54 21.14 78.31)">Q</text>
-<line x1="17.01" y1="64.27" x2="7.27" y2="69.38" stroke="#111" stroke-width="0.25"/>
-<text x="14.67" y="71.01" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(235.38 14.67 71.01)">R</text>
-<line x1="14.02" y1="56.38" x2="3.34" y2="59.01" stroke="#111" stroke-width="0.25"/>
-<text x="10.13" y="62.36" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(249.23 10.13 62.36)">S</text>
-<line x1="13.00" y1="48.00" x2="2.00" y2="48.00" stroke="#111" stroke-width="0.25"/>
-<text x="7.80" y="52.88" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(263.08 7.80 52.88)">T</text>
-<line x1="14.02" y1="39.62" x2="3.34" y2="36.99" stroke="#111" stroke-width="0.25"/>
-<text x="7.80" y="43.12" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(276.92 7.80 43.12)">U</text>
-<line x1="17.01" y1="31.73" x2="7.27" y2="26.62" stroke="#111" stroke-width="0.25"/>
-<text x="10.13" y="33.64" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(290.77 10.13 33.64)">V</text>
-<line x1="21.80" y1="24.79" x2="13.57" y2="17.50" stroke="#111" stroke-width="0.25"/>
-<text x="14.67" y="24.99" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(304.62 14.67 24.99)">W</text>
-<line x1="28.12" y1="19.20" x2="21.87" y2="10.14" stroke="#111" stroke-width="0.25"/>
-<text x="21.14" y="17.69" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(318.46 21.14 17.69)">X</text>
-<line x1="35.59" y1="15.27" x2="31.69" y2="4.99" stroke="#111" stroke-width="0.25"/>
-<text x="29.18" y="12.14" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(332.31 29.18 12.14)">Y</text>
-<line x1="43.78" y1="13.26" x2="42.46" y2="2.34" stroke="#111" stroke-width="0.25"/>
-<text x="38.31" y="8.68" font-size="6.4" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(346.15 38.31 8.68)">Z</text>
-<circle cx="48" cy="48" r="1.2" fill="#111"/>
-<text x="48" y="57" font-size="3.6" font-family="Arial" text-anchor="middle">INNEN: Geheimtext</text>
-</svg>
-    </div>
-    <div class="kasten grau">
-      <strong>Geheime Nachricht (erschien um 08:13 Uhr auf allen Bildschirmen):</strong>
-      <div class="nachricht" id="geheimtext"></div>
-      <div style="margin-top: 2mm">Klartext: ____________________________________________________________________________</div>
-    </div>
-    <div class="fuss"><span>«Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, CC BY-SA 4.0</span><span>Protokoll 1</span></div>
+  <div class="druckleiste">
+    <button type="button" onclick="window.print()">Drucken</button>
+    <label>Stufe <select id="stufe"><option value="leicht">Leicht</option><option value="mittel">Mittel</option><option value="schwer">Schwer</option></select></label>
+    <label><input type="checkbox" id="mit-geheimtext"> Geheimtext eindrucken</label>
+    <span>A4 hoch, «Tatsächliche Grösse» (100 %), Scheiben am besten auf festes Papier.</span>
   </div>
+
+  <!-- Seite 1: Auftrag -->
+  <div class="seite">
+    <div class="oberzeile">SICHERHEITSPROTOKOLL 1 &nbsp;·&nbsp; KRYPTOGRAFIE</div>
+    <div class="titelzeile"><h1>Die Nachricht von NULLBYTE</h1><span class="stufe stufe-text"></span></div>
+    <p>Um 08:13 Uhr erschien auf allen Bildschirmen der Schule eine verschlüsselte Nachricht. Ihr findet sie im Notfall-Terminal unter Protokoll 1. Entschlüsselt sie mit eurer Chiffrierscheibe und gebt den Code, der darin versteckt ist, im Terminal ein.</p>
+    <div class="wissen">
+      <span class="label">WAS WIR ÜBER DIE HACKER WISSEN</span>
+      Die Gruppe NULLBYTE unterschreibt jede Nachricht am Schluss mit ihrem Namen. Vergleicht die Unterschrift mit dem Namen, dann wisst ihr, wie die Buchstaben verschoben wurden.
+    </div>
+
+    <div class="feld">Geheimtext (aus dem Terminal abschreiben):</div>
+    <div id="geheimtext-feld"><div class="linie"></div><div class="linie"></div><div class="linie"></div></div>
+
+    <div class="feld">Verschiebung: Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</div>
+
+    <div class="feld">Entschlüsselte Nachricht (Klartext):</div>
+    <div class="linie"></div><div class="linie"></div><div class="linie"></div><div class="linie"></div>
+
+    <div class="feld">Code für das Terminal:</div>
+    <div class="codefelder"><span></span><span></span><span></span></div>
+
+    <div class="bonus">
+      <strong>Bonusfrage im Terminal (ein Versuch, plus 10 Punkte)</strong>
+      Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich? Überlegt hier, bevor ihr antwortet:
+      <div class="linie"></div><div class="linie"></div>
+    </div>
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset <span class="stufe-name"></span> · Protokoll 1</span></div>
+  </div>
+
+  <!-- Seite 2: grosse Scheibe -->
+  <div class="seite">
+    <div class="oberzeile">SICHERHEITSPROTOKOLL 1 &nbsp;·&nbsp; BASTELVORLAGE 1 VON 2</div>
+    <div class="titelzeile"><h1>Chiffrierscheibe: grosse Scheibe</h1><span class="stufe stufe-text"></span></div>
+    <p>Entlang des äusseren Kreises ausschneiden. Die schwarzen Buchstaben sind der Klartext. Am besten auf festes Papier und in tatsächlicher Grösse (100 %) drucken.</p>
+    <div class="scheibe" id="scheibe-gross"></div>
+    <div class="schere">✂ &nbsp;hier ausschneiden</div>
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset <span class="stufe-name"></span> · Protokoll 1</span></div>
+  </div>
+
+  <!-- Seite 3: kleine Scheibe und Bauanleitung -->
+  <div class="seite">
+    <div class="oberzeile">SICHERHEITSPROTOKOLL 1 &nbsp;·&nbsp; BASTELVORLAGE 2 VON 2</div>
+    <div class="titelzeile"><h1>Chiffrierscheibe: kleine Scheibe</h1><span class="stufe stufe-text"></span></div>
+    <p>Entlang des äusseren Kreises ausschneiden. Die roten Buchstaben sind der Geheimtext.</p>
+    <div class="scheibe" id="scheibe-klein"></div>
+    <div class="kasten bau">
+      <strong>So baut ihr die Scheibe zusammen</strong>
+      <ol>
+        <li>Schneidet beide Scheiben aus (grosse Scheibe auf der vorherigen Seite).</li>
+        <li>Legt die kleine rote Scheibe auf die grosse, Mittelpunkt auf Mittelpunkt.</li>
+        <li>Stecht mit einem Bleistift durch beide Mittelpunkte und steckt eine Musterklammer durch.</li>
+        <li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li>
+      </ol>
+    </div>
+    <div class="fuss"><span>«Systemabsturz» Heiss, Schmid | PH Luzern 2026 | CC BY-SA 4.0</span><span>Teamset <span class="stufe-name"></span> · Protokoll 1</span></div>
+  </div>
+
+  <script src="../js/maze.js"></script>
   <script src="../js/app.js"></script>
   <script>
-    /* Geheimtext passend zum eingestellten Code (Spielleitung) oder Standard */
+    /* Chiffrierscheiben als Vektorgrafik in echter Grösse (mm), wie im Teamset:
+       grosse Scheibe 172 mm, kleine Scheibe 142 mm Durchmesser. */
+    function scheibeSvg(o) {
+      var c = o.schnitt + 1;
+      var t = ['<svg xmlns="http://www.w3.org/2000/svg" width="' + 2 * c + 'mm" height="' + 2 * c + 'mm" viewBox="0 0 ' + 2 * c + ' ' + 2 * c + '">'];
+      t.push('<circle cx="' + c + '" cy="' + c + '" r="' + o.schnitt + '" fill="none" stroke="#5f6670" stroke-width="0.3" stroke-dasharray="2 1.2"/>');
+      t.push('<circle cx="' + c + '" cy="' + c + '" r="' + o.aussen + '" fill="' + o.flaeche + '" stroke="#111418" stroke-width="0.6"/>');
+      t.push('<circle cx="' + c + '" cy="' + c + '" r="' + o.innen + '" fill="none" stroke="#111418" stroke-width="0.25"/>');
+      for (var i = 0; i < 26; i++) {
+        var w = (i + 0.5) * 2 * Math.PI / 26;
+        t.push('<line x1="' + (c + o.innen * Math.sin(w)).toFixed(2) + '" y1="' + (c - o.innen * Math.cos(w)).toFixed(2) +
+          '" x2="' + (c + o.aussen * Math.sin(w)).toFixed(2) + '" y2="' + (c - o.aussen * Math.cos(w)).toFixed(2) + '" stroke="#111418" stroke-width="0.25"/>');
+        var a = i * 360 / 26;
+        var wb = i * 2 * Math.PI / 26;
+        var x = c + o.text * Math.sin(wb);
+        var y = c - o.text * Math.cos(wb);
+        t.push('<text x="' + x.toFixed(2) + '" y="' + y.toFixed(2) + '" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="' + o.schrift +
+          '" fill="' + o.farbe + '" text-anchor="middle" dominant-baseline="central" transform="rotate(' + a.toFixed(2) + ' ' + x.toFixed(2) + ' ' + y.toFixed(2) + ')">' +
+          String.fromCharCode(65 + i) + '</text>');
+      }
+      t.push('<circle cx="' + c + '" cy="' + c + '" r="1" fill="#111418"/>');
+      t.push('<text x="' + c + '" y="' + (c + 10) + '" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="4.6" fill="#5f6670" text-anchor="middle">' + o.beschriftung + '</text>');
+      t.push('</svg>');
+      return t.join('');
+    }
+    document.getElementById('scheibe-gross').innerHTML = scheibeSvg({
+      schnitt: 85.5, aussen: 84.5, innen: 69, text: 76.8, schrift: 8.5, farbe: '#111418', flaeche: '#fff', beschriftung: 'KLARTEXT (aussen)'
+    });
+    document.getElementById('scheibe-klein').innerHTML = scheibeSvg({
+      schnitt: 70.5, aussen: 69.5, innen: 56, text: 62.8, schrift: 7.5, farbe: '#c62828', flaeche: '#f9eaea', beschriftung: 'GEHEIMTEXT (innen)'
+    });
+
+    /* Stufe (für Kopf und Fusszeile) und optional der Geheimtext dieser Runde */
     (function () {
       var leitung = ladeJson(SPEICHER_LEITUNG) || {};
-      var p1 = leitung.p1;
-      document.getElementById('geheimtext').textContent = p1 && p1.geheimtext ? p1.geheimtext : P1_GEHEIMTEXT;
+      var wahl = document.getElementById('stufe');
+      var mit = document.getElementById('mit-geheimtext');
+      wahl.value = stufeAusUrl() || leitung.stufe || STANDARD_STUFE;
+      function zeige() {
+        var name = STUFEN[wahl.value].name;
+        Array.prototype.forEach.call(document.querySelectorAll('.stufe-text'), function (e) { e.textContent = 'STUFE ' + name.toUpperCase(); });
+        Array.prototype.forEach.call(document.querySelectorAll('.stufe-name'), function (e) { e.textContent = 'Stufe ' + name; });
+        var feld = document.getElementById('geheimtext-feld');
+        if (mit.checked) {
+          var p1 = leitung.p1;
+          feld.innerHTML = '';
+          var d = document.createElement('div');
+          d.className = 'geheimtext';
+          d.textContent = p1 && p1.geheimtext ? p1.geheimtext : P1_GEHEIMTEXT;
+          feld.appendChild(d);
+        } else {
+          feld.innerHTML = '<div class="linie"></div><div class="linie"></div><div class="linie"></div>';
+        }
+      }
+      wahl.addEventListener('change', zeige);
+      mit.addEventListener('change', zeige);
+      zeige();
     })();
   </script>
 </body>
