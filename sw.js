@@ -22,6 +22,7 @@ const DATEIEN = [
   'js/maze.js',
   'js/netzwerke.js',
   'js/unterrichtsinfo.js',
+  'js/technikcheck.js',
   'img/maske.svg',
   'img/hintergrund-anweisung.webp',
   'druck/druck.css',
