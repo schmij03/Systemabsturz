@@ -56,13 +56,14 @@ const UNTERRICHTSINFO = {
           zeilen: [
             ['1 Kryptografie', 'MI.2.1c (Z2): Daten mittels selbstentwickelter Geheimschriften verschlüsseln', 'Cäsar-Verschlüsselung mit der Chiffrierscheibe, Begriffe Schlüssel, Klartext, Geheimtext'],
             ['1 Kryptografie', 'MI.2.3n (Z3): Risiken unverschlüsselter Datenübermittlung und -speicherung abschätzen', 'NULLBYTE liest Klartext mit, die Botschaft wird nur verschlüsselt sicher. Reflexion in der Auswertung'],
+            ['1 Kryptografie', 'MI.1.3d (Z2): Sicherheitsregeln im Umgang mit persönlichen Daten (Passwort)', 'Motiv von NULLBYTE (schwache Passwörter, unvorsichtige Klicks) und Reflexion in der Auswertung'],
             ['2 Algorithmen', 'MI.2.2f (Z2): Programme mit Schleifen, bedingten Anweisungen und Parametern schreiben und testen', 'Blockprogramm für ANTI-V, Schleife ist Pflicht, Testen mit Start und Fehlermeldung'],
             ['2 Algorithmen', 'MI.2.2g (Z3): selbstentdeckte Lösungswege in lauffähigen und korrekten Computerprogrammen formulieren', 'Teams entdecken selbst eine allgemeine Regel (zum Beispiel Rechte-Hand-Regel) und setzen sie um'],
             ['2 Algorithmen', 'MI.2.2i (Z3): verschiedene Algorithmen zur Lösung desselben Problems vergleichen und beurteilen', 'Blocklimit, Energie und Effizienzbonus, Vergleich der Teamlösungen in der Auswertung'],
             ['2 Algorithmen', 'MI.2.2c und MI.2.2d (Z2): Abläufe darstellen, einfache Abläufe lesen und manuell ausführen', 'Planungsfeld auf dem Teamset, Programm vor dem Start im Kopf durchspielen'],
             ['2 Algorithmen', 'MI.2.2e (Z2): verstehen, dass ein Computer nur vordefinierte Anweisungen ausführt', 'ANTI-V tut genau, was die Blöcke sagen, nicht, was das Team meint'],
             ['2 Algorithmen', 'MI.2.1i (Z3): logische Operatoren verwenden (und, oder, nicht)', 'Stufen mittel und schwer: Bedingungen mit «und» und «nicht»'],
-            ['3 Netzwerke', 'MI.2.1f (Z2): Baum- und Netzstrukturen erkennen und verwenden', 'Netzwerkplan mit Servern und Verbindungen als Netzstruktur'],
+            ['3 Netzwerke', 'MI.2.1f (Z3): Baum- und Netzstrukturen erkennen und verwenden', 'Netzwerkplan mit Servern und Verbindungen als Netzstruktur'],
             ['3 Netzwerke', 'MI.2.2b (Z2) und MI.2.2i (Z3): Lösungswege suchen, auf Korrektheit prüfen und vergleichen', 'Kürzesten sauberen Weg finden, verlockende infizierte Abkürzungen prüfen und verwerfen'],
             ['3 Netzwerke', 'MI.2.3m (Z3): das Internet als Infrastruktur von seinen Diensten unterscheiden', 'Der Netzwerkplan als Modell für die Verbindungen hinter dem Internet']
           ]
