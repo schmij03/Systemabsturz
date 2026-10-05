@@ -1,6 +1,6 @@
 # Code-Audit «Systemabsturz»
 
-Ausgangsstand: `main`, `31a5676718f68606f634ec584adbd628d79e62f7`, 3. Oktober 2026.
+Ausgangsstand: `main`, 3. Oktober 2026.
 
 Geprüft wurden die eigenen HTML-/JavaScript-Dateien, Spielzustände, Blockly-Interpreter und Labyrinthe, Netzwerkdaten, Offline-Strategie, Druckgeneratoren, TTS-Werkzeuge und Dokumentation. Die eingebundene Blockly-Bibliothek wurde nicht auf interne Sicherheitslücken auditiert. Ein Code-Audit garantiert keine vollständige Fehlerfreiheit.
 
