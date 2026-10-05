@@ -2,6 +2,14 @@
 
 Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
 
+## Technikcheck
+
+1. Spielleitung, Reiter «1 Vorbereiten», «D Technikcheck», «Jetzt prüfen». Erwartung: sechs Zeilen mit Haken oder Kreuz (Speicher, Ton, Sprachaufnahmen, Blockly, Startsignal, Offline-Cache), ein kurzer Testton ist hörbar. Nach spätestens etwa 10 Sekunden sind alle Ergebnisse da.
+2. Auf GitHub Pages (https) und nach einmaligem Neuladen: Offline-Cache «aktiv». Lokal über http: rotes Kreuz mit Hinweis «nur über https möglich».
+3. WLAN aus, nochmals prüfen. Erwartung: Startsignal mit rotem Kreuz und Hinweis auf den manuellen Start mit PIN, die übrigen Prüfungen laufen trotzdem durch.
+4. Auf dem Gerät eines Teams die Startseite öffnen, unten «Gerät prüfen». Erwartung: dieselben sechs Prüfungen, ohne Testnachricht an ntfy.sh (nur Abfrage). «Nochmals prüfen» wiederholt sie.
+5. Ton stummgeschaltet: Die Prüfung meldet den Testton als abgespielt, er ist aber nicht hörbar. Deshalb immer auch hinhören.
+
 ## Leitfaden Spielleitung
 
 1. Kachel «Leitfaden Spielleitung» öffnen. Erwartung: 9 Seiten im Dossier-Layout, Stufe der Spielleitung vorgewählt, auf Seite 4 der Hinweis «Geschützt» statt der Lösungen, nirgends die PIN.

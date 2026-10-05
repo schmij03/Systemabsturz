@@ -161,7 +161,7 @@ const P1_GEHEIMTEXT = 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI
 const KISTE2_VERSCHLUESSELT = '813e87';
 
 /** Lösungsliste für die Spielleitung, verschlüsselt mit der PIN als Schlüssel */
-const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d75671b18077f0a2ed9c3ca11055edc252c688af4e9ee9799f062b19899a8c15b4fdab963a999fd257228fd1268d3124388c4717846fcedd1a9854cef6ad453cff058d8ef981ad7f6030556d03c3e043016d2eb1e467323c02b258c6994465731c4d956cbb4ecdeac53e529eeeb92b98bb675db187cbc0db19c441654e2a86e340bb0f08b401b51ee0cb14f58b52c815d9d0c4adfb1b098cab66fcd8a1c790e8f5a4b1ed7c465052aa09b7271fcb3bcfb9f99f37d5e6be18ae40c87499920b1e4bd0dc5816e596ee43936059e4d47d515e20adb959e016f37ac16abbe3f16fb5d360c8c57316b7aba394baf5983c9a9c765705eb75ee27cff04fe162dfe9d90f7b2c99244f368b44ddd49bb67f0e11e3b7db2180605a23847be2a0ffacf223a93e7c5441bce489c869224218ef176ae88d06dd9601d9f22ef1b703038066f5be7ae23e8648e2bc08087e58e4dc9093ef381a08cd4999916a7796c55c158e9dc1396e74a7da9acd8525f3a69eb59d91c55e051eeebcef8849e747cc83d2a2bb458a67395b8d0b9c33629c240844c493def7a0983f2f00b71e43cbb5f89e804d0ff3804dfd0ae7215370c96c83adb34ea29de6214feda368af6f8f3c17d3420bd322c060a8e9c46321aaa82';
+const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d2b221388d77f1f389c99c3074c7c94227839cea0a4445f8ff07cb1c7dbe6d74a42c0fc54a08ff4403e02e3077fdf0301dcbf127151e1f7c3c7912ff47cd043ad9521b1eaf100b6fc070933db493e035517abeb13506a46ca4e31997f9651514db0b83ecab982d8c354ef4df8828fb4e5b319d61110bd6ca1985e734d87b8055361d5e6ee576947e81ac54937b226e554fc155fcfb1d59fa3a064cd86796d7990442e19b2df6e7e44c0ee7068f2a6aae7e9f0f3331367fb97b34587418e32acf6a31fb6c8454374f2213f1c9c5f4cdc5cac4799918e44797ead5f98fb1b00ea463c0187473d7934a8741ef259c58cadd1746b511c8e52b3e91bef5a37b79091e0a994c341f337ff59da4fa173f6f1027c29b2110816b6345fa72816fa8869228ef1830313ce448a82843a21d2e024a788db7fd172089f7efe022d3f39423a5b964fd459a29922d19681a0ab08f94c36bb80adc2d8d79611bb79734ed04fbdea56b7f45d79f6fe821b693d24d0598b1a59fc15d0e0c7f390dfdfaccf3678628956b87083a3869fcd575ac2438d093377aa5f4cafb7eb0b6fa512b6568bad039efe3151ffcdad7150565f8ac3369e4e886e9b3414fed23f81b6f8e5c12b6379fd7772130980f81e660bce9e8dd90c8c5971de7c18c9e5e339f1d00864321ea3d23215f424bee7d056d73bd18dbd723dd0b3fd84eeeb306f02706237d221948e7040388baed79e1d2712be91322b9468fc5467f8fe12e62999e28d71';
 
 /* Startsignal der Spielleitung an die Tablets.
    Weil das Spiel keinen eigenen Server hat, läuft das Signal über den
@@ -2458,11 +2458,14 @@ async function zeigeLoesungen() {
       l.p1info = 'Cäsar-Verschiebung ' + p1.verschiebung + ' (innen ' + caesar('A', p1.verschiebung) + ' unter dem äusseren A, Unterschrift ' +
         caesar('NULLBYTE', p1.verschiebung) + '). Klartext: ' + p1Nachricht(p1.code, p1.verschiebung).klartext;
     }
-    // Protokoll 3: Weg und Fallen der gewählten Stufe
+    // Protokoll 3: Weg und Fallen immer aus js/netzwerke.js (gewählte Stufe).
+    // Die verschlüsselte Liste enthält nur einen stufenunabhängigen Hinweis.
     const stufe = Leitung.stand.stufe || STANDARD_STUFE;
     if (typeof NETZWERKE !== 'undefined' && NETZWERKE[stufe]) {
       l.p3info = 'Stufe ' + STUFEN[stufe].name + ': ' + NETZWERKE[stufe].loesung;
       l.fallen = NETZWERKE[stufe].fallen;
+    } else {
+      l.fallen = '';
     }
     [
       ['Protokoll 1 (Code Kiste 1)', l.p1],
@@ -2521,7 +2524,10 @@ async function erzeugeKonfiguration() {
   const loesungen = {
     p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
     signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
-    p3: w('p3'), p3info: w('p3info'), fallen: ''
+    p3: w('p3'),
+    // Weg und Fallen hängen von der Stufe ab und stehen in js/netzwerke.js
+    p3info: w('p3info') || 'Kürzester Weg ohne infizierte Server, Summe der Kennzahlen inklusive A und Z. Weg und Fallen je Stufe siehe Leitfaden.',
+    fallen: 'Die Fallen je Stufe stehen im Leitfaden und in der Lösungsansicht der Spielleitung.'
   };
   const zeilen = [];
   zeilen.push('const SPIELLEITUNG_PIN = ' + JSON.stringify(neuePin) + ';');

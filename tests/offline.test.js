@@ -5,13 +5,15 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const {root}=require('./hilfe.cjs');
+// Aktuelle Cache-Version aus sw.js, damit der Test eine Erhöhung von CACHE_NAME übersteht
+const VERSION=Number(/CACHE_PRAEFIX \+ 'v(\d+)'/.exec(fs.readFileSync(path.join(root,'sw.js'),'utf8'))[1]);
 function worker() {
   const handlers={}, deleted=[], writes=[], stored=new Map(), timers=[];
   const scope='https://example.test/HackingSchule/';
   const prefix='systemabsturz:'+scope+':';
   const cache={match:async key=>stored.get(key),put:async(key,value)=>{writes.push(key);stored.set(key,value);}};
   const c={URL, Response, console, self:{registration:{scope},location:{origin:'https://example.test'},addEventListener:(k,f)=>handlers[k]=f,clients:{claim:async()=>{}}},
-    caches:{open:async()=>cache,keys:async()=>[prefix+'v29',prefix+'v30','other-app','systemabsturz:https://example.test/Other/:v29'],delete:async key=>{deleted.push(key);}},
+    caches:{open:async()=>cache,keys:async()=>[prefix+'v'+(VERSION-1),prefix+'v'+VERSION,'other-app','systemabsturz:https://example.test/Other/:v'+(VERSION-1)],delete:async key=>{deleted.push(key);}},
     fetch:async()=>{throw new Error('offline');},setTimeout:fn=>{timers.push(fn);return timers.length;},clearTimeout:()=>{}};
   vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),c);
   return {c,handlers,deleted,writes,stored,timers,scope,prefix};
@@ -24,7 +26,7 @@ function event(w,url,mode='navigate') {
 function good() {return {ok:true,status:200,type:'basic',clone(){return this;}};}
 test('Cache-Aktivierung löscht ausschliesslich ältere Versionen dieses Projekts', async()=>{
   const w=worker();let done;w.handlers.activate({waitUntil:p=>done=p});await done;
-  assert.deepEqual(w.deleted,[w.prefix+'v29']);
+  assert.deepEqual(w.deleted,[w.prefix+'v'+(VERSION-1)]);
 });
 test('Offline-Navigation mit Spielparametern verwendet die gespeicherte Seite',async()=>{
   const w=worker(), cached={body:'terminal'};w.stored.set(w.scope+'terminal.html',cached);

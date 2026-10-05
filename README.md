@@ -10,7 +10,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 
 | Datei | Zweck |
 |---|---|
-| `index.html` | Startseite: Teamname eingeben, Spiel starten |
+| `index.html` | Startseite: Teamname eingeben, Spiel starten, unauffälliger Link «Gerät prüfen» (Technikcheck) |
 | `terminal.html` | Spielansicht der Teams mit den drei Protokollen, Countdown, Help-Desk und Punkten |
 | `spielleitung.html` | Beamer-Ansicht oben (grosser Countdown, Story-Texte, Botschaft von NULLBYTE, Schlussszene), darunter die Steuerung mit Kopfleiste und vier Reitern: «1 Vorbereiten», «2 Spiel durchführen», «3 Nach dem Spiel», «Lösungen und Extras» |
 | `css/style.css` | Gestaltung im Terminal-Look |
@@ -21,9 +21,11 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `sounds/` | Platzhalter für Töne (sonst synthetische Töne), siehe `sounds/README.md` |
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
-| `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
+| `img/` | Maske von NULLBYTE (`maske.svg`, eigene Zeichnung) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`). Hintergrundbild KI-generiert (Gemini) |
 | `material/` | Teamsets pro Stufe als eigenständige HTML-Dateien (Vorrat zum direkten Verlinken) |
 | `js/netzwerke.js` | Netzwerkpläne für Protokoll 3 pro Stufe mit Lösung |
+| `js/technikcheck.js` | Technikcheck vor dem Spiel: lokaler Speicher, Ton, Sprachaufnahmen, Blockly, Startsignal (ntfy.sh) und Offline-Cache |
+| `tests/` | Automatische Prüfungen mit Node.js (Spiellogik, Lösungsliste, Lehrplanstufen, Technikcheck, Offline-Cache) |
 | `js/unterrichtsinfo.js` | Fenster «Einsatz im Unterricht» in der Spielleitung: Lehrplanbezüge, Einsatzideen, Differenzierung (Texte oben in der Datei) |
 | `druck/` | Druckmaterial: komplettes Teamset (`teamset.html`) und Einzelblätter, Inhalt in `seiten.js`, Gestaltung in `druck.css` |
 | `sw.js` | Service Worker: speichert alles für den Offline-Betrieb |
@@ -150,6 +152,22 @@ Das Terminal zeigt «SYSTEM GELÖSCHT», alle Eingaben sind gesperrt, der Punkte
 
 Auf dem Tablet unten rechts auf «Spielleitung» tippen und die PIN eingeben (Standard **4711**). Danach wählt ihr «Spiel zurücksetzen» (mit Bestätigung) oder «Zur Spielleitungsansicht», um vom Tablet aus die Spielleitung zu öffnen. Der Spielstand liegt nur im Browser des jeweiligen Geräts (localStorage).
 
+## Technikcheck
+
+Vor dem Spiel lohnt sich ein kurzer Technikcheck. Er zeigt für jede Prüfung einen grünen Haken oder ein rotes Kreuz mit Lösungshinweis:
+
+* lokaler Speicher schreib- und lesbar (sonst geht der Spielstand beim Neuladen verloren)
+* Ton abspielbar (kurzer Testton über die Web Audio API)
+* Sprachaufnahmen erreichbar (`audio/tts/verzeichnis.json`)
+* Blockly ladbar (`lib/blockly/`)
+* Startsignal über ntfy.sh erreichbar (Zeitlimit 8 Sekunden; bei Fehler die Geräte manuell mit der PIN starten)
+* Offline-Cache bereit (Service Worker aktiv, nur über https)
+
+**Spielleitung:** Reiter «1 Vorbereiten», Abschnitt «D Technikcheck», Knopf «Jetzt prüfen». Dabei wird eine Testnachricht an einen zufälligen ntfy-Kanal gesendet.
+**Geräte der Teams:** auf der Startseite unten der Link «Gerät prüfen». Hier wird ntfy.sh nur abgefragt, nicht beschrieben.
+
+Jede Prüfung hat ein Zeitlimit und liefert immer ein Ergebnis, auch ohne Netz. Code: `js/technikcheck.js`.
+
 ## Unterrichtsinfo (Fenster in der Spielleitung)
 
 Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im Unterricht»** mit fünf aufklappbaren Abschnitten: Auf einen Blick, Lehrplanbezüge (Lehrplan 21, MI.2 mit Tabelle pro Protokoll), Einsatz im Unterricht (Ablauf und Reflexionsfragen), Differenzierung und Beurteilung, Voraussetzungen und Technik. Erst nach «Weiter zur Spielleitung», dem Kreuz oder der Escape-Taste ist die Steuerung bedienbar.
@@ -189,11 +207,13 @@ node --test tests/*.test.js
 node werkzeuge/netzwerke_pruefen.js
 ```
 
-Die Tests prüfen Spiellogik, Interpreter, Punkte, Zeitablauf, Startsignale und Cache-Verhalten mit Browser-Attrappen. Sie ersetzen nicht den Gerätetest und die Druckkontrolle aus `TESTPLAN.md`. Befunde und priorisierte Verbesserungsvorschläge stehen in `AUDIT.md`.
+Die Tests prüfen Spiellogik, Interpreter, Punkte, Zeitablauf, Startsignale, Cache-Verhalten, die verschlüsselte Lösungsliste, die Lehrplanstufen der Unterrichtsinfo und den Technikcheck mit Browser-Attrappen. Sie ersetzen nicht den Gerätetest und die Druckkontrolle aus `TESTPLAN.md`. Befunde und priorisierte Verbesserungsvorschläge stehen in `AUDIT.md`.
 
 ## Lizenz
 
 «Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, steht unter der Lizenz [Creative Commons Namensnennung, Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de).
 
 Enthaltene Fremdsoftware und Medien: [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache License 2.0, siehe `lib/blockly/LICENSE`). Sprachaufnahmen erzeugt mit [Piper](https://github.com/rhasspy/piper) (MIT) und der Stimme [Thorsten-Voice](https://github.com/thorstenMueller/Thorsten-Voice) von Thorsten Müller (CC0).
+
+Hintergrundbild der Spielanweisung (`img/hintergrund-anweisung.webp`): KI-generiert mit Google Gemini, ohne menschliche Bearbeitung. Als KI-Ausgabe nach unserem Verständnis nicht urheberrechtlich geschützt; wird mit dem Spiel unter CC BY-SA 4.0 weitergegeben. Die Maske von NULLBYTE (`img/maske.svg`) ist eine eigene Zeichnung.
 

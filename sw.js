@@ -9,7 +9,7 @@
    ===================================================================== */
 
 const CACHE_PRAEFIX = 'systemabsturz:' + self.registration.scope + ':';
-const CACHE_NAME = CACHE_PRAEFIX + 'v30';
+const CACHE_NAME = CACHE_PRAEFIX + 'v31';
 
 const DATEIEN = [
   './',
@@ -22,6 +22,7 @@ const DATEIEN = [
   'js/maze.js',
   'js/netzwerke.js',
   'js/unterrichtsinfo.js',
+  'js/technikcheck.js',
   'img/maske.svg',
   'img/hintergrund-anweisung.webp',
   'druck/druck.css',
