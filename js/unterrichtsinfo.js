@@ -119,7 +119,8 @@ const UNTERRICHTSINFO = {
           'Das Startsignal läuft über ntfy.sh und braucht Internet. Ohne Internet: Geräte der Teams manuell mit der PIN starten oder den Link `index.html?ende=HH:MM` verwenden.',
           'Scratch-Erfahrung ist hilfreich, aber nicht nötig. Der Help-Desk liefert gestufte Tipps.',
           'Lizenz: «Systemabsturz» von Christof Heiss und Jan Schmid, PH Luzern 2026, CC BY-SA 4.0.',
-          'Quelle der Kompetenzen: Lehrplan 21, Modullehrplan Medien und Informatik, https://v-ef.lehrplan.ch'
+          'Quelle der Kompetenzen: Lehrplan 21, Modullehrplan Medien und Informatik, https://v-ef.lehrplan.ch',
+          'Bildnachweis: Hintergrund der Spielanweisung KI-generiert mit Google Gemini; Maske von NULLBYTE eigene Zeichnung.'
         ] }
       ]
     }

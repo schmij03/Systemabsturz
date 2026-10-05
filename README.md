@@ -21,7 +21,7 @@ Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht ke
 | `sounds/` | Platzhalter für Töne (sonst synthetische Töne), siehe `sounds/README.md` |
 | `audio/tts/` | Sprachaufnahmen (Stimme Thorsten, CC0) und `verzeichnis.json` |
 | `werkzeuge/` | `tts_erzeugen.py` erzeugt die Sprachaufnahmen neu, `texte_exportieren.js` liest dafür die Texte aus `js/app.js` |
-| `img/` | Maske von NULLBYTE (`maske.svg`) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`) |
+| `img/` | Maske von NULLBYTE (`maske.svg`, eigene Zeichnung) und Hintergrundbild der Spielanweisung (`hintergrund-anweisung.webp`). Hintergrundbild KI-generiert (Gemini) |
 | `material/` | Teamsets pro Stufe als eigenständige HTML-Dateien (Vorrat zum direkten Verlinken) |
 | `js/netzwerke.js` | Netzwerkpläne für Protokoll 3 pro Stufe mit Lösung |
 | `js/unterrichtsinfo.js` | Fenster «Einsatz im Unterricht» in der Spielleitung: Lehrplanbezüge, Einsatzideen, Differenzierung (Texte oben in der Datei) |
@@ -196,4 +196,6 @@ Die Tests prüfen Spiellogik, Interpreter, Punkte, Zeitablauf, Startsignale und 
 «Systemabsturz» von Christof Heiss, Jan Schmid, PH Luzern 2026, steht unter der Lizenz [Creative Commons Namensnennung, Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de).
 
 Enthaltene Fremdsoftware und Medien: [Blockly](https://github.com/RaspberryPiFoundation/blockly) (Apache License 2.0, siehe `lib/blockly/LICENSE`). Sprachaufnahmen erzeugt mit [Piper](https://github.com/rhasspy/piper) (MIT) und der Stimme [Thorsten-Voice](https://github.com/thorstenMueller/Thorsten-Voice) von Thorsten Müller (CC0).
+
+Hintergrundbild der Spielanweisung (`img/hintergrund-anweisung.webp`): KI-generiert mit Google Gemini, ohne menschliche Bearbeitung. Als KI-Ausgabe nach unserem Verständnis nicht urheberrechtlich geschützt; wird mit dem Spiel unter CC BY-SA 4.0 weitergegeben. Die Maske von NULLBYTE (`img/maske.svg`) ist eine eigene Zeichnung.
 
