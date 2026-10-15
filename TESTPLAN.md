@@ -102,6 +102,9 @@ wiederhole bis Ziel erreicht
 * Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: 642».
 * Zusatz: «Euer Programm: 15 Blöcke (Limit 15). Effizienzbonus: plus 10 Punkte.»
 * Tab 3 wird freigeschaltet, 160 Punkte (mit Bonusfrage und Effizienzbonus, ohne Joker).
+* Unter der Erfolgsmeldung erscheint die Bonusfrage «Was macht der Block «wiederhole fortlaufend»?» mit den Antworten A bis D.
+* Antwort B antippen: «Richtig! Plus 10 Punkte.», 170 Punkte. Die Knöpfe verschwinden, auch nach dem Neuladen gibt es keinen zweiten Versuch.
+* In einem zweiten Durchgang eine falsche Antwort (A, C oder D) wählen: «Leider falsch. Richtig wäre B …», keine Punkte.
 
 ### Test B: Programm ohne «nicht»
 

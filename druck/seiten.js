@@ -58,7 +58,7 @@ var Druck = (function () {
         '<h2>Regeln</h2><ul>' +
         '<li>Löst die Protokolle der Reihe nach. Jedes gelöste Protokoll schaltet das nächste frei.</li>' +
         '<li><strong>Help-Desk:</strong> Im Terminal gibt es Tipps. Jedes Team hat ' + JOKER_ANZAHL + ' Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kommt ihr 5 Minuten nicht weiter, gibt es einen Tipp gratis.</li>' +
-        '<li><strong>Punkte:</strong> Start mit ' + START_PUNKTE + ' Punkten, plus ' + PUNKTE_PRO_PROTOKOLL + ' pro Protokoll, Bonus für wenige Blöcke in Protokoll 2 und für jede übrige Minute beim Override.</li>' +
+        '<li><strong>Punkte:</strong> Start mit ' + START_PUNKTE + ' Punkten, plus ' + PUNKTE_PRO_PROTOKOLL + ' pro Protokoll, Bonusfragen nach Protokoll 1 und 2, Bonus für wenige Blöcke in Protokoll 2 und für jede übrige Minute beim Override.</li>' +
         '<li>Bei 00:00 ist alles verloren. Teilt die Arbeit auf und sprecht euch ab!</li></ul>' +
         '<h2>Notizen</h2>' + linien(4)
     }, st);
@@ -162,8 +162,9 @@ var Druck = (function () {
         '<li><strong>Schleife ist Pflicht:</strong> Ohne «wiederhole bis Ziel erreicht» startet das Programm nicht.</li>' +
         '<li><strong>Blocklimit:</strong> Höchstens <strong>' + s.maxBloecke + ' Blöcke</strong>. Ist das Limit erreicht, werden die Blöcke grau.</li>' +
         '<li><strong>Energie:</strong> ANTI-V kann höchstens <strong>' + s.energie + ' Felder</strong> gehen. Umwege enden mit «Energie leer!».</li>' +
-        '<li><strong>Effizienzbonus:</strong> ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' Punkte für jeden Block unter dem Limit. Nach dem Lösen dürft ihr weiter optimieren.</li></ul>' +
-        '<h2>Plant euer Programm</h2><div class="plan"' + (st === 'leicht' ? ' style="height: 52mm"' : '') + '><span class="hut">wenn Programm startet</span></div>' +
+        '<li><strong>Effizienzbonus:</strong> ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' Punkte für jeden Block unter dem Limit. Nach dem Lösen dürft ihr weiter optimieren.</li>' +
+        '<li><strong>Bonusfrage:</strong> Nach dem Lösen folgt im Terminal eine Bonusfrage (ein Versuch, plus ' + BONUS_PUNKTE + ' Punkte).</li></ul>' +
+        '<h2>Plant euer Programm</h2><div class="plan"' + (st === 'leicht' ? ' style="height: 44mm"' : '') + '><span class="hut">wenn Programm startet</span></div>' +
         kaestchen('Eingesammelte Signaturen:', 3)
     }, st);
   }

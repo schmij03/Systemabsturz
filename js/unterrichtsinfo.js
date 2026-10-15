@@ -105,7 +105,7 @@ const UNTERRICHTSINFO = {
       titel: 'D  Differenzierung und Beurteilung',
       inhalt: [
         { liste: [
-          '**Stufen als Orientierung:** leicht für Grundanforderungen, mittel für das Regelniveau, schwer für erweiterte Anforderungen. Die Stufe gilt für das ganze Spiel und wird auf der Spielleitung gewählt. Schnelle Teams können die Bonusfrage lösen und ihr Programm weiter optimieren.',
+          '**Stufen als Orientierung:** leicht für Grundanforderungen, mittel für das Regelniveau, schwer für erweiterte Anforderungen. Die Stufe gilt für das ganze Spiel und wird auf der Spielleitung gewählt. Schnelle Teams können die Bonusfragen lösen und ihr Programm weiter optimieren.',
           '**Beurteilung:** Der Punktestand misst auch Tempo und Glück, nicht nur Kompetenz. Er eignet sich nicht als Note. Sinnvoll ist eine formative Rückmeldung über Beobachtung, die Notizen auf dem Teamset (Protokoll 1: Geheimtext, Verschiebung, Klartext, Protokoll 2: Planungsfeld) und die mündliche Reflexion.',
           '**Anschluss an eine Prüfung:** Eine Cäsar-Nachricht entschlüsseln, ein Programm lesen und manuell ausführen (MI.2.2d), im Netzwerkplan den kürzesten sauberen Weg bestimmen.'
         ] }

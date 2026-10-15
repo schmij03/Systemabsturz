@@ -49,7 +49,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 1. **Material drucken** (auf `spielleitung.html` im Reiter «1 Vorbereiten», Abschnitt «Material drucken»): pro Team ein **Teamset** der gewählten Stufe, 7 Seiten im Layout der Word-Vorlagen (rote Linie, Oberzeile, Titel mit Stufen-Abzeichen):
    * Seite 1 **Auftrag:** Lage, Teamname und Beitrittscode, Anmeldung mit Adresse des Terminals, die drei Protokolle, Regeln, Notizen.
    * Seiten 2 bis 4 **Protokoll 1:** «Die Nachricht von NULLBYTE» mit dem Geheimtext der gewählten Stufe (standardmässig eingedruckt, passend zum eingestellten Code, abschaltbar mit «Geheimtext eindrucken»), Feldern für Verschiebung, Klartext, Code und Bonusfrage, dann die grosse Scheibe (172 mm, Klartext) und die kleine Scheibe (142 mm, Geheimtext) mit Bauanleitung. Am besten auf festes Papier.
-   * Seite 5 **Protokoll 2:** Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie und Effizienzbonus, Planungsfeld und Signaturen.
+   * Seite 5 **Protokoll 2:** Vorgehen, verfügbare Blöcke nach Kategorie (Scratch-Farben), Regeln mit Blocklimit, Energie, Effizienzbonus und Hinweis auf die Bonusfrage, Planungsfeld und Signaturen.
    * Seiten 6 und 7 **Protokoll 3:** «Routing reparieren» mit Auftrag und Lösungsfeldern, dann der Netzwerkplan im Querformat mit Legende.
    * Kachel **«Gesamtes Dossier»** öffnet `druck/teamset.html`: Die Stufe der Spielleitung ist vorgewählt und lässt sich oben im Dossier umstellen, gleich wie bei den Einzelblättern. Das Dossier passt sich an den eingestellten Code an und hat den Knopf «Als HTML herunterladen» (eigenständige Datei, ohne Skripte, auch offline). Fertige Dateien liegen zusätzlich in `material/Systemabsturz_Teamset_<Stufe>.html`. Einzelblätter: `druck/auftrag.html`, `druck/protokoll1.html`, `druck/protokoll2.html`, `druck/protokoll3.html`.
    * Druckeinstellung A4, «Tatsächliche Grösse» (100 %), farbig. Der Netzwerkplan druckt automatisch quer.
@@ -96,7 +96,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 ### Die drei Protokolle
 
 * **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln, dreistelligen Code im Terminal eingeben. Der Code öffnet das Zahlenschloss von Sicherheitskiste 1. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte).
-* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg erscheint der Code für Sicherheitskiste 2.
+* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg erscheint der Code für Sicherheitskiste 2. Danach folgt eine freiwillige Bonusfrage mit vier Antworten zum Block «wiederhole fortlaufend» (ein Versuch, plus 10 Punkte).
 
 ### Protokoll 2: Regeln, Stufen und Effizienzbonus
 
@@ -117,7 +117,7 @@ Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also 
 
 ### Help-Desk und Punkte
 
-* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für die Bonusfrage, plus Effizienzbonus in Protokoll 2 (10 Punkte plus 5 pro eingespartem Block).
+* Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für jede der beiden Bonusfragen (nach Protokoll 1 und 2), plus Effizienzbonus in Protokoll 2 (10 Punkte plus 5 pro eingespartem Block).
 * Jedes Team hat 3 Joker. Ein Joker zeigt die nächste Tippstufe (1, 2, 3) des aktuellen Protokolls.
 * Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll).
 * Punkte, Joker, Teamname und Countdown sind immer in der Kopfzeile sichtbar.

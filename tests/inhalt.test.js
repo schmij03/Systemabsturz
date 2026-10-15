@@ -93,3 +93,15 @@ test('Technikcheck bricht hängende Anfragen ab und meldet trotzdem alle Ergebni
     assert.match(nach[id].text, /keine Antwort|nicht erreichbar/, id);
   }
 });
+
+test('Bonusfrage nach Protokoll 2: vier Antworten, nur B ist richtig', async () => {
+  const c = app();
+  const f = c.run('TEXTE.bonusFrage2');
+  assert.match(f.frage, /wiederhole fortlaufend/);
+  assert.deepEqual(Array.from(f.antworten, a => a[0]), ['A', 'B', 'C', 'D']);
+  for (const [buchstabe] of f.antworten) {
+    c.b = buchstabe;
+    assert.equal(await c.run('Krypto.pruefe(b, BONUS2_HASH)'), buchstabe === 'B', buchstabe);
+  }
+  assert.equal(c.run("neuerSpielstand('Team', Date.now() + 600000, null, null).bonus2"), null);
+});

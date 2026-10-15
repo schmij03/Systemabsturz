@@ -41,6 +41,9 @@ const SPERRE_NACH_FEHLER_MS = 2000;
 /** Salz für alle Hashes. Wird es geändert, müssen alle Hashes neu erzeugt werden. */
 const SALZ = 'SYSTEMABSTURZ|';
 
+/** Bonusfrage nach Protokoll 2 (Auswahlfrage, fest): Hash des richtigen Buchstabens */
+const BONUS2_HASH = 'bb33251d2a856a452f1689fdbe6fa715f927e55c6f64581ffc106d16dd7e027e';
+
 /** SHA-256-Hashes der Lösungen (Wert = SHA-256 von SALZ + Code) */
 const HASHES = {
   protokoll1: '93e6f5b9a141d8e670f4d9f4347f3b9ebfe49151ada6418067689b9b29f17de8',
@@ -276,6 +279,17 @@ const TEXTE = {
     'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
   ],
   bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
+  /* Bonusfrage nach Protokoll 2: Auswahlfrage mit einem Versuch */
+  bonusFrage2: {
+    frage: 'Was macht der Block «wiederhole fortlaufend»?',
+    antworten: [
+      ['A', 'Er wiederholt die Blöcke darin genau einmal.'],
+      ['B', 'Er wiederholt die Blöcke darin immer wieder, ohne aufzuhören.'],
+      ['C', 'Er stoppt das ganze Programm.'],
+      ['D', 'Er wiederholt die Blöcke darin 10-mal.']
+    ],
+    falsch: 'Leider falsch. Richtig wäre B: Die Blöcke darin laufen immer wieder, ohne aufzuhören.'
+  },
   /* Texte für die Beamer-Ansicht der Spielleitung.
      {UM_ZEIT} wird überall durch «, um HH:MM Uhr,» ersetzt: die Uhrzeit, zu der
      die Spielleitung «Spiel starten» gedrückt hat (beim Vorlesen weggelassen). */
@@ -1133,6 +1147,7 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
     tippStufe: { 1: 0, 2: 0, 3: 0 },   // freigeschaltete Tipps pro Protokoll
     gratisTipp: { 1: false, 2: false, 3: false },
     bonus: null,                        // null | 'richtig' | 'falsch'
+    bonus2: null,                       // Bonusfrage nach Protokoll 2: null | 'richtig' | 'falsch'
     kiste2: null,                       // entschlüsselter Code nach Protokoll 2
     override: false,
     restBeiOverride: null,
@@ -1734,6 +1749,45 @@ function zeigeErfolg2(neu) {
     banner.classList.add('neu');
     $('.erfolg-weiter', banner).hidden = false;
   }
+  baueBonus2();
+}
+
+/** Bonusfrage nach Protokoll 2: Auswahlfrage, nur ein Versuch. */
+function baueBonus2() {
+  const box = $('#bonus2');
+  const s = Terminal.stand;
+  const f = TEXTE.bonusFrage2;
+  box.hidden = false;
+  $('.bonus-frage', box).textContent = f.frage;
+  const inhalt = $('.bonus-inhalt', box);
+  inhalt.innerHTML = '';
+  if (s.bonus2) {
+    inhalt.appendChild(erstelle('p', s.bonus2 === 'richtig' ? 'ok' : 'fehler',
+      s.bonus2 === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : f.falsch));
+    return;
+  }
+  inhalt.appendChild(erstelle('p', 'klein', 'Freiwillig, nur ein Versuch. Richtig gibt es ' + BONUS_PUNKTE + ' Extrapunkte.'));
+  const auswahl = erstelle('div', 'bonus-auswahl');
+  f.antworten.forEach(function (a) {
+    const knopf = erstelle('button', 'knopf bonus-antwort');
+    knopf.type = 'button';
+    knopf.appendChild(erstelle('strong', '', a[0] + ')'));
+    knopf.appendChild(document.createTextNode(' ' + a[1]));
+    knopf.addEventListener('click', async function () {
+      if (spielGesperrt() || s.bonus2) return;
+      Array.prototype.forEach.call(auswahl.querySelectorAll('.bonus-antwort'), function (k) { k.disabled = true; });
+      const richtig = await Krypto.pruefe(a[0], BONUS2_HASH);
+      if (spielGesperrt() || s.bonus2) return;
+      s.bonus2 = richtig ? 'richtig' : 'falsch';
+      if (richtig) s.punkte += BONUS_PUNKTE;
+      speichere();
+      aktualisiereKopf();
+      Ton.spiele(richtig ? 'erfolg' : 'fehler');
+      baueBonus2();
+    });
+    auswahl.appendChild(knopf);
+  });
+  inhalt.appendChild(auswahl);
 }
 
 /* ----------------------------- Protokoll 3 -------------------------- */
@@ -2472,6 +2526,7 @@ async function zeigeLoesungen() {
       ['Protokoll 1 Erklärung', l.p1info],
       ['Bonusfrage', l.bonus],
       ['Protokoll 2 Signaturen', l.signaturen],
+      ['Bonusfrage Protokoll 2', 'B (' + TEXTE.bonusFrage2.antworten[1][1] + ')'],
       ['Code Kiste 2', l.kiste2],
       ['Protokoll 3 (Override)', l.p3],
       ['Protokoll 3 Erklärung', l.p3info],

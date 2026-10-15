@@ -225,6 +225,14 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 
 .bonus { border: 2px dashed var(--gelb); border-radius: var(--radius); padding: 12px 14px; }
 .bonus h3 { color: var(--gelb); }
+/* Bonusfrage nach Protokoll 2: knapp über dem Programmierbereich */
+.bonus-kompakt { padding: 6px 12px; margin-bottom: 8px; }
+.bonus-kompakt h3 { display: inline; margin: 0 8px 0 0; font-size: 1rem; }
+.bonus-kompakt .bonus-frage { display: inline; margin: 0; font-weight: 700; }
+.bonus-kompakt .bonus-inhalt p { margin: 4px 0; }
+.bonus-auswahl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.bonus-antwort { text-align: left; font-size: 0.95rem; padding: 6px 10px; min-height: 44px; }
+@media (max-width: 700px) { .bonus-auswahl { grid-template-columns: 1fr; } }
 
 /* ---------------------------- Ziffernfeld --------------------------- */
 

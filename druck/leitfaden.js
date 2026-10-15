@@ -87,7 +87,7 @@ var Leitfaden = (function () {
         ['Neue Runde', 'Reiter «3 Nach dem Spiel», «Spiel zurücksetzen (PIN)». Es gibt einen neuen Beitrittscode.']
       ], 'mission notfall') +
       '<h2>Punkte und Help-Desk</h2><ul>' +
-      '<li>Start mit ' + START_PUNKTE + ' Punkten, plus ' + PUNKTE_PRO_PROTOKOLL + ' pro gelöstem Protokoll, plus ' + BONUS_PUNKTE + ' für die Bonusfrage in Protokoll 1.</li>' +
+      '<li>Start mit ' + START_PUNKTE + ' Punkten, plus ' + PUNKTE_PRO_PROTOKOLL + ' pro gelöstem Protokoll, plus ' + BONUS_PUNKTE + ' für jede Bonusfrage (nach Protokoll 1 und nach Protokoll 2, je ein Versuch).</li>' +
       '<li>Effizienzbonus in Protokoll 2: ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' für jeden Block unter dem Limit. Zeitbonus: ' + PUNKTE_PRO_RESTMINUTE + ' Punkt pro übrige Minute.</li>' +
       '<li>Help-Desk: ' + JOKER_ANZAHL + ' Joker pro Team, jeder kostet ' + JOKER_KOSTEN + ' Punkte. Nach ' + GRATIS_TIPP_MINUTEN + ' Minuten ohne Fortschritt gibt es einen Tipp gratis.</li></ul>');
   }
@@ -119,6 +119,7 @@ var Leitfaden = (function () {
       '<h2>Protokoll 2: Algorithmen</h2>' + tabelle(['', ''], [
         ['Signaturen', esc(l.signaturen || '')],
         ['Code Kiste 2', '<strong class="gross">' + esc(l.kiste2 || '') + '</strong>'],
+        ['Bonusfrage', esc(TEXTE.bonusFrage2.frage) + ' Antwort <strong>B</strong>: ' + esc(TEXTE.bonusFrage2.antworten[1][1])],
         ['Regeln', 'Höchstens ' + s.maxBloecke + ' Blöcke, ' + s.energie + ' Felder Energie, Schleife ist Pflicht.'],
         ['Musterlösung', esc(s.musterloesung)]
       ], 'mission loesung') +
