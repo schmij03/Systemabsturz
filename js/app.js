@@ -278,7 +278,7 @@ const TEXTE = {
     'Danach löschen wir alles. Für immer.',
     'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
   ],
-  bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
+  bonusFrage: 'Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen. Bei wie vielen dieser Stellungen wird die Nachricht wirklich verändert, sodass der Geheimtext anders aussieht als der Klartext?',
   /* Bonusfrage nach Protokoll 2: Auswahlfrage mit einem Versuch */
   bonusFrage2: {
     frage: 'Was macht der Block «wiederhole fortlaufend»?',
@@ -1657,7 +1657,7 @@ function baueBonus() {
   inhalt.innerHTML = '';
   if (s.bonus) {
     inhalt.appendChild(erstelle('p', s.bonus === 'richtig' ? 'ok' : 'fehler',
-      s.bonus === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : 'Leider falsch. Überlegt später: Welche Einstellung verändert die Nachricht gar nicht?'));
+      s.bonus === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : 'Leider falsch. Tipp zum Nachdenken: Bei welcher Stellung steht das innere A genau unter dem äusseren A, und was passiert dann mit der Nachricht?'));
     return;
   }
   inhalt.appendChild(erstelle('p', 'klein', 'Freiwillig, nur ein Versuch. Richtig gibt es ' + BONUS_PUNKTE + ' Extrapunkte.'));

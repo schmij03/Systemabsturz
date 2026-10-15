@@ -102,7 +102,7 @@ var Druck = (function () {
         '<p class="feldname" style="margin-top: 7mm"><strong>Verschiebung:</strong> <span style="font-weight: 400">Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</span></p>' +
         '<p class="feldname">Entschlüsselte Nachricht (Klartext):</p>' + linien(4) +
         kaestchen('Code für das Terminal:', 3) +
-        '<div class="kasten"><p><strong>Bonusfrage im Terminal</strong> (ein Versuch, plus 10 Punkte)<br><span style="font-size: 9.5pt">Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich? Überlegt hier, bevor ihr antwortet:</span></p>' + linien(2) + '</div>'
+        '<div class="kasten"><p><strong>Bonusfrage im Terminal</strong> (ein Versuch, plus 10 Punkte)<br><span style="font-size: 9.5pt">Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen. Bei wie vielen dieser Stellungen wird die Nachricht wirklich verändert, sodass der Geheimtext anders aussieht als der Klartext? Überlegt hier, bevor ihr antwortet:</span></p>' + linien(2) + '</div>'
     }, st);
     var s2 = seite({
       ober: 'SICHERHEITSPROTOKOLL 1  ·  BASTELVORLAGE 1 VON 2', titel: 'Chiffrierscheibe: grosse Scheibe', teil: 'Protokoll 1',
