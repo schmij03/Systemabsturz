@@ -274,7 +274,7 @@ const TEXTE = {
     titel: 'SPIELANWEISUNG',
     absaetze: [
       'Ihr seid die Notfall-Teams unserer Schule. Jedes Team erhält ein Tablet oder einen Laptop, einen Auftrag auf Papier, eine Chiffrierscheibe für Protokoll 1 und einen Netzwerkplan für Protokoll 3.',
-      'Öffnet auf eurem Gerät das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht. Tippt oder klickt danach auf «Wir sind bereit».',
+      'Öffnet auf eurem Gerät das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht, und tippt oder klickt auf «Spiel starten». Danach tippt oder klickt ihr auf «Wir sind bereit».',
       'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jedes geknackte Protokoll schaltet das nächste frei. Mit dem letzten Code löst ihr den Override aus.',
       'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte.',
       'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf eurem Gerät. Viel Erfolg!'
@@ -1373,6 +1373,7 @@ function initTerminal() {
   }
   Terminal.stand = stand;
   speichereSpielstand(stand);
+  if (stand.tippNeu) $('#helpdesk-knopf').classList.add('blinkt');
 
   $('#team-name').textContent = stand.team;
   $('#helpdesk-knopf').addEventListener('click', oeffneHelpDesk);
@@ -1604,6 +1605,7 @@ function tick() {
       s.gratisTipp[p] = true;
       s.tippStufe[p] = 1;
       toast('Gratis-Tipp freigeschaltet! Öffnet den Help-Desk.', 'info');
+      s.tippNeu = true;   // Abzeichen «1 neu», bleibt nach dem Neuladen
       $('#helpdesk-knopf').classList.add('blinkt');
       Ton.spiele('klick');
       speichere();
@@ -1668,6 +1670,7 @@ function protokollGeloest(p) {
   aktualisiereKopf();
   aktualisiereTabs();
   aktualisiereHelpDesk();
+  Terminal.stand.tippNeu = false;
   $('#helpdesk-knopf').classList.remove('blinkt');
 }
 
@@ -1953,6 +1956,10 @@ function zeigeSieg(neu) {
 function oeffneHelpDesk() {
   Ton.spiele('klick');
   $('#helpdesk-knopf').classList.remove('blinkt');
+  if (Terminal.stand && Terminal.stand.tippNeu) {
+    Terminal.stand.tippNeu = false;
+    speichere();
+  }
   aktualisiereHelpDesk();
   $('#helpdesk').classList.add('offen');
   $('#helpdesk').setAttribute('aria-hidden', 'false');

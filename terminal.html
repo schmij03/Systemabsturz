@@ -83,14 +83,16 @@
         <div class="p2-blockly">
           <div id="blockly"></div>
           <div id="blockly-sperre" hidden>Programm läuft. Zum Ändern zuerst «Pause» drücken.</div>
+          <p id="lose-hinweis" class="lose-hinweis" hidden>Graue Blöcke hängen nicht am Programm und werden nicht ausgeführt.</p>
         </div>
         <div class="p2-labyrinth">
           <div class="signatur-leiste">Signaturen: <span id="signaturen"></span><span class="p2-zaehler"><span id="stufe-info" class="zaehler"></span><span id="block-zaehler" class="zaehler"></span><span id="energie-zaehler" class="zaehler"></span></span></div>
           <div class="svg-box"><svg id="labyrinth" xmlns="http://www.w3.org/2000/svg"></svg></div>
+          <p class="p2-hinweis">Rechts und links aus Sicht von ANTI-V (oranger Pfeil = Blickrichtung). Jedes Feld kostet 1 Energie.</p>
           <div class="algo-knoepfe">
             <button type="button" id="algo-start" class="knopf primaer">▶ Programm starten</button>
             <button type="button" id="algo-schritt" class="knopf">Schritt für Schritt</button>
-            <button type="button" id="algo-reset" class="knopf">Zurücksetzen</button>
+            <button type="button" id="algo-reset" class="knopf">Zurück zum Start</button>
           </div>
           <label class="tempo">Tempo <span class="klein">langsam</span><input type="range" id="algo-tempo"><span class="klein">schnell</span></label>
           <div id="algo-meldung" class="algo-meldung" role="status"></div>

@@ -108,7 +108,7 @@ wiederhole bis Ziel erreicht
 
 ### Test B: Programm ohne «nicht»
 
-Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entfernen, sodass nur noch «rechts frei?» und «vorne frei?» als Bedingungen stehen. «Zurücksetzen», dann «Programm starten». Erwartung:
+Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entfernen, sodass nur noch «rechts frei?» und «vorne frei?» als Bedingungen stehen. «Zurück zum Start», dann «Programm starten». Erwartung:
 
 * Die Leiste zeigt «3 8 _».
 * ANTI-V biegt bei (7,5) nach rechts ab und betritt das rote Feld **(8,5)**.

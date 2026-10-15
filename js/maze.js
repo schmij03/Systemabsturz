@@ -294,8 +294,8 @@ const Maze = (function () {
     el('rect', { x: -8, y: -6, width: 16, height: 9, rx: 3, fill: '#263238' }, roboterKoerper);
     el('circle', { cx: -4, cy: -2, r: 2.2, fill: '#76ff03' }, roboterKoerper);
     el('circle', { cx: 4, cy: -2, r: 2.2, fill: '#76ff03' }, roboterKoerper);
-    el('line', { x1: 0, y1: -11, x2: 0, y2: -17, stroke: '#00acc1', 'stroke-width': 2 }, roboterKoerper);
-    el('path', { d: 'M0 -20 L5 -14 L-5 -14 Z', fill: '#ff9100' }, roboterKoerper); // Blickrichtung
+    el('line', { x1: 0, y1: -11, x2: 0, y2: -13, stroke: '#00acc1', 'stroke-width': 2 }, roboterKoerper);
+    el('path', { d: 'M0 -21 L9 -12 L-9 -12 Z', fill: '#ff9100', stroke: '#000', 'stroke-width': 1 }, roboterKoerper); // Blickrichtung
     el('rect', { x: -9, y: 6, width: 18, height: 3, rx: 1.5, fill: '#00acc1' }, roboterKoerper);
 
     meldungText = el('text', { x: 0, y: 0, 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 'bold', fill: '#ff5252', 'font-family': 'monospace', class: 'maze-meldung', opacity: 0 }, svg);

@@ -299,6 +299,8 @@ const Algorithmen = (function () {
     if (!el) return;
     el.textContent = 'Blöcke ' + n + ' / ' + max + (lose ? ' (+' + lose + ' lose)' : '');
     el.classList.toggle('voll', n === max);
+    const hinweis = document.getElementById('lose-hinweis');
+    if (hinweis) hinweis.hidden = !lose;
     el.classList.toggle('zuviel', n > max);
     if (n > max) el.title = 'Euer Programm hat ' + (n - max) + (n - max === 1 ? ' Block' : ' Blöcke') + ' zu viel. So startet es nicht.';
     else if (lose && ws.remainingCapacity() <= 0) el.title = 'Kein Platz mehr. Löscht lose Blöcke, um neue zu holen.';
@@ -311,6 +313,7 @@ const Algorithmen = (function () {
     if (!el) return;
     const max = Maze.stufe().energie;
     el.textContent = 'Energie ' + (max - zustand.felder) + ' / ' + max;
+    el.title = 'Jedes Feld kostet 1 Energie. ANTI-V darf höchstens ' + max + ' Felder gehen, für Umwege reicht sie nicht.';
     el.classList.toggle('leer', zustand.felder >= max && zustand.status !== 'ziel');
   }
 
