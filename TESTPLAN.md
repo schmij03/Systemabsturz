@@ -1,6 +1,6 @@
 # Testplan «Systemabsturz»
 
-Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
+Technische Kontrolle vor jedem Einsatz auf einem Tablet (Safari auf iPad, Chrome oder Edge auf einem Laptop). Dauer etwa 15 Minuten. Vor dem ersten Einsatz das Spiel zusätzlich einmal ganz selbst lösen, wie im Leitfaden auf Seite 3 «Zuerst selbst ausprobieren» beschrieben.
 
 ## Technikcheck
 
@@ -41,7 +41,7 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 1. Auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» die Kachel «Gesamtes Dossier» öffnen. Erwartung: Die Stufe der Spielleitung ist vorgewählt, oben lässt sie sich umstellen. Drucken. Erwartung: 7 A4-Seiten, die Chiffrierscheiben in voller Grösse (gross 172 mm, klein 142 mm), Seite 7 (Netzwerkplan) quer und farbig. «Als HTML herunterladen», die Datei ohne Internet öffnen: gleiche 7 Seiten.
 2. «▶ Spiel starten». Erwartung: Vollbild, Botschaft von NULLBYTE mit Maske und Stimme.
 3. Nach der Botschaft (oder Taste → bzw. Leertaste): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben. Es sind keine Knöpfe sichtbar. Taste R liest nochmals vor, → oder Enter gibt die Aufgaben sofort frei.
-4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
+4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Die gesprochene Anweisung nennt beide Schritte. Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
 5. Ende der Anweisung. Erwartung Beamer: Countdown läuft, Story «Euer Auftrag», Beitrittscode klein oben. Erwartung Tablet nach wenigen Sekunden: «AUFGABEN EMPFANGEN», dann Protokoll 1 mit demselben Countdown, 100 Punkte, drei Joker.
 6. Ein zweites Tablet erst jetzt anmelden. Erwartung: Es startet sofort mit derselben Restzeit.
 7. Notfall ohne Internet: WLAN auf einem Tablet ausschalten, anmelden. Erwartung: rote Meldung «Keine Verbindung». «Spielleitung: manuell starten (PIN)» startet das Tablet.
@@ -52,19 +52,19 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 Die Steuerung zeigt oben immer Phase, Beitrittscode, Stufe und Restzeit. Der passende Reiter öffnet sich automatisch: vor dem Start «1 Vorbereiten», nach der Freigabe «2 Spiel durchführen», nach «System gerettet» oder Zeitablauf «3 Nach dem Spiel».
 
 1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 eingeben, «Übernehmen (PIN)». Erwartung: «Verschiebung 4 (A wird zu E)», Vorschau zeigt den neuen Geheimtext, Unterschrift RYPPFCXI. Stufe auf «Mittel» stellen: Verschiebung 6, Unterschrift TARRHEZK. Auf «Schwer»: Verschiebung 8, Unterschrift VCTTJGBM. Danach wieder «Leicht».
-2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
+2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 knackt Protokoll 1.
 3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
 4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 136 (sauberer Umweg) ergibt «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
 5. «Standard» stellt Code 729 wieder her (Verschiebung weiterhin nach Stufe).
-6. Ohne Spielleitung: `index.html?stufe=mittel` öffnen und manuell starten. Erwartung: Geheimtext endet auf TARRHEZK, 729 öffnet Protokoll 1, Tipp 3 nennt «innen G».
+6. Ohne Spielleitung: `index.html?stufe=mittel` öffnen und manuell starten. Erwartung: Geheimtext endet auf TARRHEZK, 729 knackt Protokoll 1, Tipp 3 nennt «innen G».
 
 ## Netzwerkpläne (Protokoll 3) prüfen
 
 Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn der kürzeste saubere Weg nicht eindeutig ist).
 
-* Leicht: A, F, G, C, D, E, Z = 12 + 13 + 12 + 23 + 10 + 15 + 24 = **109**. Fallen zum Beispiel 100, 115, 117.
-* Mittel: A, B, G, H, L, P, Q, Z = 12 + 14 + 9 + 17 + 14 + 14 + 5 + 24 = **109**. Fallen zum Beispiel 096, 102, 103.
-* Schwer: A, Q, R, S, M, H, I, J, K, Z = 12 + 4 + 6 + 7 + 9 + 7 + 16 + 16 + 8 + 24 = **109**. Fallen zum Beispiel 066, 074, 104.
+* Leicht: A, F, G, C, D, E, Z = 12 + 13 + 12 + 23 + 10 + 15 + 24 = **109**. Fallen zum Beispiel 100, 115, 117. Saubere Umwege 136, 138, 163, 165, 190.
+* Mittel: A, B, G, H, L, P, Q, Z = 12 + 14 + 9 + 17 + 14 + 14 + 5 + 24 = **109**. Fallen zum Beispiel 096, 102, 103. Saubere Umwege 131, 165.
+* Schwer: A, Q, R, S, M, H, I, J, K, Z = 12 + 4 + 6 + 7 + 9 + 7 + 16 + 16 + 8 + 24 = **109**. Fallen zum Beispiel 066, 074, 104. Saubere Umwege 150, 151, 154, 171.
 
 ## Protokoll 1
 
@@ -72,7 +72,9 @@ Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn de
 |---|---|
 | 123 eingeben, Bestätigen | Fehlerton, «ZUGRIFF VERWEIGERT», Ziffernfeld 2 Sekunden gesperrt |
 | 729 eingeben, Bestätigen | Erfolgston, «PROTOKOLL 1 GEKNACKT. Code 729 akzeptiert, Protokoll 2 ist freigeschaltet.», 120 Punkte, Tab 2 freigeschaltet |
-| Bonusfrage: 25 | «Richtig! Plus 10 Punkte.», 130 Punkte, kein zweiter Versuch möglich |
+| Bonusfrage «Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen …»: 25 | «Richtig! Plus 10 Punkte.», 130 Punkte, kein zweiter Versuch möglich |
+| Bei einer falschen Antwort (zum Beispiel 26) | «Leider falsch. Tipp zum Nachdenken: Bei welcher Stellung steht das innere A genau unter dem äusseren A …», keine Punkte |
+| Druckblatt Protokoll 1, Bauanleitung | Letzter Schritt «So entschlüsselt ihr: Sucht jeden Buchstaben der Nachricht innen auf der roten Scheibe …» |
 
 ## Protokoll 2 (wichtigster Test)
 
@@ -93,6 +95,8 @@ wiederhole bis Ziel erreicht
     sonst
       drehe dich nach links
 ```
+
+Vor dem Start: Die Story nennt «ANTI-V sammelt jede gelbe Zahl ein, über die er läuft», unter dem Labyrinth steht «Rechts und links aus Sicht von ANTI-V (oranger Pfeil = Blickrichtung). Jedes Feld kostet 1 Energie.» Der orange Pfeil am Roboter ist gut erkennbar.
 
 «Programm starten» drücken. Erwartung:
 
@@ -120,6 +124,8 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 |---|---|
 | Nur «drehe dich nach links» und «gehe 1 Feld vor» anhängen | ANTI-V stösst an die Mauer, «Mauer!» |
 | «wiederhole bis Ziel erreicht» mit nur «drehe dich nach rechts» | Abbruch: «Endlosschleife? ANTI-V dreht sich im Kreis.» |
+| Programm, das das Ziel über andere Zahlen erreicht (Stufe mittel, zum Beispiel über 1 und 2) | «Ziel erreicht, aber falsche Signaturen (…). ANTI-V hat einen anderen Weg genommen. Der richtige Weg führt über genau 3 Signaturen.» |
+| Einen Block lose in den Arbeitsbereich legen | Hinweis unten im Arbeitsbereich «Graue Blöcke hängen nicht am Programm und werden nicht ausgeführt.», verschwindet nach dem Anhängen |
 | Nur «gehe 1 Feld vor» ohne Schleife | «Ihr müsst mit der Schleife «wiederhole bis Ziel erreicht» arbeiten.» |
 | 15 Blöcke anhängen (Stufe schwer) | Anzeige «Blöcke 15 / 15» gelb |
 | Danach 2 Blöcke lose daneben legen | Anzeige «Blöcke 15 / 15 (+2 lose)», lose Blöcke grau, Programm startet normal |
@@ -130,12 +136,13 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 ### Stufen leicht und mittel
 
 1. Auf der Spielleitung die Stufe «Leicht» wählen und ein Tablet starten (oder `index.html?stufe=leicht`). Erwartung: Spirallabyrinth, Toolbox ohne Operatoren, «Blöcke 0 / 5», «Energie 38 / 38».
-2. Programm: wiederhole bis Ziel erreicht { falls vorne frei? dann gehe 1 Feld vor, sonst drehe dich nach rechts }. Erwartung: 3, 8, 5, Code 642, Effizienzbonus 10.
+2. Programm: wiederhole bis Ziel erreicht { falls vorne frei? dann gehe 1 Feld vor, sonst drehe dich nach rechts }. Erwartung: 3, 8, 5, «Protokoll 3 ist freigeschaltet», Effizienzbonus 10.
 3. Gleiches Programm mit «drehe dich nach links». Erwartung: «Energie leer!».
 4. Stufe «Mittel»: Musterlösung ohne «und» und «nicht» (9 Blöcke) erreicht das Ziel mit 3, 8, 5.
-| «Schritt für Schritt» mehrmals drücken | Je ein Block wird ausgeführt und hervorgehoben |
-| Tempo-Regler verschieben | Animation wird schneller oder langsamer |
-| Seite neu laden | Das gebaute Programm ist noch da |
+5. «Schritt für Schritt» mehrmals drücken: Je ein Block wird ausgeführt und hervorgehoben.
+6. Tempo-Regler verschieben: Die Animation wird schneller oder langsamer.
+7. «Zurück zum Start»: ANTI-V steht wieder am Start, das Programm bleibt.
+8. Seite neu laden: Das gebaute Programm ist noch da.
 
 ## Protokoll 3
 
@@ -152,7 +159,8 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 | Schritt | Erwartung |
 |---|---|
 | Help-Desk öffnen, Joker einlösen | Bestätigungsdialog, danach Tipp Stufe 1 sichtbar, minus 20 Punkte, ein Joker weniger in der Kopfzeile |
-| 5 Minuten in einem Protokoll nichts lösen | Hinweis «Gratis-Tipp freigeschaltet», Stufe 1 ist mit «(gratis)» markiert, kein Joker verbraucht |
+| 5 Minuten in einem Protokoll nichts lösen | Hinweis «Gratis-Tipp freigeschaltet», Help-Desk-Knopf blinkt mit Abzeichen «1 neu» (auch nach dem Neuladen), Stufe 1 ist mit «(gratis)» markiert, kein Joker verbraucht |
+| Help-Desk öffnen und Seite neu laden | Abzeichen «1 neu» ist weg |
 | Alle 3 Joker verbrauchen | «Keine Joker mehr. Wendet euch an die Spielleitung.» |
 
 ## Vorlesen und NULLBYTE

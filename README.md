@@ -44,6 +44,13 @@ Die Startseite für die Teams ist dann `https://BENUTZERNAME.github.io/REPOSITOR
 
 Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Branch `main` liegen. Wird auf einem anderen Branch entwickelt, diesen zuerst in `main` mergen.
 
+## Vor dem ersten Einsatz
+
+* **Selbst ausprobieren:** Das Spiel einmal ganz durchspielen (ca. 45 Minuten), am besten im Schulzimmer mit dem WLAN der Schule: Spielleitung auf dem Laptop, ein zweites Fenster oder Tablet als Team. Anleitung in Schritten im Leitfaden, Seite 3 «Zuerst selbst ausprobieren».
+* **Voraussetzungen der Klasse:** Auf Stufe leicht ohne Vorwissen spielbar. Für mittel helfen Scratch-Grundlagen (Schleife, «falls dann sonst»), für schwer zusätzlich «und» und «nicht». Die Cäsar-Verschlüsselung vorher nicht erklären, sie ist Teil des Rätsels. Details im Leitfaden, Seite 2 «Was die Klasse mitbringen sollte».
+* **Material:** pro Team ein Dossier (7 Seiten, die Bastelvorlagen der Chiffrierscheibe auf festem Papier), eine Schere, eine Musterklammer, Stifte und ein geladenes Tablet oder Laptop. Für die Lehrperson der Leitfaden mit Lösungen. Weitere Gegenstände wie Kisten oder Schlösser braucht es nicht.
+* **Technikcheck** auf der Spielleitung und auf einem Gerät der Teams (siehe unten).
+
 ## Ablauf in der Lektion
 
 1. **Material drucken** (auf `spielleitung.html` im Reiter «1 Vorbereiten», Abschnitt «Material drucken»): pro Team ein **Teamset** der gewählten Stufe, 7 Seiten im Layout der Word-Vorlagen (rote Linie, Oberzeile, Titel mit Stufen-Abzeichen):
@@ -55,9 +62,9 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
    * Druckeinstellung A4, «Tatsächliche Grösse» (100 %), farbig. Der Netzwerkplan druckt automatisch quer.
    * **Leitfaden für die Spielleitung** (Kachel «Leitfaden Spielleitung», `druck/leitfaden.html`, 11 Seiten im gleichen Layout): Vorbereitung mit Checkliste, Voraussetzungen der Klasse (Vorwissen je Protokoll, passende Stufe, was tun bei fehlendem Vorwissen), Testlauf für die Lehrperson vor dem ersten Einsatz, Druckliste und Material, Ablauf der Lektion, Tastatur, Notfälle, Punkte, Lösungen der gewählten Stufe, alle Help-Desk-Tipps und die Unterrichtsinfo. Die Lösungen (und die PIN) werden erst nach Eingabe der PIN eingeblendet. Das verhindert versehentliches Anzeigen, ist aber kein Zugriffsschutz gegenüber Personen mit Zugriff auf den Quellcode. Drucken oder «Als HTML herunterladen» (mit Lösungen, wenn sie eingefügt sind). Inhalt in `druck/leitfaden.js`.
    * Inhalt aller Blätter: `druck/seiten.js`, Gestaltung: `druck/druck.css`. Nach Änderungen die Download-Dateien mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
-2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, Schwierigkeit für Protokoll 2 wählen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
+2. **Vorbereitung:** Auf dem Beamer-Laptop `spielleitung.html` öffnen, die Stufe wählen (gilt für alle drei Protokolle) und bei Bedarf einen eigenen Code für Protokoll 1 einstellen. Tablets liegen mit geöffneter Startseite `index.html` bereit.
 3. **Spiel starten:** «▶ Spiel starten» drücken. Der Beamer wechselt in den **Vollbildmodus** und **NULLBYTE meldet sich** mit Maske, getipptem Text und Hackerstimme.
-4. **Spielanweisung:** Direkt nach der Botschaft erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein und tippen auf «Wir sind bereit». Die Tablets warten verdeckt.
+4. **Spielanweisung:** Direkt nach der Botschaft erscheint die **Spielanweisung**, darüber gross der **Beitrittscode** (fünf Buchstaben) und die Adresse des Notfall-Terminals. Die Anweisung wird Absatz für Absatz vorgelesen und hervorgehoben. **Jetzt verteilt ihr das gedruckte Material.** Die Teams geben Teamname und Beitrittscode ein, tippen auf «Spiel starten» und danach auf «Wir sind bereit». Die Tablets warten verdeckt.
 5. **Aufgaben erhalten:** Am Ende der Anweisung startet automatisch der Countdown auf dem Beamer und alle Tablets erhalten innerhalb weniger Sekunden ihre Aufgaben («Aufgaben empfangen», Protokoll 1). Der Beitrittscode bleibt klein auf der Leinwand, damit Nachzügler noch einsteigen können (sie starten sofort mit derselben Restzeit).
 6. Abkürzen: Während der Botschaft sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. In der Anweisung gibt <kbd>→</kbd> oder <kbd>Enter</kbd> die Aufgaben sofort frei, in der Steuerung unter «Probleme?» «Aufgaben sofort freigeben».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
@@ -80,7 +87,7 @@ Ohne Startsignal funktioniert weiterhin die Synchronisation über die Uhrzeit: I
 
 Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 
-* **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt die **Verschiebung der Chiffrierscheibe in Protokoll 1** (Leicht 4, Mittel 6, Schwer 8), das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Bereich «Material herunterladen und drucken», die gewählte Stufe ist markiert). Der Override-Code ist auf allen Stufen 109.
+* **Schwierigkeit** Leicht, Mittel oder Schwer. Sie bestimmt die **Verschiebung der Chiffrierscheibe in Protokoll 1** (Leicht 4, Mittel 6, Schwer 8), das Labyrinth in Protokoll 2 und den **Netzwerkplan in Protokoll 3** (inklusive Tipps und Fallen). Druckt das passende Teamset (Abschnitt «C Material drucken», die gewählte Stufe ist vorgewählt). Die Übersicht unter der Stufenwahl zeigt pro Stufe, was sie schwierig macht (Protokoll 2: «Einfacher Weg», «Abzweigungen», «Infizierte Felder meiden» mit Blocklimit). Der Override-Code ist auf allen Stufen 109.
 
 | Stufe | Protokoll 1 | Netzwerk Protokoll 3 | Richtiger Weg (Summe 109) | Schwierigkeit |
 |---|---|---|---|---|
@@ -88,15 +95,18 @@ Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 | Mittel | Verschiebung 6 (A wird zu G, Unterschrift TARRHEZK) | 18 Server, 5 infiziert, 32 Verbindungen | A, B, G, H, L, P, Q, Z (7 Verbindungen) | Alle kurzen Wege sind infiziert, der saubere Weg führt im Zickzack von oben nach unten |
 | Schwer | Verschiebung 8 (A wird zu I, Unterschrift VCTTJGBM) | 22 Server, 7 infiziert, 38 Verbindungen | A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen) | Viele verlockende Abkürzungen, der saubere Weg beginnt ganz unten und steigt quer durchs Netz |
 
-Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Umwege: Gibt ein Team die Summe eines sauberen, aber längeren Weges ein, meldet das Terminal «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Danach die Teamsets mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
+Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Umwege: Gibt ein Team die Summe eines sauberen, aber längeren Weges ein, meldet das Terminal «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Hashes für `HASHES.protokoll3Fallen` und `HASHES.protokoll3Umwege` in `js/app.js` erzeugen (der Konfigurationsgenerator der Spielleitung rechnet beides ebenfalls mit). Danach die Teamsets mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 
 * **Code für Protokoll 1:** Eigenen dreistelligen Code eingeben (freiwillig), «Übernehmen (PIN)». Die Verschiebung ergibt sich aus der Stufe und passt sich bei einem Stufenwechsel automatisch an. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
 * Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`. Der Geheimtext für die anderen Stufen wird daraus automatisch umgeschlüsselt. Die Verschiebungen je Stufe stehen in `P1_VERSCHIEBUNG_STUFEN`.
 
 ### Die drei Protokolle
 
-* **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln, dreistelligen Code im Terminal eingeben. Das schaltet Protokoll 2 frei. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte).
-* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg wird Protokoll 3 freigeschaltet. Danach folgt eine freiwillige Bonusfrage mit vier Antworten zum Block «wiederhole bis Ziel erreicht» (ein Versuch, plus 10 Punkte).
+Jedes gelöste Protokoll schaltet im Terminal das nächste frei. Weitere Gegenstände (Kisten, Schlösser) braucht es nicht.
+
+* **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln (Buchstaben innen auf der roten Scheibe suchen, aussen ablesen), dreistelligen Code im Terminal eingeben. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte): Bei wie vielen der 26 Stellungen der Scheibe wird die Nachricht wirklich verändert? Antwort 25.
+* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. ANTI-V sammelt jede gelbe Zahl ein, über die er läuft. Er muss das Ziel erreichen und dabei genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Danach folgt eine freiwillige Bonusfrage mit vier Antworten: Wann hört «wiederhole bis Ziel erreicht» auf? Antwort B, sobald ANTI-V auf dem Zielfeld steht (ein Versuch, plus 10 Punkte).
+* **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den Weg von A nach Z mit den wenigsten Verbindungen ohne infizierte Server finden, erst danach die Kennzahlen addieren und die Summe als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
 
 ### Protokoll 2: Regeln, Stufen und Effizienzbonus
 
@@ -112,14 +122,20 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 | Mittel (Standard) | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
 | Schwer | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
 
-Die Signaturen sind auf allen Stufen 3, 8, 5. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
-* **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den Weg mit den wenigsten Verbindungen ohne infizierte Server finden, die Kennzahlen addieren und als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
+Die Signaturen sind auf allen Stufen 3, 8, 5. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an und führen in drei Stufen näher zur Lösung, ohne das Programm vollständig vorzugeben.
+
+**Hilfen im Terminal:**
+
+* Unter dem Labyrinth steht: «Rechts und links aus Sicht von ANTI-V (oranger Pfeil = Blickrichtung). Jedes Feld kostet 1 Energie.»
+* Liegen lose Blöcke im Arbeitsbereich, erscheint «Graue Blöcke hängen nicht am Programm und werden nicht ausgeführt.»
+* Erreicht ANTI-V das Ziel mit falschen Zahlen, nennt die Meldung die eingesammelten Zahlen, zum Beispiel «Ziel erreicht, aber falsche Signaturen (3, 1, 2). ANTI-V hat einen anderen Weg genommen.» oder «… nur 1 Signatur eingesammelt (3).»
+* «Zurück zum Start» setzt ANTI-V zurück, das Programm bleibt erhalten.
 
 ### Help-Desk und Punkte
 
 * Start mit 100 Punkten, plus 20 pro gelöstem Protokoll, minus 20 pro Joker, plus 1 Punkt pro volle Minute Restzeit beim Override, plus 10 für jede der beiden Bonusfragen (nach Protokoll 1 und 2), plus Effizienzbonus in Protokoll 2 (10 Punkte plus 5 pro eingespartem Block).
 * Jedes Team hat 3 Joker. Ein Joker zeigt die nächste Tippstufe (1, 2, 3) des aktuellen Protokolls.
-* Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll).
+* Wird in einem Protokoll 5 Minuten lang nichts gelöst, erscheint Tippstufe 1 gratis (einmal pro Protokoll). Der Help-Desk-Knopf blinkt dann und zeigt das Abzeichen «1 neu», auch nach dem Neuladen, bis das Team den Help-Desk öffnet.
 * Punkte, Joker, Teamname und Countdown sind immer in der Kopfzeile sichtbar.
 
 ### Uhrzeit des Absturzes

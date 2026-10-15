@@ -42,6 +42,7 @@ var Leitfaden = (function () {
       '<p class="zeile">Protokoll 1: Verschiebung ' + p1Verschiebung(st) + ' (A wird zu ' + caesar('A', p1Verschiebung(st)) + ')  ·  Protokoll 2: ' + (s.kurz ? s.kurz + ', ' : '') + 'höchstens ' + s.maxBloecke + ' Blöcke, ' + s.energie + ' Felder Energie  ·  Protokoll 3: ' + Object.keys(netz.server).length + ' Server</p>' +
       '<p class="zeile">Spielzeit ' + SPIELDAUER_MINUTEN + ' Minuten, dazu Einstieg (ca. 5 Minuten) und Auswertung (10 bis 15 Minuten).</p></div>' +
       '<h2>Vor der Lektion (ca. 15 Minuten)</h2>' + haken([
+        '<strong>Erster Einsatz?</strong> Zuerst Seite 2 (Voraussetzungen der Klasse) und Seite 3 (selbst ausprobieren, Druckliste) lesen.',
         'Auf der Spielleitung im Reiter «1 Vorbereiten» die <strong>Stufe</strong> wählen und bei Bedarf einen eigenen <strong>Code für Protokoll 1</strong> einstellen.',
         'Pro Team ein <strong>Dossier</strong> der gewählten Stufe drucken (7 Seiten, A4, «Tatsächliche Grösse», farbig). Chiffrierscheiben auf festes Papier.',
         'Chiffrierscheiben vorbereiten: ausschneiden und mit einer Musterklammer verbinden (oder als erste Teamaufgabe).',
@@ -108,7 +109,7 @@ var Leitfaden = (function () {
   function ablauf(st) {
     return seite(st, 'SPIELLEITUNG  |  ABLAUF', 'Ablauf der Lektion',
       tabelle(['Phase', 'Was passiert', 'Spielleitung'], [
-        ['Einstieg<br>ca. 5 Min.', '«▶ Spiel starten»: Vollbild, Botschaft von NULLBYTE, danach die Spielanweisung mit dem <strong>Beitrittscode</strong>. Die Teams melden sich mit Teamname und Code an und warten.', 'Material verteilen, Teams zu 3 bis 4 Personen bilden.'],
+        ['Einstieg<br>ca. 5 Min.', '«▶ Spiel starten»: Vollbild, Botschaft von NULLBYTE, danach die Spielanweisung mit dem <strong>Beitrittscode</strong>. Die Teams geben Teamname und Code ein, tippen auf «Spiel starten» und «Wir sind bereit» und warten.', 'Material verteilen, Teams zu 3 bis 4 Personen bilden.'],
         ['Spielphase<br>' + SPIELDAUER_MINUTEN + ' Min.', 'Am Ende der Anweisung startet der Countdown, alle Geräte erhalten gleichzeitig ihre Aufgaben. Protokoll 1, 2 und 3 der Reihe nach.', 'Beobachten, nicht vorschnell helfen. Hat ein Team den Override ausgelöst: «System gerettet».'],
         ['Auswertung<br>10 bis 15 Min.', 'Endpunktestände vergleichen, Lösungswege besprechen.', 'Reflexionsfragen siehe «Einsatz im Unterricht».']
       ], 'mission ablauf') +
@@ -129,6 +130,8 @@ var Leitfaden = (function () {
         ['Ein Gerät wartet noch, obwohl das Spiel läuft', 'Reiter «2 Spiel durchführen», «Probleme?», «Startsignal erneut senden».'],
         ['Ein Team hat die Seite neu geladen', 'Kein Problem: Spielstand, Punkte und Countdown bleiben erhalten.'],
         ['Gerät für die nächste Runde', 'Nichts löschen: Die Teams tippen nach Spielende auf «Neues Spiel» oder melden sich auf der Startseite mit dem neuen Beitrittscode an. Mitten im Spiel: unten rechts «Spielleitung», PIN, «Spiel zurücksetzen».'],
+        ['Protokoll 2: Team weiss nicht, welche Zahlen zählen', 'ANTI-V sammelt jede gelbe Zahl auf seinem Weg. Nur der richtige Weg führt über genau 3, 8, 5. Die Meldung im Terminal nennt die eingesammelten Zahlen.'],
+        ['Protokoll 3: «Euer Weg ist sauber, aber …»', 'Der Weg meidet die roten Server, hat aber zu viele Verbindungen. Hinweis: Verbindungen (Linien) zählen, nicht die Kennzahlen.'],
         ['Kein Ton', 'Lautstärke prüfen und einmal auf den Bildschirm tippen oder klicken. Browser erlauben Ton erst nach einer Berührung.'],
         ['Neue Runde', 'Reiter «3 Nach dem Spiel», «Spiel zurücksetzen (PIN)». Es gibt einen neuen Beitrittscode.']
       ], 'mission notfall') +
