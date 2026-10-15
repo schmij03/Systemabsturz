@@ -62,7 +62,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 6. Abkürzen: Während der Botschaft sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. In der Anweisung gibt <kbd>→</kbd> oder <kbd>Enter</kbd> die Aufgaben sofort frei, in der Steuerung unter «Probleme?» «Aufgaben sofort freigeben».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
-Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode; Schwierigkeit und eigener Code für Kiste 1 bleiben erhalten) und die Tablets zurücksetzen.
+Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode; Schwierigkeit und eigener Code für Kiste 1 bleiben erhalten). Die Geräte der Teams müssen nicht zurückgesetzt werden: Nach Spielende tippen die Teams auf «Neues Spiel», oder sie melden sich auf der Startseite mit dem neuen Beitrittscode an.
 
 ### Wie kommt das Startsignal auf die Tablets?
 
@@ -148,7 +148,16 @@ Warum keine Online-Dienste wie ElevenLabs, OpenAI oder Google? Diese brauchen ei
 
 Das Terminal zeigt «SYSTEM GELÖSCHT», alle Eingaben sind gesperrt, der Punktestand bleibt sichtbar.
 
-### Tablets zurücksetzen
+### Geräte für eine neue Runde
+
+Browserdaten müssen nie gelöscht werden.
+
+* **Spiel beendet** (Override, «SYSTEM GELÖSCHT» oder Zeit abgelaufen): Im Terminal «Neues Spiel» tippen. Auf der Startseite erscheint direkt die Anmeldung.
+* **Noch angemeldet oder Spiel läuft:** Die Startseite zeigt «Weiter zum Terminal» und darunter die Anmeldung. Wer sich mit einem neuen Beitrittscode anmeldet, ersetzt nach einer Rückfrage den alten Spielstand. Mit dem gleichen Code geht es im laufenden Spiel weiter.
+* **Wartet auf das Startsignal mit einem alten Code:** Im Warteschirm «Anderer Beitrittscode? Neu anmelden».
+* Eine Anmeldung, die seit mehr als 6 Stunden auf das Startsignal wartet, gilt als beendet.
+
+### Gerät mit PIN zurücksetzen
 
 Auf dem Tablet unten rechts auf «Spielleitung» tippen und die PIN eingeben (Standard **4711**). Danach wählt ihr «Spiel zurücksetzen» (mit Bestätigung) oder «Zur Spielleitungsansicht», um vom Tablet aus die Spielleitung zu öffnen. Der Spielstand liegt nur im Browser des jeweiligen Geräts (localStorage).
 

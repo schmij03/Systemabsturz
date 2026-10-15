@@ -1160,6 +1160,23 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
 }
 
 function ladeSpielstand() { return ladeJson(SPEICHER_TEAM); }
+
+/** Wartende Anmeldungen, die älter sind, gelten als vergessen (neue Lektion). */
+const ALTE_ANMELDUNG_STUNDEN = 6;
+
+/** Ist das Spiel auf diesem Gerät vorbei? Dann darf ohne PIN neu angemeldet werden. */
+function spielVorbei(s) {
+  if (!s || !s.team) return true;
+  if (s.override || s.geloescht) return true;
+  if (s.wartet) return Date.now() - (s.startzeit || 0) > ALTE_ANMELDUNG_STUNDEN * 3600000;
+  return !!s.endzeit && Date.now() > s.endzeit;
+}
+
+/** Löscht den Spielstand dieses Geräts und öffnet die Anmeldung (ohne alten Beitrittscode). */
+function zurAnmeldung() {
+  try { localStorage.removeItem(SPEICHER_TEAM); } catch (e) { /* egal */ }
+  location.href = mitParameter('index.html');
+}
 function speichereSpielstand(s) { return speichereJson(SPEICHER_TEAM, s); }
 
 /* ===================================================================
@@ -1176,10 +1193,24 @@ function initStartseite() {
     ? 'Countdown synchronisiert: Das Spiel endet um ' + ende.text + ' Uhr.'
     : 'Nach der Anmeldung wartet ihr auf die Freigabe der Spielleitung. Spielzeit: ' + SPIELDAUER_MINUTEN + ' Minuten.';
 
+  // Alter Spielstand auf diesem Gerät: weiterspielen oder neu anmelden.
+  // Ein neues Spiel braucht keine PIN, nur den neuen Beitrittscode.
+  const aktiv = stand && stand.team && !spielVorbei(stand);
   if (stand && stand.team) {
-    formular.hidden = true;
     laeuft.hidden = false;
-    $('#laufendes-team').textContent = stand.team;
+    const info = $('#laufendes-info');
+    info.textContent = '';
+    if (aktiv) {
+      info.appendChild(document.createTextNode('Auf diesem Gerät läuft noch das Spiel von '));
+      info.appendChild(erstelle('strong', '', stand.team));
+      info.appendChild(document.createTextNode('.'));
+      $('#neues-spiel-hinweis').textContent = 'Neue Runde? Meldet euch unten mit dem neuen Beitrittscode an. Der alte Spielstand wird dann gelöscht.';
+    } else {
+      info.appendChild(document.createTextNode('Das letzte Spiel auf diesem Gerät ('));
+      info.appendChild(erstelle('strong', '', stand.team));
+      info.appendChild(document.createTextNode(') ist beendet. Meldet euch für ein neues Spiel an.'));
+      $('#weiter').hidden = true;
+    }
     $('#weiter').addEventListener('click', function () {
       Ton.entsperren();
       location.href = mitParameter('terminal.html');
@@ -1209,7 +1240,7 @@ function initStartseite() {
     return name;
   }
 
-  formular.addEventListener('submit', function (e) {
+  formular.addEventListener('submit', async function (e) {
     e.preventDefault();
     const name = teamname();
     if (!name) return;
@@ -1222,6 +1253,19 @@ function initStartseite() {
     if (code && code.length !== SPIELCODE_LAENGE) {
       $('#start-meldung').textContent = 'Der Beitrittscode hat ' + SPIELCODE_LAENGE + ' Buchstaben. Schaut nochmals auf die Leinwand.';
       return;
+    }
+    if (aktiv) {
+      // Gleicher Code: dasselbe Spiel, einfach weiter
+      if (code && code === stand.spielcode) {
+        Ton.entsperren();
+        location.href = mitParameter('terminal.html');
+        return;
+      }
+      const ja = await dialog('Neues Spiel starten?', 'Auf diesem Gerät läuft noch das Spiel von ' + stand.team + '. Mit dem neuen Beitrittscode wird dieser Spielstand gelöscht.', [
+        { text: 'Abbrechen', wert: false },
+        { text: 'Neues Spiel', wert: true, klasse: 'primaer' }
+      ]);
+      if (!ja) return;
     }
     starte(name, code);
   });
@@ -1237,6 +1281,20 @@ function initStartseite() {
   });
 
   $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
+}
+
+/** Knopf «Neues Spiel» im Terminal (Spielende oder Warten auf den Start): ohne PIN,
+    weil nichts Laufendes verloren geht. */
+async function neuesSpielAmGeraet() {
+  const s = Terminal.stand;
+  const wartet = s && s.wartet;
+  const ja = await dialog(wartet ? 'Anderer Beitrittscode?' : 'Neues Spiel?',
+    wartet ? 'Die Anmeldung wird gelöscht. Danach meldet ihr euch mit dem Code auf der Leinwand neu an.'
+           : 'Der Spielstand auf diesem Gerät wird gelöscht. Notiert eure Punkte, falls ihr sie noch braucht.', [
+    { text: 'Abbrechen', wert: false },
+    { text: wartet ? 'Neu anmelden' : 'Neues Spiel', wert: true, klasse: 'primaer' }
+  ]);
+  if (ja) zurAnmeldung();
 }
 
 /** Setzt den Spielstand dieses Geräts zurück (nur mit PIN). */
@@ -1302,6 +1360,7 @@ function initTerminal() {
   $('#helpdesk-hintergrund').addEventListener('click', schliesseHelpDesk);
   $('#joker-knopf').addEventListener('click', jokerEinloesen);
   $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
+  $$('.neues-spiel-knopf').forEach(function (k) { k.addEventListener('click', neuesSpielAmGeraet); });
   $$('[data-gehe-zu]').forEach(function (k) {
     k.addEventListener('click', function () {
       Ton.spiele('klick');

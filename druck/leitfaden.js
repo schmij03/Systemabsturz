@@ -82,7 +82,7 @@ var Leitfaden = (function () {
         ['Kein Internet, Startsignal kommt nicht an', 'Auf dem Gerät des Teams «Spielleitung: manuell starten» und PIN. Für eine gemeinsame Uhr den Link <code>index.html?ende=HH:MM</code> verwenden (Reiter «Lösungen und Extras»).'],
         ['Ein Gerät wartet noch, obwohl das Spiel läuft', 'Reiter «2 Spiel durchführen», «Probleme?», «Startsignal erneut senden».'],
         ['Ein Team hat die Seite neu geladen', 'Kein Problem: Spielstand, Punkte und Countdown bleiben erhalten.'],
-        ['Gerät für die nächste Runde vorbereiten', 'Unten rechts «Spielleitung», PIN, «Spiel zurücksetzen».'],
+        ['Gerät für die nächste Runde', 'Nichts löschen: Die Teams tippen nach Spielende auf «Neues Spiel» oder melden sich auf der Startseite mit dem neuen Beitrittscode an. Mitten im Spiel: unten rechts «Spielleitung», PIN, «Spiel zurücksetzen».'],
         ['Kein Ton', 'Lautstärke prüfen und einmal auf den Bildschirm tippen oder klicken. Browser erlauben Ton erst nach einer Berührung.'],
         ['Neue Runde', 'Reiter «3 Nach dem Spiel», «Spiel zurücksetzen (PIN)». Es gibt einen neuen Beitrittscode.']
       ], 'mission notfall') +

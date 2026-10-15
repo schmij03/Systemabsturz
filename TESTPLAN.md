@@ -167,7 +167,10 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 
 1. Auf einem zweiten Tablet die Startseite mit einer Endzeit in 2 Minuten öffnen (zum Beispiel `index.html?ende=10:02`). Nach Ablauf: «SYSTEM GELÖSCHT», Eingaben gesperrt, Punkte bleiben sichtbar.
 2. Unten rechts «Spielleitung», PIN 4711. Erwartung: Auswahl «Spiel zurücksetzen» oder «Zur Spielleitungsansicht». «Zur Spielleitungsansicht» öffnet spielleitung.html. «Spiel zurücksetzen», dann «Löschen». Erwartung: zurück auf der Startseite, Spielstand leer.
-3. Offline-Test: Seite einmal online laden, dann WLAN ausschalten und neu laden. Das Terminal und die Blöcke funktionieren weiter.
+3. Im Fenster «SYSTEM GELÖSCHT» auf «Neues Spiel» tippen und bestätigen. Erwartung: Startseite mit leerer Anmeldung, ohne PIN.
+4. Spiel mit Beitrittscode starten (Gerät wartet auf das Startsignal). Startseite öffnen. Erwartung: «Auf diesem Gerät läuft noch das Spiel von …», «Weiter zum Terminal» und darunter die Anmeldung. Mit dem gleichen Code anmelden: weiter im alten Spiel. Mit einem neuen Code anmelden: Rückfrage «Neues Spiel starten?», danach neuer Spielstand mit dem neuen Code.
+5. Im Warteschirm «Anderer Beitrittscode? Neu anmelden» und bestätigen. Erwartung: Startseite mit leerer Anmeldung.
+6. Offline-Test: Seite einmal online laden, dann WLAN ausschalten und neu laden. Das Terminal und die Blöcke funktionieren weiter.
 
 
 ## Regressionen nach dem Code-Audit

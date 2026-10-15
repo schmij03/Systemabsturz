@@ -105,3 +105,16 @@ test('Bonusfrage nach Protokoll 2: vier Antworten, nur B ist richtig', async () 
   }
   assert.equal(c.run("neuerSpielstand('Team', Date.now() + 600000, null, null).bonus2"), null);
 });
+
+test('Spielende erkennt beendete, abgelaufene und alte wartende Spiele', () => {
+  const c = app();
+  const jetzt = Date.now();
+  const f = s => { c.s = s; return c.run('spielVorbei(s)'); };
+  assert.equal(f(null), true);
+  assert.equal(f({ team: 'A', override: true, endzeit: jetzt + 60000 }), true);
+  assert.equal(f({ team: 'A', geloescht: true }), true);
+  assert.equal(f({ team: 'A', endzeit: jetzt - 1000 }), true);
+  assert.equal(f({ team: 'A', endzeit: jetzt + 60000 }), false);
+  assert.equal(f({ team: 'A', wartet: true, endzeit: null, startzeit: jetzt - 60000 }), false);
+  assert.equal(f({ team: 'A', wartet: true, endzeit: null, startzeit: jetzt - 7 * 3600000 }), true);
+});
