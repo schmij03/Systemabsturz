@@ -60,17 +60,19 @@
 
     <!-- 1. Vorbereiten -->
     <div class="reiter-inhalt" data-inhalt="vorbereiten" role="tabpanel">
+      <p class="erstmals-hinweis"><strong>Zum ersten Mal?</strong> Spielt das Spiel zuerst selbst ganz durch und lest im <a href="druck/leitfaden.html" target="_blank" rel="noopener">Leitfaden</a> die Seiten «Was die Klasse mitbringen sollte» und «Zuerst selbst ausprobieren» (Voraussetzungen, Testlauf, was zu drucken ist).</p>
       <div class="raster-2">
         <div class="karte einstellungen">
           <h3><span class="schritt">A</span> Schwierigkeit wählen</h3>
           <label class="zeile">Stufe <select id="stufe-wahl" class="stufe-wahl gross-wahl"></select></label>
           <p class="klein">Gilt für Protokoll 1 (Verschiebung der Chiffrierscheibe), Protokoll 2 (Labyrinth) und Protokoll 3 (Netzwerkplan). Druckt danach das Material derselben Stufe.</p>
           <table id="stufen-uebersicht" class="stufen-tabelle"></table>
+          <p class="klein">Protokoll 2: Schwierigere Labyrinthe brauchen längere Programme mit mehr Bedingungen. Darum ist das Blocklimit dort höher.</p>
         </div>
 
         <div class="karte einstellungen">
-          <h3><span class="schritt">B</span> Code für Kiste 1 (Protokoll 1)</h3>
-          <p class="klein">Zahlenschloss eurer ersten Kiste. Die geheime Nachricht wird automatisch neu verschlüsselt.</p>
+          <h3><span class="schritt">B</span> Code für Protokoll 1 (freiwillig)</h3>
+          <p class="klein">Eigener dreistelliger Code, der in der geheimen Nachricht versteckt ist. Die Nachricht wird automatisch neu verschlüsselt. Ohne Eingabe gilt der Standardcode.</p>
           <div class="p1-einstellung">
             <label>Code <input id="p1-code" class="pin-klein" inputmode="numeric" maxlength="3" placeholder="z. B. 418" autocomplete="off"></label>
             <button type="button" id="p1-uebernehmen" class="knopf primaer">Übernehmen (PIN)</button>
@@ -91,7 +93,7 @@
         <p class="klein">Pro Team ein Dossier der gewählten Stufe. Die Stufe lässt sich oben im Dossier oder Blatt umstellen. Druckeinstellung A4, «Tatsächliche Grösse», farbig. Im Dossier gibt es auch «Als HTML herunterladen».</p>
         <div class="druck-kacheln">
           <a class="druck-kachel dossier-kachel" href="druck/teamset.html" target="_blank" rel="noopener"><span class="kachel-icon">📚</span><strong>Gesamtes Dossier</strong><span class="klein">Auftrag und Protokoll 1 bis 3, 7 Seiten</span></a>
-          <a class="druck-kachel leitfaden-kachel" href="druck/leitfaden.html" target="_blank" rel="noopener"><span class="kachel-icon">🧭</span><strong>Leitfaden Spielleitung</strong><span class="klein">Vorbereitung, Ablauf, Notfälle, Lösungen (PIN), 9 Seiten</span></a>
+          <a class="druck-kachel leitfaden-kachel" href="druck/leitfaden.html" target="_blank" rel="noopener"><span class="kachel-icon">🧭</span><strong>Leitfaden Spielleitung</strong><span class="klein">Voraussetzungen, Testlauf, Ablauf, Notfälle, Lösungen (PIN), 11 Seiten</span></a>
           <a class="druck-kachel" href="druck/auftrag.html" target="_blank" rel="noopener"><span class="kachel-icon">📄</span><strong>Auftrag</strong><span class="klein">1 Seite</span></a>
           <a class="druck-kachel" href="druck/protokoll1.html" target="_blank" rel="noopener"><span class="kachel-icon">🔐</span><strong>Protokoll 1</strong><span class="klein">Auftrag und Chiffrierscheibe, 3 Seiten</span></a>
           <a class="druck-kachel" id="link-protokoll2" href="druck/protokoll2.html" target="_blank" rel="noopener"><span class="kachel-icon">🧩</span><strong>Protokoll 2</strong><span class="klein">Algorithmen, 1 Seite</span></a>
@@ -171,12 +173,9 @@
           <button type="button" id="reset-countdown" class="knopf gefahr">Spiel zurücksetzen (PIN)</button>
         </div>
         <div class="karte">
-          <h3>Geräte der Teams zurücksetzen</h3>
-          <ol>
-            <li>Auf dem Tablet oder Laptop des Teams unten rechts auf «Spielleitung» tippen oder klicken.</li>
-            <li>PIN eingeben, «Spiel zurücksetzen» wählen und «Löschen» bestätigen.</li>
-          </ol>
-          <p class="klein">Der Spielstand liegt nur auf dem jeweiligen Gerät. Die Teams melden ihren Endpunktestand mündlich.</p>
+          <h3>Geräte der Teams</h3>
+          <p>Browserdaten müssen nicht gelöscht werden. Ist das Spiel auf einem Gerät beendet, tippen die Teams auf «Neues Spiel» und melden sich mit dem neuen Beitrittscode an. Auch auf der Startseite können sie sich jederzeit mit dem neuen Code anmelden, der alte Spielstand wird dann ersetzt.</p>
+          <p class="klein">Mitten im laufenden Spiel zurücksetzen: unten rechts «Spielleitung», PIN, «Spiel zurücksetzen». Der Spielstand liegt nur auf dem jeweiligen Gerät. Die Teams melden ihren Endpunktestand mündlich.</p>
         </div>
       </div>
     </div>
@@ -185,7 +184,7 @@
     <div class="reiter-inhalt" data-inhalt="extras" role="tabpanel" hidden>
       <div class="karte">
         <h3>Lösungen</h3>
-        <p class="klein">Passen sich an die gewählte Stufe und den Code für Kiste 1 an. Nicht auf dem Beamer zeigen.</p>
+        <p class="klein">Passen sich an die gewählte Stufe und den Code für Protokoll 1 an. Nicht auf dem Beamer zeigen.</p>
         <button type="button" id="loesungen-knopf" class="knopf">Lösungen anzeigen</button>
         <a class="knopf link-knopf" href="druck/leitfaden.html" target="_blank" rel="noopener">Leitfaden Spielleitung (Druck und Download)</a>
         <div id="loesungen" hidden>
@@ -206,11 +205,10 @@
         <summary><h3>Konfiguration erzeugen (Codes ändern)</h3></summary>
         <p>Hier erzeugt ihr neue Hashes, wenn ihr das Spiel mit eigenen Codes spielen wollt. Die Ausgabe ersetzt die entsprechenden Konstanten oben in <code>js/app.js</code>. Die Eingaben werden nirgends gespeichert.</p>
         <div class="generator">
-          <label>Code Protokoll 1 (Kiste 1) <input id="gen-p1" inputmode="numeric"></label>
+          <label>Code Protokoll 1 <input id="gen-p1" inputmode="numeric"></label>
           <label>Erklärung Protokoll 1 <input id="gen-p1info"></label>
           <label>Bonusantwort <input id="gen-bonus" inputmode="numeric"></label>
           <label>Signaturen Protokoll 2 (mit Komma) <input id="gen-signaturen"></label>
-          <label>Code Kiste 2 <input id="gen-kiste2" inputmode="numeric"></label>
           <label>Override-Code Protokoll 3 <input id="gen-p3" inputmode="numeric"></label>
           <label>Erklärung Protokoll 3 <input id="gen-p3info"></label>
           <label>Verschiebung Protokoll 1 (1 bis 25) <input id="gen-verschiebung" inputmode="numeric" placeholder="4"></label>

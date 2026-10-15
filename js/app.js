@@ -27,6 +27,9 @@ const JOKER_KOSTEN = 20;
 const BONUS_PUNKTE = 10;
 const PUNKTE_PRO_RESTMINUTE = 1;
 
+/** Anzahl Viren-Signaturen, die ANTI-V in Protokoll 2 einsammeln muss */
+const SIGNATUREN_ANZAHL = 3;
+
 /** Effizienzbonus in Protokoll 2: Grundbonus plus Punkte pro Block,
     der unter dem Blocklimit der Stufe bleibt (Limit siehe js/maze.js) */
 const BLOCK_BONUS_BASIS = 10;
@@ -40,6 +43,9 @@ const SPERRE_NACH_FEHLER_MS = 2000;
 
 /** Salz für alle Hashes. Wird es geändert, müssen alle Hashes neu erzeugt werden. */
 const SALZ = 'SYSTEMABSTURZ|';
+
+/** Bonusfrage nach Protokoll 2 (Auswahlfrage, fest): Hash des richtigen Buchstabens */
+const BONUS2_HASH = 'bb33251d2a856a452f1689fdbe6fa715f927e55c6f64581ffc106d16dd7e027e';
 
 /** SHA-256-Hashes der Lösungen (Wert = SHA-256 von SALZ + Code) */
 const HASHES = {
@@ -137,6 +143,27 @@ const HASHES = {
       '272a1760c2cc7264369850ce3344445185d0142f3945c6bdbaf288116b80b6cc',
       '4cf8e4fd534fa3e41f61a5d2474770e91cb8d6fb0ea06e7275d25b991c4427bc'
     ]
+  },
+  /* Umwege: Summen sauberer Wege mit mehr Verbindungen als der richtige
+     Weg (pro Stufe, js/netzwerke.js). Gleich neu berechnen wie die Fallen. */
+  protokoll3Umwege: {
+    leicht: [
+      '64ff5473b982d89e81b4b579a28836a4d171399767c5fa84f72414893f6dafa0',
+      'fdfc5a5d96a62fd4d45186bdff945353d9be7b878b616a66b2f613d5ac45d805',
+      '4f6f336cf931249a0054471f5d18bbff58bc810b237a65c312b02910c3752abd',
+      '3c907caebfec7539e9ddf433e9ace0ecc6794c180c2cbe7d325aeb1ecf71e853',
+      '5a1d97d5ec712634e47cc336bb6da11c964166e6f3160f26546c5c0520879999'
+    ],
+    mittel: [
+      '8107d344949bd3483fd949dc3a84d824782f89ece525119fd45d1ac5f634e06d',
+      '3c907caebfec7539e9ddf433e9ace0ecc6794c180c2cbe7d325aeb1ecf71e853'
+    ],
+    schwer: [
+      '8447a8577b74f0e56c89e44bc8daa83d137c9e0f4a7eb199dd5f0af7f614231d',
+      '58faab6d97ab9e5dc3a58debef6ad324c0e0ee1d9ed28f9c4bdae717992e8b01',
+      '8de93df8872beafa4dd78a53469fc95505480327e7fac223b9c7afd142aff73c',
+      'c0029525eebb977aa7a1d971b1694ceb40ea814dbf9f091c5fafc35b415345df'
+    ]
   }
 };
 
@@ -157,11 +184,8 @@ const P1_VERSCHIEBUNG_STUFEN = { leicht: 4, mittel: 6, schwer: 8 };
     Für die anderen Stufen wird er automatisch umgeschlüsselt. */
 const P1_GEHEIMTEXT = 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI';
 
-/** Code für Sicherheitskiste 2, verschlüsselt mit den Signaturen als Schlüssel */
-const KISTE2_VERSCHLUESSELT = '813e87';
-
 /** Lösungsliste für die Spielleitung, verschlüsselt mit der PIN als Schlüssel */
-const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d2b221388d77f1f389c99c3074c7c94227839cea0a4445f8ff07cb1c7dbe6d74a42c0fc54a08ff4403e02e3077fdf0301dcbf127151e1f7c3c7912ff47cd043ad9521b1eaf100b6fc070933db493e035517abeb13506a46ca4e31997f9651514db0b83ecab982d8c354ef4df8828fb4e5b319d61110bd6ca1985e734d87b8055361d5e6ee576947e81ac54937b226e554fc155fcfb1d59fa3a064cd86796d7990442e19b2df6e7e44c0ee7068f2a6aae7e9f0f3331367fb97b34587418e32acf6a31fb6c8454374f2213f1c9c5f4cdc5cac4799918e44797ead5f98fb1b00ea463c0187473d7934a8741ef259c58cadd1746b511c8e52b3e91bef5a37b79091e0a994c341f337ff59da4fa173f6f1027c29b2110816b6345fa72816fa8869228ef1830313ce448a82843a21d2e024a788db7fd172089f7efe022d3f39423a5b964fd459a29922d19681a0ab08f94c36bb80adc2d8d79611bb79734ed04fbdea56b7f45d79f6fe821b693d24d0598b1a59fc15d0e0c7f390dfdfaccf3678628956b87083a3869fcd575ac2438d093377aa5f4cafb7eb0b6fa512b6568bad039efe3151ffcdad7150565f8ac3369e4e886e9b3414fed23f81b6f8e5c12b6379fd7772130980f81e660bce9e8dd90c8c5971de7c18c9e5e339f1d00864321ea3d23215f424bee7d056d73bd18dbd723dd0b3fd84eeeb306f02706237d221948e7040388baed79e1d2712be91322b9468fc5467f8fe12e62999e28d71';
+const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d2b221388d77f1f389c99c3074c7c94227839cea0a4445f8ff07cb1c7dbe6d74a42c0fc54a08ff4403e02e3077fdf0301dcbf127151e1f7c3c7912ff47cd043ad9521b1eaf100b6fc070933db493e035517abeb13506a46ca4e31997f9651514db0b83ecab982d8c354ef4df8828fb4e5b319d61110bd6ca1985e734d87b8055361d5e6ee576947e81ac54937b226e554fc155fcfb1d59fa3a064cd86796d7990442e19b2df6e7e44c0ee7068f2a6aae7e9f0f3331367fb97b34587418e32acf6a31fb6c8535e7fed392f1e974f4c9b5da7199999824f6e2cac58dd882e0dfd5c3d0cc2023e6e3fbd7409fa10d5c8bec6264b46118efd7af40faa7763e2908ce6b3c0f148b377b843d15cef76ebe1505726f343584cf97c13ab7d4daec1398a43ec93035398578a98927b6a99ac35e0df93388e600b9f61f052267a771177558e1dacb824c96984dcd7e9fb589d403ffd80e7969fa09a18fd7d60539559ace15693f44166f4ffda5e54681fd84ec91752ea40f5e2ccf3cad1dfaecf7831658154ae6c95b8849fcd451fc55b8c5b4579d97d44a5f2be016ef7749c5f89a617dffc3814c299b1795e1a5990cf289e4e852b872e16bfec74cfcfbfaec3386c71b1547d5d5fc7d257694ea8ac95c00f875968d23923d8b0c939b8d71a603e1ea3dc7954f60ebae2c855d87d8ec1d96e3694d5f586a2ea3b3d485981d2d5219c8c2352229dafd198496e1bfbaf77119067f85c6ef3b713fd23dea5c12c1cfe4e9db53a8da0d04fafb6038e476fc677e4526e7d1ce151242e080c7e9ef356d80e54cc940b';
 
 /* Startsignal der Spielleitung an die Tablets.
    Weil das Spiel keinen eigenen Server hat, läuft das Signal über den
@@ -199,30 +223,30 @@ const TEXTE = {
     2: {
       titel: 'Protokoll 2: Algorithmen',
       kurz: 'Algorithmen',
-      story: 'Stark, Kiste 1 ist offen! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
+      story: 'Stark, Protokoll 1 ist geknackt! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht. ANTI-V sammelt jede gelbe Zahl ein, über die er läuft. Nur der richtige Weg führt über genau die drei Viren-Signaturen. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
       /* Tipps für die Stufen leicht und mittel (schwer: «tipps» darunter) */
       tippsStufen: {
         leicht: [
-          'ANTI-V soll geradeaus gehen, solange vorne frei ist. An jeder Ecke biegt der Gang nach rechts ab.',
-          'Ihr braucht «wiederhole bis Ziel erreicht» und darin «falls dann sonst» mit der Bedingung «vorne frei?».',
-          'wiederhole bis Ziel erreicht: falls vorne frei, dann gehe 1 Feld vor, sonst drehe dich nach rechts. Das sind genau 5 Blöcke.'
+          'ANTI-V soll immer geradeaus gehen. Nur wenn vorne blockiert ist, dreht er sich. Schaut euch die Ecken im Labyrinth an: In welche Richtung muss er dort drehen?',
+          'Ihr braucht «wiederhole bis Ziel erreicht» und darin einen Block «falls dann sonst» mit der Bedingung «vorne frei?». Überlegt: Was soll ANTI-V tun, wenn vorne frei ist, und was, wenn vorne blockiert ist?',
+          'Ist vorne frei, geht ANTI-V 1 Feld vor. Ist vorne blockiert, dreht er sich nach rechts. Mehr braucht es nicht.'
         ],
         mittel: [
-          'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
-          'In der Wiederholung prüft ihr zuerst rechts, dann vorne. Ist beides zu, dreht ANTI-V nach links. Ihr braucht zwei «falls dann sonst» ineinander.',
-          'falls rechts frei, dann drehe rechts und gehe vor. Sonst: falls vorne frei, dann gehe vor, sonst drehe links.'
+          'Stellt euch hinter ANTI-V, dann sind rechts und links klar. Die Idee: ANTI-V hält die rechte Hand an der Wand und folgt ihr. Darum prüft er zuerst, ob rechts frei ist.',
+          'Die Reihenfolge der Prüfungen: zuerst rechts, dann vorne. Sind rechts und vorne blockiert, dreht ANTI-V nach links. Dafür braucht ihr zwei «falls dann sonst»: Das zweite steckt im «sonst» des ersten.',
+          'Ist rechts frei, braucht ANTI-V zwei Blöcke: zuerst nach rechts drehen, dann 1 Feld vor. Im inneren «falls dann sonst» geht er vor, wenn vorne frei ist, sonst dreht er nach links.'
         ]
       },
       tipps: [
-        'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
-        'Ihr braucht eine Wiederholung und darin «falls dann sonst». Eine Bedingung mit «und» ist nur wahr, wenn beide Teile stimmen. Ein rotes Feld ist nie erlaubt.',
-        'Erste Prüfung: rechts frei und nicht rechts infiziert, dann drehe rechts und gehe vor. Sonst prüft ihr vorne. Sonst dreht ihr links.'
+        'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V folgt der Wand auf seiner rechten Seite. Neu sind die roten Felder: Ein Feld ist nur gut, wenn es frei ist und nicht infiziert.',
+        'Baut es wie die rechte Hand an der Wand: zuerst rechts prüfen, dann vorne, sonst nach links drehen. Jede Prüfung braucht «und» mit «nicht», zum Beispiel: rechts frei? und nicht rechts infiziert?',
+        'Ist rechts frei und nicht infiziert: drehe dich nach rechts, dann gehe 1 Feld vor. Sonst prüft ihr vorne auf die gleiche Art. Ist auch vorne blockiert oder infiziert, dreht ANTI-V nach links.'
       ]
     },
     3: {
       titel: 'Protokoll 3: Netzwerke',
       kurz: 'Netzwerke',
-      story: 'Virus gefunden, Kiste 2 ist offen! Repariert das Routing auf eurem Netzwerkplan und gebt die Summe als Override-Code ein.',
+      story: 'Virus gefunden, Protokoll 2 ist geknackt! Repariert das Routing: Sucht auf eurem Netzwerkplan den Weg von A nach Z mit den wenigsten Verbindungen, ohne rote Server. Zählt erst danach die Kennzahlen zusammen und gebt die Summe als Override-Code ein.',
       /* Tipps passend zum Netzwerkplan der Stufe (mittel: «tipps» darunter) */
       tippsStufen: {
         leicht: [
@@ -250,9 +274,9 @@ const TEXTE = {
     titel: 'SPIELANWEISUNG',
     absaetze: [
       'Ihr seid die Notfall-Teams unserer Schule. Jedes Team erhält ein Tablet oder einen Laptop, einen Auftrag auf Papier, eine Chiffrierscheibe für Protokoll 1 und einen Netzwerkplan für Protokoll 3.',
-      'Öffnet auf eurem Gerät das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht. Tippt oder klickt danach auf «Wir sind bereit».',
-      'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jeder geknackte Code öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus.',
-      'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kisten dürfen nur mit dem richtigen Code geöffnet werden.',
+      'Öffnet auf eurem Gerät das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht, und tippt oder klickt auf «Spiel starten». Danach tippt oder klickt ihr auf «Wir sind bereit».',
+      'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jedes geknackte Protokoll schaltet das nächste frei. Mit dem letzten Code löst ihr den Override aus.',
+      'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte.',
       'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf eurem Gerät. Viel Erfolg!'
     ]
   },
@@ -275,7 +299,18 @@ const TEXTE = {
     'Danach löschen wir alles. Für immer.',
     'Wir sind NULLBYTE. Wir vergessen nichts. Erwartet uns.'
   ],
-  bonusFrage: 'Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich?',
+  bonusFrage: 'Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen. Bei wie vielen dieser Stellungen wird die Nachricht wirklich verändert, sodass der Geheimtext anders aussieht als der Klartext?',
+  /* Bonusfrage nach Protokoll 2: Auswahlfrage mit einem Versuch */
+  bonusFrage2: {
+    frage: 'Wann hört der Block «wiederhole bis Ziel erreicht» auf, die Blöcke darin zu wiederholen?',
+    antworten: [
+      ['A', 'Nach genau einem Durchgang.'],
+      ['B', 'Sobald ANTI-V auf dem Zielfeld steht.'],
+      ['C', 'Nach genau 10 Durchgängen.'],
+      ['D', 'Nie, er wiederholt immer weiter.']
+    ],
+    falsch: 'Leider falsch. Richtig wäre B: Vor jedem Durchgang prüft die Schleife, ob ANTI-V auf dem Zielfeld steht. Dann hört sie auf.'
+  },
   /* Texte für die Beamer-Ansicht der Spielleitung.
      {UM_ZEIT} wird überall durch «, um HH:MM Uhr,» ersetzt: die Uhrzeit, zu der
      die Spielleitung «Spiel starten» gedrückt hat (beim Vorlesen weggelassen). */
@@ -286,11 +321,11 @@ const TEXTE = {
     },
     auftrag: {
       titel: 'EUER AUFTRAG',
-      text: 'Ihr seid die Notfall-Teams der Schule. Jedes Team hat ein Notfall-Terminal. Knackt die drei Sicherheitsprotokolle: Kryptografie, Algorithmen und Netzwerke. Jedes gelöste Protokoll öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus und rettet das System.'
+      text: 'Ihr seid die Notfall-Teams der Schule. Jedes Team hat ein Notfall-Terminal. Knackt die drei Sicherheitsprotokolle: Kryptografie, Algorithmen und Netzwerke. Jedes gelöste Protokoll schaltet das nächste frei. Mit dem letzten Code löst ihr den Override aus und rettet das System.'
     },
     regeln: {
       titel: 'REGELN',
-      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
+      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
     },
     gerettet: {
       titel: 'SYSTEM WIEDERHERGESTELLT',
@@ -397,7 +432,7 @@ const Krypto = (function () {
   }
 
   /* Einfache Verschlüsselung (XOR mit SHA-256-Schlüsselstrom), damit
-     Kisten-Codes und Lösungen nicht im Klartext im Quellcode stehen. */
+     Lösungen nicht im Klartext im Quellcode stehen. */
   async function schluesselstrom(schluessel, laenge) {
     const strom = new Uint8Array(Math.ceil(laenge / 32) * 32);
     for (let i = 0; i * 32 < laenge; i++) {
@@ -1133,7 +1168,7 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
     tippStufe: { 1: 0, 2: 0, 3: 0 },   // freigeschaltete Tipps pro Protokoll
     gratisTipp: { 1: false, 2: false, 3: false },
     bonus: null,                        // null | 'richtig' | 'falsch'
-    kiste2: null,                       // entschlüsselter Code nach Protokoll 2
+    bonus2: null,                       // Bonusfrage nach Protokoll 2: null | 'richtig' | 'falsch'
     override: false,
     restBeiOverride: null,
     geloescht: false,
@@ -1145,6 +1180,23 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
 }
 
 function ladeSpielstand() { return ladeJson(SPEICHER_TEAM); }
+
+/** Wartende Anmeldungen, die älter sind, gelten als vergessen (neue Lektion). */
+const ALTE_ANMELDUNG_STUNDEN = 6;
+
+/** Ist das Spiel auf diesem Gerät vorbei? Dann darf ohne PIN neu angemeldet werden. */
+function spielVorbei(s) {
+  if (!s || !s.team) return true;
+  if (s.override || s.geloescht) return true;
+  if (s.wartet) return Date.now() - (s.startzeit || 0) > ALTE_ANMELDUNG_STUNDEN * 3600000;
+  return !!s.endzeit && Date.now() > s.endzeit;
+}
+
+/** Löscht den Spielstand dieses Geräts und öffnet die Anmeldung (ohne alten Beitrittscode). */
+function zurAnmeldung() {
+  try { localStorage.removeItem(SPEICHER_TEAM); } catch (e) { /* egal */ }
+  location.href = mitParameter('index.html');
+}
 function speichereSpielstand(s) { return speichereJson(SPEICHER_TEAM, s); }
 
 /* ===================================================================
@@ -1161,10 +1213,24 @@ function initStartseite() {
     ? 'Countdown synchronisiert: Das Spiel endet um ' + ende.text + ' Uhr.'
     : 'Nach der Anmeldung wartet ihr auf die Freigabe der Spielleitung. Spielzeit: ' + SPIELDAUER_MINUTEN + ' Minuten.';
 
+  // Alter Spielstand auf diesem Gerät: weiterspielen oder neu anmelden.
+  // Ein neues Spiel braucht keine PIN, nur den neuen Beitrittscode.
+  const aktiv = stand && stand.team && !spielVorbei(stand);
   if (stand && stand.team) {
-    formular.hidden = true;
     laeuft.hidden = false;
-    $('#laufendes-team').textContent = stand.team;
+    const info = $('#laufendes-info');
+    info.textContent = '';
+    if (aktiv) {
+      info.appendChild(document.createTextNode('Auf diesem Gerät läuft noch das Spiel von '));
+      info.appendChild(erstelle('strong', '', stand.team));
+      info.appendChild(document.createTextNode('.'));
+      $('#neues-spiel-hinweis').textContent = 'Neue Runde? Meldet euch unten mit dem neuen Beitrittscode an. Der alte Spielstand wird dann gelöscht.';
+    } else {
+      info.appendChild(document.createTextNode('Das letzte Spiel auf diesem Gerät ('));
+      info.appendChild(erstelle('strong', '', stand.team));
+      info.appendChild(document.createTextNode(') ist beendet. Meldet euch für ein neues Spiel an.'));
+      $('#weiter').hidden = true;
+    }
     $('#weiter').addEventListener('click', function () {
       Ton.entsperren();
       location.href = mitParameter('terminal.html');
@@ -1194,7 +1260,7 @@ function initStartseite() {
     return name;
   }
 
-  formular.addEventListener('submit', function (e) {
+  formular.addEventListener('submit', async function (e) {
     e.preventDefault();
     const name = teamname();
     if (!name) return;
@@ -1207,6 +1273,19 @@ function initStartseite() {
     if (code && code.length !== SPIELCODE_LAENGE) {
       $('#start-meldung').textContent = 'Der Beitrittscode hat ' + SPIELCODE_LAENGE + ' Buchstaben. Schaut nochmals auf die Leinwand.';
       return;
+    }
+    if (aktiv) {
+      // Gleicher Code: dasselbe Spiel, einfach weiter
+      if (code && code === stand.spielcode) {
+        Ton.entsperren();
+        location.href = mitParameter('terminal.html');
+        return;
+      }
+      const ja = await dialog('Neues Spiel starten?', 'Auf diesem Gerät läuft noch das Spiel von ' + stand.team + '. Mit dem neuen Beitrittscode wird dieser Spielstand gelöscht.', [
+        { text: 'Abbrechen', wert: false },
+        { text: 'Neues Spiel', wert: true, klasse: 'primaer' }
+      ]);
+      if (!ja) return;
     }
     starte(name, code);
   });
@@ -1222,6 +1301,20 @@ function initStartseite() {
   });
 
   $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
+}
+
+/** Knopf «Neues Spiel» im Terminal (Spielende oder Warten auf den Start): ohne PIN,
+    weil nichts Laufendes verloren geht. */
+async function neuesSpielAmGeraet() {
+  const s = Terminal.stand;
+  const wartet = s && s.wartet;
+  const ja = await dialog(wartet ? 'Anderer Beitrittscode?' : 'Neues Spiel?',
+    wartet ? 'Die Anmeldung wird gelöscht. Danach meldet ihr euch mit dem Code auf der Leinwand neu an.'
+           : 'Der Spielstand auf diesem Gerät wird gelöscht. Notiert eure Punkte, falls ihr sie noch braucht.', [
+    { text: 'Abbrechen', wert: false },
+    { text: wartet ? 'Neu anmelden' : 'Neues Spiel', wert: true, klasse: 'primaer' }
+  ]);
+  if (ja) zurAnmeldung();
 }
 
 /** Setzt den Spielstand dieses Geräts zurück (nur mit PIN). */
@@ -1280,6 +1373,7 @@ function initTerminal() {
   }
   Terminal.stand = stand;
   speichereSpielstand(stand);
+  if (stand.tippNeu) $('#helpdesk-knopf').classList.add('blinkt');
 
   $('#team-name').textContent = stand.team;
   $('#helpdesk-knopf').addEventListener('click', oeffneHelpDesk);
@@ -1287,6 +1381,7 @@ function initTerminal() {
   $('#helpdesk-hintergrund').addEventListener('click', schliesseHelpDesk);
   $('#joker-knopf').addEventListener('click', jokerEinloesen);
   $$('.reset-knopf').forEach(function (k) { k.addEventListener('click', resetTablet); });
+  $$('.neues-spiel-knopf').forEach(function (k) { k.addEventListener('click', neuesSpielAmGeraet); });
   $$('[data-gehe-zu]').forEach(function (k) {
     k.addEventListener('click', function () {
       Ton.spiele('klick');
@@ -1510,6 +1605,7 @@ function tick() {
       s.gratisTipp[p] = true;
       s.tippStufe[p] = 1;
       toast('Gratis-Tipp freigeschaltet! Öffnet den Help-Desk.', 'info');
+      s.tippNeu = true;   // Abzeichen «1 neu», bleibt nach dem Neuladen
       $('#helpdesk-knopf').classList.add('blinkt');
       Ton.spiele('klick');
       speichere();
@@ -1574,6 +1670,7 @@ function protokollGeloest(p) {
   aktualisiereKopf();
   aktualisiereTabs();
   aktualisiereHelpDesk();
+  Terminal.stand.tippNeu = false;
   $('#helpdesk-knopf').classList.remove('blinkt');
 }
 
@@ -1607,7 +1704,7 @@ function baueProtokoll1() {
       if (spielGesperrt()) return 'fertig';
       if (richtig) {
         Ton.spiele('erfolg');
-        Terminal.stand.kiste1 = code;
+        Terminal.stand.code1 = code;
         protokollGeloest(1);
         zeigeErfolg1(true);
         return 'fertig';
@@ -1627,7 +1724,7 @@ function zeigeErfolg1(neu) {
   $('.eingabe', wurzel).hidden = true;
   const erfolg = $('.erfolg', wurzel);
   erfolg.hidden = false;
-  $('.erfolg-text', erfolg).textContent = 'PROTOKOLL 1 GEKNACKT. Code für Sicherheitskiste 1: ' + (s.kiste1 || '???');
+  $('.erfolg-text', erfolg).textContent = 'PROTOKOLL 1 GEKNACKT. Code ' + (s.code1 || s.kiste1 || '???') + ' akzeptiert, Protokoll 2 ist freigeschaltet.';
   if (neu) erfolg.classList.add('neu');
   baueBonus();
 }
@@ -1642,7 +1739,7 @@ function baueBonus() {
   inhalt.innerHTML = '';
   if (s.bonus) {
     inhalt.appendChild(erstelle('p', s.bonus === 'richtig' ? 'ok' : 'fehler',
-      s.bonus === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : 'Leider falsch. Überlegt später: Welche Einstellung verändert die Nachricht gar nicht?'));
+      s.bonus === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : 'Leider falsch. Tipp zum Nachdenken: Bei welcher Stellung steht das innere A genau unter dem äusseren A, und was passiert dann mit der Nachricht?'));
     return;
   }
   inhalt.appendChild(erstelle('p', 'klein', 'Freiwillig, nur ein Versuch. Richtig gibt es ' + BONUS_PUNKTE + ' Extrapunkte.'));
@@ -1690,9 +1787,7 @@ function starteAlgorithmen() {
       const schluessel = gesammelt.join(',');
       if (await Krypto.pruefe(schluessel, HASHES.signaturen)) {
         const s = Terminal.stand;
-        const kiste = await Krypto.entschluessle(KISTE2_VERSCHLUESSELT, schluessel);
         if (spielGesperrt()) return beendet;
-        s.kiste2 = kiste;
         const neu = !s.geloest[2];
         // Effizienzbonus: weniger Blöcke gibt mehr Punkte, Verbesserungen zählen auch später
         const bonus = Math.max(0, BLOCK_BONUS_BASIS + BLOCK_BONUS_PRO_BLOCK * (info.maxBloecke - info.bloecke));
@@ -1714,14 +1809,18 @@ function starteAlgorithmen() {
         return { ok: true, text: erfolgstext2() + ' ' + zusatz };
       }
       Ton.spiele('fehler');
-      return { ok: false, text: 'Ziel erreicht, aber Signaturen unvollständig. ANTI-V muss den richtigen Weg nehmen.' };
+      const liste = gesammelt.join(', ');
+      const text = gesammelt.length < SIGNATUREN_ANZAHL
+        ? 'Ziel erreicht, aber nur ' + gesammelt.length + (gesammelt.length === 1 ? ' Signatur' : ' Signaturen') + ' eingesammelt' + (liste ? ' (' + liste + ')' : '') + '. '
+        : 'Ziel erreicht, aber falsche Signaturen (' + liste + '). ';
+      return { ok: false, text: text + 'ANTI-V hat einen anderen Weg genommen. Der richtige Weg führt über genau ' + SIGNATUREN_ANZAHL + ' Signaturen.' };
     }
   });
 }
 
 function erfolgstext2() {
   const s = Terminal.stand;
-  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: ' + (s.kiste2 || '???') +
+  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert, Protokoll 3 ist freigeschaltet.' +
     (s.blockBonus ? ' (Effizienzbonus ' + s.blockBonus + ' Punkte für ' + s.bloecke + ' Blöcke)' : '');
 }
 
@@ -1734,6 +1833,45 @@ function zeigeErfolg2(neu) {
     banner.classList.add('neu');
     $('.erfolg-weiter', banner).hidden = false;
   }
+  baueBonus2();
+}
+
+/** Bonusfrage nach Protokoll 2: Auswahlfrage, nur ein Versuch. */
+function baueBonus2() {
+  const box = $('#bonus2');
+  const s = Terminal.stand;
+  const f = TEXTE.bonusFrage2;
+  box.hidden = false;
+  $('.bonus-frage', box).textContent = f.frage;
+  const inhalt = $('.bonus-inhalt', box);
+  inhalt.innerHTML = '';
+  if (s.bonus2) {
+    inhalt.appendChild(erstelle('p', s.bonus2 === 'richtig' ? 'ok' : 'fehler',
+      s.bonus2 === 'richtig' ? 'Richtig! Plus ' + BONUS_PUNKTE + ' Punkte.' : f.falsch));
+    return;
+  }
+  inhalt.appendChild(erstelle('p', 'klein', 'Freiwillig, nur ein Versuch. Richtig gibt es ' + BONUS_PUNKTE + ' Extrapunkte.'));
+  const auswahl = erstelle('div', 'bonus-auswahl');
+  f.antworten.forEach(function (a) {
+    const knopf = erstelle('button', 'knopf bonus-antwort');
+    knopf.type = 'button';
+    knopf.appendChild(erstelle('strong', '', a[0] + ')'));
+    knopf.appendChild(document.createTextNode(' ' + a[1]));
+    knopf.addEventListener('click', async function () {
+      if (spielGesperrt() || s.bonus2) return;
+      Array.prototype.forEach.call(auswahl.querySelectorAll('.bonus-antwort'), function (k) { k.disabled = true; });
+      const richtig = await Krypto.pruefe(a[0], BONUS2_HASH);
+      if (spielGesperrt() || s.bonus2) return;
+      s.bonus2 = richtig ? 'richtig' : 'falsch';
+      if (richtig) s.punkte += BONUS_PUNKTE;
+      speichere();
+      aktualisiereKopf();
+      Ton.spiele(richtig ? 'erfolg' : 'fehler');
+      baueBonus2();
+    });
+    auswahl.appendChild(knopf);
+  });
+  inhalt.appendChild(auswahl);
 }
 
 /* ----------------------------- Protokoll 3 -------------------------- */
@@ -1757,9 +1895,14 @@ function baueProtokoll3() {
       const hash = await Krypto.hashCode(code);
       const f = HASHES.protokoll3Fallen;
       const fallen = Array.isArray(f) ? f : (f[Terminal.stand.stufe] || f.mittel || []);
+      const u = HASHES.protokoll3Umwege || {};
+      const umwege = u[Terminal.stand.stufe] || u.mittel || [];
       if (fallen.indexOf(hash) >= 0) {
         Ton.spiele('alarm');
         feld.setzeMeldung('ACHTUNG: Euer Weg führt über einen infizierten Server!', 'fehler');
+      } else if (umwege.indexOf(hash) >= 0) {
+        Ton.spiele('fehler');
+        feld.setzeMeldung('Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.', 'fehler');
       } else {
         Ton.spiele('fehler');
         feld.setzeMeldung('OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.', 'fehler');
@@ -1813,6 +1956,10 @@ function zeigeSieg(neu) {
 function oeffneHelpDesk() {
   Ton.spiele('klick');
   $('#helpdesk-knopf').classList.remove('blinkt');
+  if (Terminal.stand && Terminal.stand.tippNeu) {
+    Terminal.stand.tippNeu = false;
+    speichere();
+  }
   aktualisiereHelpDesk();
   $('#helpdesk').classList.add('offen');
   $('#helpdesk').setAttribute('aria-hidden', 'false');
@@ -1998,7 +2145,9 @@ function initSpielleitung() {
       const netz = typeof NETZWERKE !== 'undefined' && NETZWERKE[k];
       z.appendChild(erstelle('td', '', STUFEN[k].name));
       z.appendChild(erstelle('td', '', 'A wird zu ' + caesar('A', p1Verschiebung(k))));
-      z.appendChild(erstelle('td', '', 'max. ' + STUFEN[k].maxBloecke + ' Blöcke'));
+      const p2 = erstelle('td', '', STUFEN[k].kurz || '');
+      p2.appendChild(erstelle('span', 'stufen-limit', 'Limit ' + STUFEN[k].maxBloecke + ' Blöcke'));
+      z.appendChild(p2);
       z.appendChild(erstelle('td', '', netz ? Object.keys(netz.server).length + ' Server' : ''));
       t.appendChild(z);
     });
@@ -2468,11 +2617,11 @@ async function zeigeLoesungen() {
       l.fallen = '';
     }
     [
-      ['Protokoll 1 (Code Kiste 1)', l.p1],
+      ['Protokoll 1 (Code)', l.p1],
       ['Protokoll 1 Erklärung', l.p1info],
       ['Bonusfrage', l.bonus],
       ['Protokoll 2 Signaturen', l.signaturen],
-      ['Code Kiste 2', l.kiste2],
+      ['Bonusfrage Protokoll 2', 'B (' + TEXTE.bonusFrage2.antworten[1][1] + ')'],
       ['Protokoll 3 (Override)', l.p3],
       ['Protokoll 3 Erklärung', l.p3info],
       ['Protokoll 3 Fallen (infizierte Server)', l.fallen]
@@ -2511,22 +2660,27 @@ async function erzeugeKonfiguration() {
   const sig = w('signaturen').split(/[^0-9]+/).filter(Boolean).join(',');
   // Fallen für Protokoll 3 direkt aus den Netzwerkplänen (js/netzwerke.js)
   const fallenStufen = {};
-  Object.keys(NETZWERKE).forEach(function (st) { fallenStufen[st] = netzwerkAnalyse(st).fallen; });
+  const umwegeStufen = {};
+  Object.keys(NETZWERKE).forEach(function (st) {
+    const a = netzwerkAnalyse(st);
+    fallenStufen[st] = a.fallen;
+    umwegeStufen[st] = a.umwege;
+  });
   const verschiebung = parseInt(w('verschiebung') || P1_VERSCHIEBUNG, 10);
   if (!/^\d{3}$/.test(w('p1')) || !(verschiebung >= 1 && verschiebung <= 25)) {
     toast('Code Protokoll 1 muss dreistellig sein, Verschiebung zwischen 1 und 25.', 'warnung');
     return;
   }
-  if (!/^\d{2}$/.test(w('bonus')) || !/^\d{3}$/.test(w('kiste2')) || !/^\d{3}$/.test(w('p3')) || !/^\d,\d,\d$/.test(sig)) {
-    toast('Bonusantwort: 2 Ziffern; Kiste 2 und Override: je 3 Ziffern; Signaturen: 3 einzelne Ziffern mit Komma.', 'warnung');
+  if (!/^\d{2}$/.test(w('bonus')) || !/^\d{3}$/.test(w('p3')) || !/^\d,\d,\d$/.test(sig)) {
+    toast('Bonusantwort: 2 Ziffern; Override: 3 Ziffern; Signaturen: 3 einzelne Ziffern mit Komma.', 'warnung');
     return;
   }
   const loesungen = {
     p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
-    signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
+    signaturen: sig.split(',').join(', '),
     p3: w('p3'),
     // Weg und Fallen hängen von der Stufe ab und stehen in js/netzwerke.js
-    p3info: w('p3info') || 'Kürzester Weg ohne infizierte Server, Summe der Kennzahlen inklusive A und Z. Weg und Fallen je Stufe siehe Leitfaden.',
+    p3info: w('p3info') || 'Weg mit den wenigsten Verbindungen ohne infizierte Server, Summe der Kennzahlen inklusive A und Z. Weg und Fallen je Stufe siehe Leitfaden.',
     fallen: 'Die Fallen je Stufe stehen im Leitfaden und in der Lösungsansicht der Spielleitung.'
   };
   const zeilen = [];
@@ -2537,22 +2691,26 @@ async function erzeugeKonfiguration() {
   zeilen.push("  bonus: '" + await Krypto.hashCode(loesungen.bonus) + "',");
   zeilen.push("  signaturen: '" + await Krypto.hashCode(sig) + "',");
   zeilen.push("  protokoll3: '" + await Krypto.hashCode(loesungen.p3) + "',");
-  zeilen.push('  /* Fallen pro Stufe, berechnet aus js/netzwerke.js */');
-  zeilen.push('  protokoll3Fallen: {');
-  const stufenZeilen = [];
-  for (const st of Object.keys(fallenStufen)) {
-    const fh = [];
-    for (const f of fallenStufen[st]) fh.push("      '" + await Krypto.hashCode(f) + "'");
-    stufenZeilen.push('    ' + st + ': [\n' + fh.join(',\n') + '\n    ]');
-  }
-  zeilen.push(stufenZeilen.join(',\n'));
+  // Fallen und Umwege pro Stufe als Hash-Listen
+  const hashListe = async function (name, kommentar, stufen) {
+    zeilen.push('  /* ' + kommentar + ' */');
+    zeilen.push('  ' + name + ': {');
+    const stufenZeilen = [];
+    for (const st of Object.keys(stufen)) {
+      const fh = [];
+      for (const f of stufen[st]) fh.push("      '" + await Krypto.hashCode(f) + "'");
+      stufenZeilen.push('    ' + st + ': [\n' + fh.join(',\n') + '\n    ]');
+    }
+    zeilen.push(stufenZeilen.join(',\n'));
+  };
+  await hashListe('protokoll3Fallen', 'Fallen pro Stufe, berechnet aus js/netzwerke.js', fallenStufen);
+  zeilen.push('  },');
+  await hashListe('protokoll3Umwege', 'Umwege pro Stufe, berechnet aus js/netzwerke.js', umwegeStufen);
   zeilen.push('  }');
   zeilen.push('};');
   zeilen.push('');
   zeilen.push('const P1_VERSCHIEBUNG = ' + verschiebung + ';');
   zeilen.push("const P1_GEHEIMTEXT = '" + p1Nachricht(w('p1'), verschiebung).geheimtext + "';");
-  zeilen.push('');
-  zeilen.push("const KISTE2_VERSCHLUESSELT = '" + await Krypto.verschluessle(loesungen.kiste2, sig) + "';");
   zeilen.push('');
   zeilen.push("const LOESUNGEN_VERSCHLUESSELT = '" + await Krypto.verschluessle(JSON.stringify(loesungen), neuePin) + "';");
   $('#generator-ausgabe').value = zeilen.join('\n');

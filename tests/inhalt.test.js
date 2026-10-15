@@ -16,7 +16,7 @@ test('Lösungsliste ist mit der PIN entschlüsselbar und enthält keine veraltet
   assert.equal(l.p1, '729');
   assert.match(l.bonus, /^25\b/);
   assert.equal(l.signaturen, '3, 8, 5');
-  assert.equal(l.kiste2, '642');
+  assert.equal(l.kiste2, undefined);
   assert.equal(l.p3, '109');
   for (const feld of ['p3info', 'fallen']) assert.equal(typeof l[feld], 'string');
   const alles = JSON.stringify(l);
@@ -92,4 +92,29 @@ test('Technikcheck bricht hängende Anfragen ab und meldet trotzdem alle Ergebni
     assert.equal(nach[id].ok, false, id);
     assert.match(nach[id].text, /keine Antwort|nicht erreichbar/, id);
   }
+});
+
+test('Bonusfrage nach Protokoll 2: vier Antworten, nur B ist richtig', async () => {
+  const c = app();
+  const f = c.run('TEXTE.bonusFrage2');
+  assert.match(f.frage, /wiederhole bis Ziel erreicht/);
+  assert.deepEqual(Array.from(f.antworten, a => a[0]), ['A', 'B', 'C', 'D']);
+  for (const [buchstabe] of f.antworten) {
+    c.b = buchstabe;
+    assert.equal(await c.run('Krypto.pruefe(b, BONUS2_HASH)'), buchstabe === 'B', buchstabe);
+  }
+  assert.equal(c.run("neuerSpielstand('Team', Date.now() + 600000, null, null).bonus2"), null);
+});
+
+test('Spielende erkennt beendete, abgelaufene und alte wartende Spiele', () => {
+  const c = app();
+  const jetzt = Date.now();
+  const f = s => { c.s = s; return c.run('spielVorbei(s)'); };
+  assert.equal(f(null), true);
+  assert.equal(f({ team: 'A', override: true, endzeit: jetzt + 60000 }), true);
+  assert.equal(f({ team: 'A', geloescht: true }), true);
+  assert.equal(f({ team: 'A', endzeit: jetzt - 1000 }), true);
+  assert.equal(f({ team: 'A', endzeit: jetzt + 60000 }), false);
+  assert.equal(f({ team: 'A', wartet: true, endzeit: null, startzeit: jetzt - 60000 }), false);
+  assert.equal(f({ team: 'A', wartet: true, endzeit: null, startzeit: jetzt - 7 * 3600000 }), true);
 });

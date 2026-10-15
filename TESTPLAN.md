@@ -1,6 +1,6 @@
 # Testplan «Systemabsturz»
 
-Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chrome auf Android). Dauer etwa 15 Minuten.
+Technische Kontrolle vor jedem Einsatz auf einem Tablet (Safari auf iPad, Chrome oder Edge auf einem Laptop). Dauer etwa 15 Minuten. Vor dem ersten Einsatz das Spiel zusätzlich einmal ganz selbst lösen, wie im Leitfaden auf Seite 3 «Zuerst selbst ausprobieren» beschrieben.
 
 ## Technikcheck
 
@@ -12,10 +12,10 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 ## Leitfaden Spielleitung
 
-1. Kachel «Leitfaden Spielleitung» öffnen. Erwartung: 9 Seiten im Dossier-Layout, Stufe der Spielleitung vorgewählt, auf Seite 4 der Hinweis «Geschützt» statt der Lösungen, nirgends die PIN.
+1. Kachel «Leitfaden Spielleitung» öffnen. Erwartung: 11 Seiten im Dossier-Layout, Stufe der Spielleitung vorgewählt, Seite 2 «Was die Klasse mitbringen sollte», Seite 3 «Zuerst selbst ausprobieren» mit Druckliste, auf Seite 6 der Hinweis «Geschützt» statt der Lösungen, nirgends die PIN.
 2. Falsche PIN eingeben, «Lösungen einfügen». Erwartung: «Falsche PIN.».
-3. PIN 4711. Erwartung: Seite 4 zeigt Codes (Kiste 1, Kiste 2, Override), Schlüssel, Klartext und Fallen der gewählten Stufe. Bei eigenem Code der Spielleitung steht dieser Code.
-4. Stufe umstellen: Lösungen, Tipps und Abzeichen passen sich an. Drucken: 9 A4-Seiten, nichts abgeschnitten.
+3. PIN 4711. Erwartung: Seite 6 zeigt die Codes (Protokoll 1 und Override), Schlüssel, Klartext und Fallen der gewählten Stufe. Bei eigenem Code der Spielleitung steht dieser Code.
+4. Stufe umstellen: Lösungen, Tipps und Abzeichen passen sich an. Drucken: 11 A4-Seiten, nichts abgeschnitten.
 5. «Als HTML herunterladen»: Datei öffnet ohne Internet, mit Lösungen nur, wenn sie vorher eingefügt waren.
 
 ## Uhrzeit und Geräte
@@ -41,7 +41,7 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 1. Auf `spielleitung.html` im Reiter «1 Vorbereiten» unter «Material drucken» die Kachel «Gesamtes Dossier» öffnen. Erwartung: Die Stufe der Spielleitung ist vorgewählt, oben lässt sie sich umstellen. Drucken. Erwartung: 7 A4-Seiten, die Chiffrierscheiben in voller Grösse (gross 172 mm, klein 142 mm), Seite 7 (Netzwerkplan) quer und farbig. «Als HTML herunterladen», die Datei ohne Internet öffnen: gleiche 7 Seiten.
 2. «▶ Spiel starten». Erwartung: Vollbild, Botschaft von NULLBYTE mit Maske und Stimme.
 3. Nach der Botschaft (oder Taste → bzw. Leertaste): Spielanweisung mit grossem Beitrittscode darüber, Absätze werden nacheinander vorgelesen und grün hervorgehoben. Es sind keine Knöpfe sichtbar. Taste R liest nochmals vor, → oder Enter gibt die Aufgaben sofort frei.
-4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
+4. Während der Anweisung auf dem Testtablet `index.html` öffnen, Teamname und Beitrittscode eingeben, «Spiel starten», «Wir sind bereit». Die gesprochene Anweisung nennt beide Schritte. Erwartung: «Warten auf die Spielleitung», Aufgaben nicht sichtbar.
 5. Ende der Anweisung. Erwartung Beamer: Countdown läuft, Story «Euer Auftrag», Beitrittscode klein oben. Erwartung Tablet nach wenigen Sekunden: «AUFGABEN EMPFANGEN», dann Protokoll 1 mit demselben Countdown, 100 Punkte, drei Joker.
 6. Ein zweites Tablet erst jetzt anmelden. Erwartung: Es startet sofort mit derselben Restzeit.
 7. Notfall ohne Internet: WLAN auf einem Tablet ausschalten, anmelden. Erwartung: rote Meldung «Keine Verbindung». «Spielleitung: manuell starten (PIN)» startet das Tablet.
@@ -52,27 +52,29 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 Die Steuerung zeigt oben immer Phase, Beitrittscode, Stufe und Restzeit. Der passende Reiter öffnet sich automatisch: vor dem Start «1 Vorbereiten», nach der Freigabe «2 Spiel durchführen», nach «System gerettet» oder Zeitablauf «3 Nach dem Spiel».
 
 1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 eingeben, «Übernehmen (PIN)». Erwartung: «Verschiebung 4 (A wird zu E)», Vorschau zeigt den neuen Geheimtext, Unterschrift RYPPFCXI. Stufe auf «Mittel» stellen: Verschiebung 6, Unterschrift TARRHEZK. Auf «Schwer»: Verschiebung 8, Unterschrift VCTTJGBM. Danach wieder «Leicht».
-2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
+2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 knackt Protokoll 1.
 3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
-4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
+4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 136 (sauberer Umweg) ergibt «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
 5. «Standard» stellt Code 729 wieder her (Verschiebung weiterhin nach Stufe).
-6. Ohne Spielleitung: `index.html?stufe=mittel` öffnen und manuell starten. Erwartung: Geheimtext endet auf TARRHEZK, 729 öffnet Protokoll 1, Tipp 3 nennt «innen G».
+6. Ohne Spielleitung: `index.html?stufe=mittel` öffnen und manuell starten. Erwartung: Geheimtext endet auf TARRHEZK, 729 knackt Protokoll 1, Tipp 3 nennt «innen G».
 
 ## Netzwerkpläne (Protokoll 3) prüfen
 
 Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn der kürzeste saubere Weg nicht eindeutig ist).
 
-* Leicht: A, F, G, C, D, E, Z = 12 + 13 + 12 + 23 + 10 + 15 + 24 = **109**. Fallen zum Beispiel 100, 115, 117.
-* Mittel: A, B, G, H, L, P, Q, Z = 12 + 14 + 9 + 17 + 14 + 14 + 5 + 24 = **109**. Fallen zum Beispiel 096, 102, 103.
-* Schwer: A, Q, R, S, M, H, I, J, K, Z = 12 + 4 + 6 + 7 + 9 + 7 + 16 + 16 + 8 + 24 = **109**. Fallen zum Beispiel 066, 074, 104.
+* Leicht: A, F, G, C, D, E, Z = 12 + 13 + 12 + 23 + 10 + 15 + 24 = **109**. Fallen zum Beispiel 100, 115, 117. Saubere Umwege 136, 138, 163, 165, 190.
+* Mittel: A, B, G, H, L, P, Q, Z = 12 + 14 + 9 + 17 + 14 + 14 + 5 + 24 = **109**. Fallen zum Beispiel 096, 102, 103. Saubere Umwege 131, 165.
+* Schwer: A, Q, R, S, M, H, I, J, K, Z = 12 + 4 + 6 + 7 + 9 + 7 + 16 + 16 + 8 + 24 = **109**. Fallen zum Beispiel 066, 074, 104. Saubere Umwege 150, 151, 154, 171.
 
 ## Protokoll 1
 
 | Schritt | Erwartung |
 |---|---|
 | 123 eingeben, Bestätigen | Fehlerton, «ZUGRIFF VERWEIGERT», Ziffernfeld 2 Sekunden gesperrt |
-| 729 eingeben, Bestätigen | Erfolgston, «PROTOKOLL 1 GEKNACKT. Code für Sicherheitskiste 1: 729», 120 Punkte, Tab 2 freigeschaltet |
-| Bonusfrage: 25 | «Richtig! Plus 10 Punkte.», 130 Punkte, kein zweiter Versuch möglich |
+| 729 eingeben, Bestätigen | Erfolgston, «PROTOKOLL 1 GEKNACKT. Code 729 akzeptiert, Protokoll 2 ist freigeschaltet.», 120 Punkte, Tab 2 freigeschaltet |
+| Bonusfrage «Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen …»: 25 | «Richtig! Plus 10 Punkte.», 130 Punkte, kein zweiter Versuch möglich |
+| Bei einer falschen Antwort (zum Beispiel 26) | «Leider falsch. Tipp zum Nachdenken: Bei welcher Stellung steht das innere A genau unter dem äusseren A …», keine Punkte |
+| Druckblatt Protokoll 1, Bauanleitung | Letzter Schritt «So entschlüsselt ihr: Sucht jeden Buchstaben der Nachricht innen auf der roten Scheibe …» |
 
 ## Protokoll 2 (wichtigster Test)
 
@@ -94,18 +96,23 @@ wiederhole bis Ziel erreicht
       drehe dich nach links
 ```
 
+Vor dem Start: Die Story nennt «ANTI-V sammelt jede gelbe Zahl ein, über die er läuft», unter dem Labyrinth steht «Rechts und links aus Sicht von ANTI-V (oranger Pfeil = Blickrichtung). Jedes Feld kostet 1 Energie.» Der orange Pfeil am Roboter ist gut erkennbar.
+
 «Programm starten» drücken. Erwartung:
 
 * ANTI-V läuft den Weg (1,1) bis (8,1), dann (8,2), (7,2), (7,3) bis (7,6), (8,6), (8,7), (8,8).
 * Der jeweils ausgeführte Block leuchtet gelb.
 * Die Leiste zeigt nacheinander **Signaturen: 3 8 5**, genau diese drei Zahlen in dieser Reihenfolge.
-* Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: 642».
+* Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert, Protokoll 3 ist freigeschaltet.».
 * Zusatz: «Euer Programm: 15 Blöcke (Limit 15). Effizienzbonus: plus 10 Punkte.»
 * Tab 3 wird freigeschaltet, 160 Punkte (mit Bonusfrage und Effizienzbonus, ohne Joker).
+* Unter der Erfolgsmeldung erscheint die Bonusfrage «Wann hört der Block «wiederhole bis Ziel erreicht» auf, die Blöcke darin zu wiederholen?» mit den Antworten A bis D.
+* Antwort B antippen: «Richtig! Plus 10 Punkte.», 170 Punkte. Die Knöpfe verschwinden, auch nach dem Neuladen gibt es keinen zweiten Versuch.
+* In einem zweiten Durchgang eine falsche Antwort (A, C oder D) wählen: «Leider falsch. Richtig wäre B: Vor jedem Durchgang prüft die Schleife …», keine Punkte.
 
 ### Test B: Programm ohne «nicht»
 
-Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entfernen, sodass nur noch «rechts frei?» und «vorne frei?» als Bedingungen stehen. «Zurücksetzen», dann «Programm starten». Erwartung:
+Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entfernen, sodass nur noch «rechts frei?» und «vorne frei?» als Bedingungen stehen. «Zurück zum Start», dann «Programm starten». Erwartung:
 
 * Die Leiste zeigt «3 8 _».
 * ANTI-V biegt bei (7,5) nach rechts ab und betritt das rote Feld **(8,5)**.
@@ -117,25 +124,32 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 |---|---|
 | Nur «drehe dich nach links» und «gehe 1 Feld vor» anhängen | ANTI-V stösst an die Mauer, «Mauer!» |
 | «wiederhole bis Ziel erreicht» mit nur «drehe dich nach rechts» | Abbruch: «Endlosschleife? ANTI-V dreht sich im Kreis.» |
+| Programm, das das Ziel über andere Zahlen erreicht (Stufe mittel, zum Beispiel über 1 und 2) | «Ziel erreicht, aber falsche Signaturen (…). ANTI-V hat einen anderen Weg genommen. Der richtige Weg führt über genau 3 Signaturen.» |
+| Einen Block lose in den Arbeitsbereich legen | Hinweis unten im Arbeitsbereich «Graue Blöcke hängen nicht am Programm und werden nicht ausgeführt.», verschwindet nach dem Anhängen |
 | Nur «gehe 1 Feld vor» ohne Schleife | «Ihr müsst mit der Schleife «wiederhole bis Ziel erreicht» arbeiten.» |
-| Mehr als 15 Blöcke ziehen (Stufe schwer) | Ab 15 Blöcken werden die Blöcke in der Toolbox grau, Anzeige «Blöcke 15 / 15» gelb |
+| 15 Blöcke anhängen (Stufe schwer) | Anzeige «Blöcke 15 / 15» gelb |
+| Danach 2 Blöcke lose daneben legen | Anzeige «Blöcke 15 / 15 (+2 lose)», lose Blöcke grau, Programm startet normal |
+| Einen losen Block zusätzlich anhängen | Anzeige «Blöcke 16 / 15» rot, beim Start «Euer Programm hat 16 Blöcke, erlaubt sind höchstens 15. Entfernt 1 Block.» |
+| 3 lose Blöcke neben dem vollen Programm | Toolbox wird grau, keine weiteren Blöcke möglich |
 | Kürzere Lösung mit 11 Blöcken: wiederhole { falls (rechts frei? und nicht rechts infiziert?) dann drehe rechts }, danach { falls vorne frei? dann gehe vor, sonst drehe links } | «Neuer Rekord! Plus 20 Punkte.» |
 
 ### Stufen leicht und mittel
 
 1. Auf der Spielleitung die Stufe «Leicht» wählen und ein Tablet starten (oder `index.html?stufe=leicht`). Erwartung: Spirallabyrinth, Toolbox ohne Operatoren, «Blöcke 0 / 5», «Energie 38 / 38».
-2. Programm: wiederhole bis Ziel erreicht { falls vorne frei? dann gehe 1 Feld vor, sonst drehe dich nach rechts }. Erwartung: 3, 8, 5, Code 642, Effizienzbonus 10.
+2. Programm: wiederhole bis Ziel erreicht { falls vorne frei? dann gehe 1 Feld vor, sonst drehe dich nach rechts }. Erwartung: 3, 8, 5, «Protokoll 3 ist freigeschaltet», Effizienzbonus 10.
 3. Gleiches Programm mit «drehe dich nach links». Erwartung: «Energie leer!».
 4. Stufe «Mittel»: Musterlösung ohne «und» und «nicht» (9 Blöcke) erreicht das Ziel mit 3, 8, 5.
-| «Schritt für Schritt» mehrmals drücken | Je ein Block wird ausgeführt und hervorgehoben |
-| Tempo-Regler verschieben | Animation wird schneller oder langsamer |
-| Seite neu laden | Das gebaute Programm ist noch da |
+5. «Schritt für Schritt» mehrmals drücken: Je ein Block wird ausgeführt und hervorgehoben.
+6. Tempo-Regler verschieben: Die Animation wird schneller oder langsamer.
+7. «Zurück zum Start»: ANTI-V steht wieder am Start, das Programm bleibt.
+8. Seite neu laden: Das gebaute Programm ist noch da.
 
 ## Protokoll 3
 
 | Schritt | Erwartung |
 |---|---|
 | 104 (Stufe schwer, Abkürzung über rote Server) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
+| 150 (Stufe schwer, sauberer Umweg) | «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.» |
 | 999 | «OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.» |
 | 109 | Fanfare, grosser roter Knopf «OVERRIDE AUSLÖSEN» |
 | Knopf drücken | «SYSTEM WIEDERHERGESTELLT. Ihr habt die Schule gerettet!», Restzeit, Zeitbonus, Endpunktestand, Countdown steht still |
@@ -145,7 +159,8 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 | Schritt | Erwartung |
 |---|---|
 | Help-Desk öffnen, Joker einlösen | Bestätigungsdialog, danach Tipp Stufe 1 sichtbar, minus 20 Punkte, ein Joker weniger in der Kopfzeile |
-| 5 Minuten in einem Protokoll nichts lösen | Hinweis «Gratis-Tipp freigeschaltet», Stufe 1 ist mit «(gratis)» markiert, kein Joker verbraucht |
+| 5 Minuten in einem Protokoll nichts lösen | Hinweis «Gratis-Tipp freigeschaltet», Help-Desk-Knopf blinkt mit Abzeichen «1 neu» (auch nach dem Neuladen), Stufe 1 ist mit «(gratis)» markiert, kein Joker verbraucht |
+| Help-Desk öffnen und Seite neu laden | Abzeichen «1 neu» ist weg |
 | Alle 3 Joker verbrauchen | «Keine Joker mehr. Wendet euch an die Spielleitung.» |
 
 ## Vorlesen und NULLBYTE
@@ -161,7 +176,10 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 
 1. Auf einem zweiten Tablet die Startseite mit einer Endzeit in 2 Minuten öffnen (zum Beispiel `index.html?ende=10:02`). Nach Ablauf: «SYSTEM GELÖSCHT», Eingaben gesperrt, Punkte bleiben sichtbar.
 2. Unten rechts «Spielleitung», PIN 4711. Erwartung: Auswahl «Spiel zurücksetzen» oder «Zur Spielleitungsansicht». «Zur Spielleitungsansicht» öffnet spielleitung.html. «Spiel zurücksetzen», dann «Löschen». Erwartung: zurück auf der Startseite, Spielstand leer.
-3. Offline-Test: Seite einmal online laden, dann WLAN ausschalten und neu laden. Das Terminal und die Blöcke funktionieren weiter.
+3. Im Fenster «SYSTEM GELÖSCHT» auf «Neues Spiel» tippen und bestätigen. Erwartung: Startseite mit leerer Anmeldung, ohne PIN.
+4. Spiel mit Beitrittscode starten (Gerät wartet auf das Startsignal). Startseite öffnen. Erwartung: «Auf diesem Gerät läuft noch das Spiel von …», «Weiter zum Terminal» und darunter die Anmeldung. Mit dem gleichen Code anmelden: weiter im alten Spiel. Mit einem neuen Code anmelden: Rückfrage «Neues Spiel starten?», danach neuer Spielstand mit dem neuen Code.
+5. Im Warteschirm «Anderer Beitrittscode? Neu anmelden» und bestätigen. Erwartung: Startseite mit leerer Anmeldung.
+6. Offline-Test: Seite einmal online laden, dann WLAN ausschalten und neu laden. Das Terminal und die Blöcke funktionieren weiter.
 
 
 ## Regressionen nach dem Code-Audit
@@ -172,7 +190,7 @@ Vor dem Gerätetest `node --test tests/*.test.js` ausführen.
 * Kurz vor 00:00 eine Codeprüfung oder den letzten Blockly-Schritt auslösen: Nach Ablauf keine zusätzlichen Punkte und keine neu freigeschalteten Protokolle.
 * Blockly unmittelbar nach Erreichen des Ziels zurücksetzen: Keine verspätete Auswertung des alten Durchlaufs.
 * Joker-Dialog offen lassen, bis ein Gratis-Tipp erscheint: Bestätigen darf keinen anderen Tipp ungefragt kaufen.
-* Schwierigkeit Schwer und eigenen Schlosscode einstellen, Runde zurücksetzen: Auswahl, Vorschau, Druckmaterial und Startsignal behalten dieselben Einstellungen; Lösungen werden verborgen.
+* Schwierigkeit Schwer und eigenen Code für Protokoll 1 einstellen, Runde zurücksetzen: Auswahl, Vorschau, Druckmaterial und Startsignal behalten dieselben Einstellungen; Lösungen werden verborgen.
 * Bei `?ende=HH:MM` den Beamer stoppen und neu laden: Die gestoppte Restzeit bleibt erhalten.
 * PIN-Dialog per Enter bestätigen, per Escape abbrechen und mit Tab bedienen. Währenddessen dürfen Beamer-Tastenkürzel nicht reagieren.
 * Vorlesen mehrfach starten und stoppen, sowohl mit Aufnahme als auch Browserstimme; Intro und Anweisung dürfen nicht hängen bleiben.

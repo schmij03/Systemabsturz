@@ -64,7 +64,7 @@ const UNTERRICHTSINFO = {
             ['2 Algorithmen', 'MI.2.2e (Z2): verstehen, dass ein Computer nur vordefinierte Anweisungen ausführt', 'ANTI-V tut genau, was die Blöcke sagen, nicht, was das Team meint'],
             ['2 Algorithmen', 'MI.2.1i (Z3): logische Operatoren verwenden (und, oder, nicht)', 'Stufen mittel und schwer: Bedingungen mit «und» und «nicht»'],
             ['3 Netzwerke', 'MI.2.1f (Z3): Baum- und Netzstrukturen erkennen und verwenden', 'Netzwerkplan mit Servern und Verbindungen als Netzstruktur'],
-            ['3 Netzwerke', 'MI.2.2b (Z2) und MI.2.2i (Z3): Lösungswege suchen, auf Korrektheit prüfen und vergleichen', 'Kürzesten sauberen Weg finden, verlockende infizierte Abkürzungen prüfen und verwerfen'],
+            ['3 Netzwerke', 'MI.2.2b (Z2) und MI.2.2i (Z3): Lösungswege suchen, auf Korrektheit prüfen und vergleichen', 'Sauberen Weg mit den wenigsten Verbindungen finden, verlockende infizierte Abkürzungen prüfen und verwerfen'],
             ['3 Netzwerke', 'MI.2.3m (Z3): das Internet als Infrastruktur von seinen Diensten unterscheiden', 'Der Netzwerkplan als Modell für die Verbindungen hinter dem Internet']
           ]
         } },
@@ -84,7 +84,6 @@ const UNTERRICHTSINFO = {
         { h: 'Vor der Lektion (ca. 15 Minuten)' },
         { liste: [
           'Teamsets der gewählten Stufe drucken (A4, 100 %, farbig), Chiffrierscheiben auf festes Papier.',
-          'Zahlenschlösser auf die gewählten Codes stellen.',
           'Tablets oder Laptops mit geöffneter Startseite bereitlegen.',
           'Prüfen, ob ntfy.sh im Schulnetz erreichbar ist. Stufe auf der Spielleitung wählen.'
         ] },
@@ -105,9 +104,9 @@ const UNTERRICHTSINFO = {
       titel: 'D  Differenzierung und Beurteilung',
       inhalt: [
         { liste: [
-          '**Stufen als Orientierung:** leicht für Grundanforderungen, mittel für das Regelniveau, schwer für erweiterte Anforderungen. Die Stufe gilt für das ganze Spiel und wird auf der Spielleitung gewählt. Schnelle Teams können die Bonusfrage lösen und ihr Programm weiter optimieren.',
+          '**Stufen als Orientierung:** leicht für Grundanforderungen, mittel für das Regelniveau, schwer für erweiterte Anforderungen. Die Stufe gilt für das ganze Spiel und wird auf der Spielleitung gewählt. Schnelle Teams können die Bonusfragen lösen und ihr Programm weiter optimieren.',
           '**Beurteilung:** Der Punktestand misst auch Tempo und Glück, nicht nur Kompetenz. Er eignet sich nicht als Note. Sinnvoll ist eine formative Rückmeldung über Beobachtung, die Notizen auf dem Teamset (Protokoll 1: Geheimtext, Verschiebung, Klartext, Protokoll 2: Planungsfeld) und die mündliche Reflexion.',
-          '**Anschluss an eine Prüfung:** Eine Cäsar-Nachricht entschlüsseln, ein Programm lesen und manuell ausführen (MI.2.2d), im Netzwerkplan den kürzesten sauberen Weg bestimmen.'
+          '**Anschluss an eine Prüfung:** Eine Cäsar-Nachricht entschlüsseln, ein Programm lesen und manuell ausführen (MI.2.2d), im Netzwerkplan den sauberen Weg mit den wenigsten Verbindungen bestimmen.'
         ] }
       ]
     },
@@ -117,7 +116,8 @@ const UNTERRICHTSINFO = {
         { liste: [
           'Pro Team ein Tablet (zum Beispiel iPad mit Safari, Querformat) oder ein Laptop mit aktuellem Browser (Chrome, Edge, Safari oder Firefox). Dazu ein Beamer-Laptop mit `spielleitung.html`.',
           'Das Startsignal läuft über ntfy.sh und braucht Internet. Ohne Internet: Geräte der Teams manuell mit der PIN starten oder den Link `index.html?ende=HH:MM` verwenden.',
-          'Scratch-Erfahrung ist hilfreich, aber nicht nötig. Der Help-Desk liefert gestufte Tipps.',
+          '**Vorwissen der Klasse:** Auf Stufe leicht ohne Vorkenntnisse spielbar. Für mittel helfen Scratch-Grundlagen (Schleife, «falls dann sonst»), für schwer zusätzlich «und» und «nicht». Die Cäsar-Verschlüsselung vorher nicht erklären, sie ist Teil des Rätsels. Details im Leitfaden, Seite 2.',
+          '**Zuerst selbst ausprobieren:** Vor dem ersten Einsatz das Spiel einmal selbst ganz durchspielen (ca. 45 Minuten), am besten im Schulzimmer mit dem WLAN der Schule. Anleitung und Druckliste im Leitfaden, Seite 3.',
           'Lizenz: «Systemabsturz» von Christof Heiss und Jan Schmid, PH Luzern 2026, CC BY-SA 4.0.',
           'Quelle der Kompetenzen: Lehrplan 21, Modullehrplan Medien und Informatik, https://v-ef.lehrplan.ch',
           'Bildnachweis: Hintergrund der Spielanweisung KI-generiert mit Google Gemini; Maske von NULLBYTE eigene Zeichnung.'

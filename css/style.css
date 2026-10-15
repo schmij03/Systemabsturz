@@ -179,7 +179,9 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 .joker-punkt { color: var(--text-schwach); }
 .joker-punkt.voll { color: var(--gelb); }
 .helpdesk-knopf { align-self: center; background: #10263a; border-color: var(--blau); color: #fff; }
-.helpdesk-knopf.blinkt { animation: blinken 1s infinite; }
+.helpdesk-knopf.blinkt { animation: blinken 1s infinite; position: relative; }
+/* Abzeichen, bis der Help-Desk nach einem Gratis-Tipp geöffnet wird */
+.helpdesk-knopf.blinkt::after { content: '1 neu'; position: absolute; top: -8px; right: -8px; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; color: #000; background: var(--gelb); border-radius: 10px; }
 
 @keyframes puls { 50% { opacity: 0.45; } }
 @keyframes blinken { 50% { opacity: 0.55; } }
@@ -225,6 +227,14 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 
 .bonus { border: 2px dashed var(--gelb); border-radius: var(--radius); padding: 12px 14px; }
 .bonus h3 { color: var(--gelb); }
+/* Bonusfrage nach Protokoll 2: knapp über dem Programmierbereich */
+.bonus-kompakt { padding: 6px 12px; margin-bottom: 8px; }
+.bonus-kompakt h3 { display: inline; margin: 0 8px 0 0; font-size: 1rem; }
+.bonus-kompakt .bonus-frage { display: inline; margin: 0; font-weight: 700; }
+.bonus-kompakt .bonus-inhalt p { margin: 4px 0; }
+.bonus-auswahl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.bonus-antwort { text-align: left; font-size: 0.95rem; padding: 6px 10px; min-height: 44px; }
+@media (max-width: 700px) { .bonus-auswahl { grid-template-columns: 1fr; } }
 
 /* ---------------------------- Ziffernfeld --------------------------- */
 
@@ -287,6 +297,8 @@ code { background: var(--flaeche-hell); padding: 0 0.3em; border-radius: 4px; wo
 .signatur-platz.voll { color: var(--gelb); border-color: var(--gelb); animation: aufleuchten 0.6s; }
 .svg-box { flex: 1; min-height: 160px; display: flex; justify-content: center; }
 #labyrinth { width: 100%; height: 100%; max-height: 100%; border-radius: 6px; }
+.p2-hinweis { margin: 0; font-size: 0.78rem; line-height: 1.35; color: var(--text-schwach); }
+.lose-hinweis { position: absolute; bottom: 8px; left: 124px; right: 70px; z-index: 80; margin: 0; padding: 6px 10px; font-size: 0.85rem; color: var(--text); background: rgba(13, 20, 23, 0.92); border: 1px solid var(--rand); border-radius: 6px; pointer-events: none; }
 .algo-knoepfe { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 6px; }
 .algo-knoepfe .knopf { padding: 0 0.4em; font-size: 0.95rem; }
 #algo-start.laeuft { background: #8a6d00; border-color: var(--gelb); }
@@ -573,6 +585,7 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .zaehler { padding: 4px 8px; border: 1px solid var(--rand); border-radius: 6px; font-size: 0.8rem; white-space: nowrap; color: var(--text); background: var(--flaeche); }
 #stufe-info { color: var(--text-schwach); }
 #block-zaehler.voll { color: var(--gelb); border-color: var(--gelb); }
+#block-zaehler.zuviel { color: #fff; background: var(--rot-dunkel); border-color: var(--rot); }
 #energie-zaehler { color: #9ec9ff; border-color: #2a4a66; }
 #energie-zaehler.leer { color: #fff; background: var(--rot-dunkel); border-color: var(--rot); }
 .stufe-wahl { min-height: 48px; font: inherit; padding: 0 10px; color: var(--gruen-hell); background: #000; border: 2px solid var(--rand); border-radius: 6px; }
@@ -744,6 +757,8 @@ body[data-phase="beendet"] .phase-chip strong { color: var(--text-schwach); }
 .stufen-tabelle { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
 .stufen-tabelle th, .stufen-tabelle td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rand); }
 .stufen-tabelle th { color: var(--text-schwach); font-weight: 600; font-size: 0.8rem; }
+.stufen-tabelle th, .stufen-tabelle td:not(:nth-child(3)) { white-space: nowrap; }
+.stufen-tabelle .stufen-limit { display: block; font-size: 0.8rem; color: var(--text-schwach); }
 .stufen-tabelle tr.gewaehlt td { background: rgba(255, 213, 79, 0.08); color: #fff; }
 .stufen-tabelle tr.gewaehlt td:first-child { color: var(--gelb); font-weight: 700; }
 .zur-steuerung {
@@ -866,6 +881,10 @@ html.info-offen, html.info-offen body { overflow: hidden; }
 .technikcheck-liste li.fehler .technik-zeichen { background: var(--rot); color: #fff; }
 .technikcheck-liste .technik-text { font-family: var(--sans); font-size: 0.95rem; }
 .technikcheck-liste .technik-hinweis { display: block; margin-top: 2px; color: var(--gelb); font-size: 0.88rem; }
+.erstmals-hinweis { margin: 0 0 12px; padding: 10px 14px; border: 1px solid var(--gelb); border-left-width: 4px; border-radius: 6px; background: rgba(255, 213, 79, 0.06); font-size: 0.95rem; }
+.erstmals-hinweis a { color: var(--gelb); }
+.overlay-knoepfe { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; align-items: center; }
+.spiel-laeuft { margin-bottom: 18px; }
 .link-unauffaellig { margin-top: 14px; min-height: 44px; padding: 6px 10px; background: none; border: none; color: var(--text-schwach); font: inherit; font-size: 0.85rem; text-decoration: underline; cursor: pointer; }
 .link-unauffaellig:hover, .link-unauffaellig:focus-visible { color: var(--text); }
 .geraetecheck { margin-top: 8px; }

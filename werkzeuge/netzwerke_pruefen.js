@@ -4,8 +4,10 @@
    Aufruf: node werkzeuge/netzwerke_pruefen.js
    Zeigt pro Stufe den kürzesten Weg ohne infizierte Server (muss
    eindeutig sein), seine Summe (Override-Code) und alle infizierten
-   Wege, die höchstens gleich viele Verbindungen haben (Fallen).
-   Mit --hashes werden die Fallen-Hashes für js/app.js ausgegeben.
+   Wege, die weniger Verbindungen haben (Fallen), sowie die Summen
+   sauberer Wege mit mehr Verbindungen (Umwege).
+   Mit --hashes werden die Hashes für HASHES.protokoll3Fallen und
+   HASHES.protokoll3Umwege in js/app.js ausgegeben.
    Lizenz: CC BY-SA 4.0, Christof Heiss, Jan Schmid, PH Luzern 2026
    ===================================================================== */
 'use strict';
@@ -19,7 +21,7 @@ const SALZ = /const SALZ = '([^']*)'/.exec(fs.readFileSync(path.join(wurzel, 'js
 const hash = function (code) { return crypto.createHash('sha256').update(SALZ + code, 'utf8').digest('hex'); };
 const mitHashes = process.argv.indexOf('--hashes') >= 0;
 let fehler = 0;
-const ausgabe = {};
+const ausgabe = { protokoll3Fallen: {}, protokoll3Umwege: {} };
 
 Object.keys(NETZWERKE).forEach(function (stufe) {
   const n = NETZWERKE[stufe];
@@ -48,8 +50,13 @@ Object.keys(NETZWERKE).forEach(function (stufe) {
   console.log('   kürzester sauberer Weg (' + kurz + ' Verbindungen): ' + beste.map(function (w) { return w.join('-') + ' = ' + summe(w); }).join(' | '));
   if (beste.length !== 1) { console.log('   FEHLER: Der kürzeste saubere Weg ist nicht eindeutig.'); fehler++; }
   if (code !== 109) console.log('   Hinweis: Override-Code ist ' + code + ', HASHES.protokoll3 in js/app.js muss dazu passen.');
-  console.log('   Fallen: ' + fallen.map(function (z) { return String(z).padStart(3, '0'); }).join(', '));
-  ausgabe[stufe] = fallen.map(function (z) { return hash(String(z).padStart(3, '0')); });
+  const umwege = Array.from(new Set(sauber.filter(function (w) { return w.length - 1 > kurz; }).map(summe)))
+    .filter(function (z) { return z !== code && fallen.indexOf(z) < 0; }).sort(function (a, b) { return a - b; });
+  const drei = function (z) { return String(z).padStart(3, '0'); };
+  console.log('   Fallen: ' + fallen.map(drei).join(', '));
+  console.log('   Umwege: ' + umwege.map(drei).join(', '));
+  ausgabe.protokoll3Fallen[stufe] = fallen.map(function (z) { return hash(drei(z)); });
+  ausgabe.protokoll3Umwege[stufe] = umwege.map(function (z) { return hash(drei(z)); });
 });
 
 if (mitHashes) console.log(JSON.stringify(ausgabe, null, 2));

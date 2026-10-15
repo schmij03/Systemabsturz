@@ -54,11 +54,11 @@ var Druck = (function () {
         '<table class="mission"><tr><th>Protokoll</th><th>Was ihr tut</th><th>Wo</th></tr>' +
         '<tr><td>1  Kryptografie</td><td>Entschlüsselt die Nachricht aus dem Terminal mit der Chiffrierscheibe und gebt den Code ein.</td><td>Papier</td></tr>' +
         '<tr><td>2  Algorithmen</td><td>Programmiert den Antiviren-Roboter ANTI-V mit Blöcken, bis er die drei Viren-Signaturen einsammelt.</td><td>Tablet oder Laptop</td></tr>' +
-        '<tr><td>3  Netzwerke</td><td>Findet auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server. Die Summe ist der Override-Code.</td><td>Papier</td></tr></table>' +
+        '<tr><td>3  Netzwerke</td><td>Findet auf dem Netzwerkplan den Weg mit den wenigsten Verbindungen ohne infizierte Server. Die Summe der Kennzahlen ist der Override-Code.</td><td>Papier</td></tr></table>' +
         '<h2>Regeln</h2><ul>' +
         '<li>Löst die Protokolle der Reihe nach. Jedes gelöste Protokoll schaltet das nächste frei.</li>' +
         '<li><strong>Help-Desk:</strong> Im Terminal gibt es Tipps. Jedes Team hat ' + JOKER_ANZAHL + ' Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kommt ihr 5 Minuten nicht weiter, gibt es einen Tipp gratis.</li>' +
-        '<li><strong>Punkte:</strong> Start mit ' + START_PUNKTE + ' Punkten, plus ' + PUNKTE_PRO_PROTOKOLL + ' pro Protokoll, Bonus für wenige Blöcke in Protokoll 2 und für jede übrige Minute beim Override.</li>' +
+        '<li><strong>Punkte:</strong> Start mit ' + START_PUNKTE + ' Punkten, plus ' + PUNKTE_PRO_PROTOKOLL + ' pro Protokoll, Bonusfragen nach Protokoll 1 und 2, Bonus für wenige Blöcke in Protokoll 2 und für jede übrige Minute beim Override.</li>' +
         '<li>Bei 00:00 ist alles verloren. Teilt die Arbeit auf und sprecht euch ab!</li></ul>' +
         '<h2>Notizen</h2>' + linien(4)
     }, st);
@@ -102,7 +102,7 @@ var Druck = (function () {
         '<p class="feldname" style="margin-top: 7mm"><strong>Verschiebung:</strong> <span style="font-weight: 400">Aus dem Buchstaben ____ wird ____, also um ____ Stellen.</span></p>' +
         '<p class="feldname">Entschlüsselte Nachricht (Klartext):</p>' + linien(4) +
         kaestchen('Code für das Terminal:', 3) +
-        '<div class="kasten"><p><strong>Bonusfrage im Terminal</strong> (ein Versuch, plus 10 Punkte)<br><span style="font-size: 9.5pt">Wie viele Einstellungen der Chiffrierscheibe verschlüsseln eine Nachricht wirklich? Überlegt hier, bevor ihr antwortet:</span></p>' + linien(2) + '</div>'
+        '<div class="kasten"><p><strong>Bonusfrage im Terminal</strong> (ein Versuch, plus 10 Punkte)<br><span style="font-size: 9.5pt">Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen. Bei wie vielen dieser Stellungen wird die Nachricht wirklich verändert, sodass der Geheimtext anders aussieht als der Klartext? Überlegt hier, bevor ihr antwortet:</span></p>' + linien(2) + '</div>'
     }, st);
     var s2 = seite({
       ober: 'SICHERHEITSPROTOKOLL 1  ·  BASTELVORLAGE 1 VON 2', titel: 'Chiffrierscheibe: grosse Scheibe', teil: 'Protokoll 1',
@@ -120,7 +120,8 @@ var Druck = (function () {
         '<li>Schneidet beide Scheiben aus (grosse Scheibe auf der vorherigen Seite).</li>' +
         '<li>Legt die kleine rote Scheibe auf die grosse, Mittelpunkt auf Mittelpunkt.</li>' +
         '<li>Stecht mit einem Bleistift durch beide Mittelpunkte und steckt eine Musterklammer durch.</li>' +
-        '<li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li></ol></div>'
+        '<li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li>' +
+        '<li><strong>So entschlüsselt ihr:</strong> Sucht jeden Buchstaben der Nachricht innen auf der roten Scheibe und schreibt den Buchstaben ab, der aussen daneben steht.</li></ol></div>'
     }, st);
     return s1 + s2 + s3;
   }
@@ -148,7 +149,7 @@ var Druck = (function () {
     return seite({
       ober: 'SICHERHEITSPROTOKOLL 2  ·  ALGORITHMEN', titel: 'Virenscanner programmieren', teil: 'Protokoll 2',
       inhalt:
-        '<p>NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert im Notfall-Terminal den Antiviren-Roboter <strong>ANTI-V</strong> so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt.' +
+        '<p>Programmiert den Antiviren-Roboter <strong>ANTI-V</strong> im Terminal so, dass er das Ziel erreicht. Er sammelt jede gelbe Zahl ein, über die er läuft. Nur der richtige Weg führt über genau die drei Viren-Signaturen.' +
         (hatInfiziert ? ' Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.' : '') + '</p>' +
         '<h2>So geht ihr vor</h2><ol>' +
         '<li>Zieht die Blöcke aus der Werkzeugleiste unter «wenn Programm startet».</li>' +
@@ -160,10 +161,11 @@ var Druck = (function () {
         '<br><strong>Rechts und links</strong> gelten aus der Sicht von ANTI-V. Stellt euch hinter den Roboter!</div>' +
         '<h2>Regeln des Terminals</h2><ul>' +
         '<li><strong>Schleife ist Pflicht:</strong> Ohne «wiederhole bis Ziel erreicht» startet das Programm nicht.</li>' +
-        '<li><strong>Blocklimit:</strong> Höchstens <strong>' + s.maxBloecke + ' Blöcke</strong>. Ist das Limit erreicht, werden die Blöcke grau.</li>' +
+        '<li><strong>Blocklimit:</strong> Höchstens <strong>' + s.maxBloecke + ' Blöcke</strong> im Programm (lose Blöcke zählen nicht), sonst startet es nicht.</li>' +
         '<li><strong>Energie:</strong> ANTI-V kann höchstens <strong>' + s.energie + ' Felder</strong> gehen. Umwege enden mit «Energie leer!».</li>' +
-        '<li><strong>Effizienzbonus:</strong> ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' Punkte für jeden Block unter dem Limit. Nach dem Lösen dürft ihr weiter optimieren.</li></ul>' +
-        '<h2>Plant euer Programm</h2><div class="plan"' + (st === 'leicht' ? ' style="height: 52mm"' : '') + '><span class="hut">wenn Programm startet</span></div>' +
+        '<li><strong>Effizienzbonus:</strong> ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' Punkte für jeden Block unter dem Limit. Nach dem Lösen dürft ihr weiter optimieren.</li>' +
+        '<li><strong>Bonusfrage:</strong> Nach dem Lösen folgt im Terminal eine Bonusfrage (ein Versuch, plus ' + BONUS_PUNKTE + ' Punkte).</li></ul>' +
+        '<h2>Plant euer Programm</h2><div class="plan"' + (st === 'leicht' ? ' style="height: 39mm"' : '') + '><span class="hut">wenn Programm startet</span></div>' +
         kaestchen('Eingesammelte Signaturen:', 3)
     }, st);
   }
@@ -175,7 +177,7 @@ var Druck = (function () {
       inhalt:
         '<p><strong>Virus gefunden!</strong> Doch NULLBYTE hat Server im Schulnetz infiziert. Die Daten müssen von <strong>Server A</strong> zu <strong>Server Z</strong> fliessen, damit ihr den Override auslösen könnt.</p>' +
         '<div class="kasten"><h3>Euer Auftrag</h3><ol>' +
-        '<li>Sucht auf dem Netzwerkplan den Weg von Server A zu Server Z mit <strong>möglichst wenigen Verbindungen</strong>.</li>' +
+        '<li>Sucht auf dem Netzwerkplan den Weg von Server A zu Server Z mit <strong>möglichst wenigen Verbindungen</strong> (Linien). Die Kennzahlen spielen dabei noch keine Rolle.</li>' +
         '<li>Der Weg darf <strong>keinen infizierten (roten) Server</strong> berühren.</li>' +
         '<li>Zählt die Kennzahlen aller Server auf eurem Weg zusammen, <strong>Server A und Server Z eingeschlossen</strong>.</li>' +
         '<li>Die Summe ist der Override-Code. Gebt ihn dreistellig im Terminal ein (zum Beispiel 065) und drückt den roten Buzzer!</li></ol></div>' +
