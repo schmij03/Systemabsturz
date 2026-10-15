@@ -206,20 +206,20 @@ const TEXTE = {
       /* Tipps für die Stufen leicht und mittel (schwer: «tipps» darunter) */
       tippsStufen: {
         leicht: [
-          'ANTI-V soll geradeaus gehen, solange vorne frei ist. An jeder Ecke biegt der Gang nach rechts ab.',
-          'Ihr braucht «wiederhole bis Ziel erreicht» und darin «falls dann sonst» mit der Bedingung «vorne frei?».',
-          'wiederhole bis Ziel erreicht: falls vorne frei, dann gehe 1 Feld vor, sonst drehe dich nach rechts. Das sind genau 5 Blöcke.'
+          'ANTI-V soll immer geradeaus gehen. Nur wenn vorne blockiert ist, dreht er sich. Schaut euch die Ecken im Labyrinth an: In welche Richtung muss er dort drehen?',
+          'Ihr braucht «wiederhole bis Ziel erreicht» und darin einen Block «falls dann sonst» mit der Bedingung «vorne frei?». Überlegt: Was soll ANTI-V tun, wenn vorne frei ist, und was, wenn vorne blockiert ist?',
+          'Ist vorne frei, geht ANTI-V 1 Feld vor. Ist vorne blockiert, dreht er sich nach rechts. Mehr braucht es nicht.'
         ],
         mittel: [
-          'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
-          'In der Wiederholung prüft ihr zuerst rechts, dann vorne. Ist beides zu, dreht ANTI-V nach links. Ihr braucht zwei «falls dann sonst» ineinander.',
-          'falls rechts frei, dann drehe rechts und gehe vor. Sonst: falls vorne frei, dann gehe vor, sonst drehe links.'
+          'Stellt euch hinter ANTI-V, dann sind rechts und links klar. Die Idee: ANTI-V hält die rechte Hand an der Wand und folgt ihr. Darum prüft er zuerst, ob rechts frei ist.',
+          'Die Reihenfolge der Prüfungen: zuerst rechts, dann vorne. Sind rechts und vorne blockiert, dreht ANTI-V nach links. Dafür braucht ihr zwei «falls dann sonst»: Das zweite steckt im «sonst» des ersten.',
+          'Ist rechts frei, braucht ANTI-V zwei Blöcke: zuerst nach rechts drehen, dann 1 Feld vor. Im inneren «falls dann sonst» geht er vor, wenn vorne frei ist, sonst dreht er nach links.'
         ]
       },
       tipps: [
-        'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V soll immer der Wand auf seiner rechten Seite folgen.',
-        'Ihr braucht eine Wiederholung und darin «falls dann sonst». Eine Bedingung mit «und» ist nur wahr, wenn beide Teile stimmen. Ein rotes Feld ist nie erlaubt.',
-        'Erste Prüfung: rechts frei und nicht rechts infiziert, dann drehe rechts und gehe vor. Sonst prüft ihr vorne. Sonst dreht ihr links.'
+        'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V folgt der Wand auf seiner rechten Seite. Neu sind die roten Felder: Ein Feld ist nur gut, wenn es frei ist und nicht infiziert.',
+        'Baut es wie die rechte Hand an der Wand: zuerst rechts prüfen, dann vorne, sonst nach links drehen. Jede Prüfung braucht «und» mit «nicht», zum Beispiel: rechts frei? und nicht rechts infiziert?',
+        'Ist rechts frei und nicht infiziert: drehe dich nach rechts, dann gehe 1 Feld vor. Sonst prüft ihr vorne auf die gleiche Art. Ist auch vorne blockiert oder infiziert, dreht ANTI-V nach links.'
       ]
     },
     3: {
