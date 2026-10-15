@@ -160,11 +160,8 @@ const P1_VERSCHIEBUNG_STUFEN = { leicht: 4, mittel: 6, schwer: 8 };
     Für die anderen Stufen wird er automatisch umgeschlüsselt. */
 const P1_GEHEIMTEXT = 'EGLXYRK WGLYPI. AMV LEFIR IYIV WCWXIQ KIWTIVVX. SLRI GSHI WMRH EPPI HEXIR AIK. HIV IVWXI GSHI PEYXIX WMIFIR DAIM RIYR. RYPPFCXI';
 
-/** Code für Sicherheitskiste 2, verschlüsselt mit den Signaturen als Schlüssel */
-const KISTE2_VERSCHLUESSELT = '813e87';
-
 /** Lösungsliste für die Spielleitung, verschlüsselt mit der PIN als Schlüssel */
-const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d2b221388d77f1f389c99c3074c7c94227839cea0a4445f8ff07cb1c7dbe6d74a42c0fc54a08ff4403e02e3077fdf0301dcbf127151e1f7c3c7912ff47cd043ad9521b1eaf100b6fc070933db493e035517abeb13506a46ca4e31997f9651514db0b83ecab982d8c354ef4df8828fb4e5b319d61110bd6ca1985e734d87b8055361d5e6ee576947e81ac54937b226e554fc155fcfb1d59fa3a064cd86796d7990442e19b2df6e7e44c0ee7068f2a6aae7e9f0f3331367fb97b34587418e32acf6a31fb6c8454374f2213f1c9c5f4cdc5cac4799918e44797ead5f98fb1b00ea463c0187473d7934a8741ef259c58cadd1746b511c8e52b3e91bef5a37b79091e0a994c341f337ff59da4fa173f6f1027c29b2110816b6345fa72816fa8869228ef1830313ce448a82843a21d2e024a788db7fd172089f7efe022d3f39423a5b964fd459a29922d19681a0ab08f94c36bb80adc2d8d79611bb79734ed04fbdea56b7f45d79f6fe821b693d24d0598b1a59fc15d0e0c7f390dfdfaccf3678628956b87083a3869fcd575ac2438d093377aa5f4cafb7eb0b6fa512b6568bad039efe3151ffcdad7150565f8ac3369e4e886e9b3414fed23f81b6f8e5c12b6379fd7772130980f81e660bce9e8dd90c8c5971de7c18c9e5e339f1d00864321ea3d23215f424bee7d056d73bd18dbd723dd0b3fd84eeeb306f02706237d221948e7040388baed79e1d2712be91322b9468fc5467f8fe12e62999e28d71';
+const LOESUNGEN_VERSCHLUESSELT = '1916610122a0b351b0f1170885a5dddb3f8ff731699c4acaeb9266ac4a88964bf7876983299050792c8d2b221388d77f1f389c99c3074c7c94227839cea0a4445f8ff07cb1c7dbe6d74a42c0fc54a08ff4403e02e3077fdf0301dcbf127151e1f7c3c7912ff47cd043ad9521b1eaf100b6fc070933db493e035517abeb13506a46ca4e31997f9651514db0b83ecab982d8c354ef4df8828fb4e5b319d61110bd6ca1985e734d87b8055361d5e6ee576947e81ac54937b226e554fc155fcfb1d59fa3a064cd86796d7990442e19b2df6e7e44c0ee7068f2a6aae7e9f0f3331367fb97b34587418e32acf6a31fb6c8535e7fed392f1e974f4c9b5da7199999824f6e2cac58dd882e0dfd5c3d0cc2023e6e3fbd7409fa10d5c8bec6264b46118efd7af40faa7763e2908ce6b3c0f148b377b843d15cef76ebe1505726f343584cf97c13ab7d4daec1398a43ec93035398578a98927b6a99ac35e0df93388e600b9f61f052267a771177558e1dacb824c96984dcd7e9fb589d403ffd80e7969fa09a18fd7d60539559ace15693f44166f4ffda5e54681fd84ec91752ea40f5e2ccf3cad1dfaecf7831658154ae6c95b8849fcd451fc55b8c5b4579d97d44a5f2be016ef7749c5f89a617dffc3814c299b1795e1a5990cf289e4e852b872e16bfec74cfcfbfaec3386c71b1547d5d5fc7d257694ea8ac95c00f875968d23923d8b0c939b8d71a603e1ea3dc7954f60ebae2c855d87d8ec1d96e3694d5f586a2ea3b3d485981d2d5219c8c2352229dafd198496e1bfbaf77119067f85c6ef3b713fd23dea5c12c1cfe4e9db53a8da0d04fafb6038e476fc677e4526e7d1ce151242e080c7e9ef356d80e54cc940b';
 
 /* Startsignal der Spielleitung an die Tablets.
    Weil das Spiel keinen eigenen Server hat, läuft das Signal über den
@@ -202,7 +199,7 @@ const TEXTE = {
     2: {
       titel: 'Protokoll 2: Algorithmen',
       kurz: 'Algorithmen',
-      story: 'Stark, Kiste 1 ist offen! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
+      story: 'Stark, Protokoll 1 ist geknackt! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
       /* Tipps für die Stufen leicht und mittel (schwer: «tipps» darunter) */
       tippsStufen: {
         leicht: [
@@ -225,7 +222,7 @@ const TEXTE = {
     3: {
       titel: 'Protokoll 3: Netzwerke',
       kurz: 'Netzwerke',
-      story: 'Virus gefunden, Kiste 2 ist offen! Repariert das Routing auf eurem Netzwerkplan und gebt die Summe als Override-Code ein.',
+      story: 'Virus gefunden, Protokoll 2 ist geknackt! Repariert das Routing auf eurem Netzwerkplan und gebt die Summe als Override-Code ein.',
       /* Tipps passend zum Netzwerkplan der Stufe (mittel: «tipps» darunter) */
       tippsStufen: {
         leicht: [
@@ -254,8 +251,8 @@ const TEXTE = {
     absaetze: [
       'Ihr seid die Notfall-Teams unserer Schule. Jedes Team erhält ein Tablet oder einen Laptop, einen Auftrag auf Papier, eine Chiffrierscheibe für Protokoll 1 und einen Netzwerkplan für Protokoll 3.',
       'Öffnet auf eurem Gerät das Notfall-Terminal. Gebt euren Teamnamen und den Beitrittscode ein, der oben auf der Leinwand steht. Tippt oder klickt danach auf «Wir sind bereit».',
-      'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jeder geknackte Code öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus.',
-      'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kisten dürfen nur mit dem richtigen Code geöffnet werden.',
+      'Knackt die drei Sicherheitsprotokolle der Reihe nach: Kryptografie, Algorithmen und Netzwerke. Jedes geknackte Protokoll schaltet das nächste frei. Mit dem letzten Code löst ihr den Override aus.',
+      'Kommt ihr nicht weiter, fragt den Help-Desk im Terminal. Jedes Team hat drei Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte.',
       'Ihr habt ' + SPIELDAUER_MINUTEN + ' Minuten. Sobald diese Anweisung zu Ende ist, läuft der Countdown und eure Aufgaben erscheinen auf eurem Gerät. Viel Erfolg!'
     ]
   },
@@ -300,11 +297,11 @@ const TEXTE = {
     },
     auftrag: {
       titel: 'EUER AUFTRAG',
-      text: 'Ihr seid die Notfall-Teams der Schule. Jedes Team hat ein Notfall-Terminal. Knackt die drei Sicherheitsprotokolle: Kryptografie, Algorithmen und Netzwerke. Jedes gelöste Protokoll öffnet eine Sicherheitskiste. Mit dem letzten Code löst ihr den Override aus und rettet das System.'
+      text: 'Ihr seid die Notfall-Teams der Schule. Jedes Team hat ein Notfall-Terminal. Knackt die drei Sicherheitsprotokolle: Kryptografie, Algorithmen und Netzwerke. Jedes gelöste Protokoll schaltet das nächste frei. Mit dem letzten Code löst ihr den Override aus und rettet das System.'
     },
     regeln: {
       titel: 'REGELN',
-      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Gewaltsames Öffnen der Kisten ist verboten. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
+      text: 'Arbeitet im Team und sprecht euch ab. Der Help-Desk im Terminal gibt Tipps, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Wenn der Countdown 00:00 erreicht, löscht NULLBYTE das System.'
     },
     gerettet: {
       titel: 'SYSTEM WIEDERHERGESTELLT',
@@ -411,7 +408,7 @@ const Krypto = (function () {
   }
 
   /* Einfache Verschlüsselung (XOR mit SHA-256-Schlüsselstrom), damit
-     Kisten-Codes und Lösungen nicht im Klartext im Quellcode stehen. */
+     Lösungen nicht im Klartext im Quellcode stehen. */
   async function schluesselstrom(schluessel, laenge) {
     const strom = new Uint8Array(Math.ceil(laenge / 32) * 32);
     for (let i = 0; i * 32 < laenge; i++) {
@@ -1148,7 +1145,6 @@ function neuerSpielstand(team, endzeit, endeText, spielcode) {
     gratisTipp: { 1: false, 2: false, 3: false },
     bonus: null,                        // null | 'richtig' | 'falsch'
     bonus2: null,                       // Bonusfrage nach Protokoll 2: null | 'richtig' | 'falsch'
-    kiste2: null,                       // entschlüsselter Code nach Protokoll 2
     override: false,
     restBeiOverride: null,
     geloescht: false,
@@ -1681,7 +1677,7 @@ function baueProtokoll1() {
       if (spielGesperrt()) return 'fertig';
       if (richtig) {
         Ton.spiele('erfolg');
-        Terminal.stand.kiste1 = code;
+        Terminal.stand.code1 = code;
         protokollGeloest(1);
         zeigeErfolg1(true);
         return 'fertig';
@@ -1701,7 +1697,7 @@ function zeigeErfolg1(neu) {
   $('.eingabe', wurzel).hidden = true;
   const erfolg = $('.erfolg', wurzel);
   erfolg.hidden = false;
-  $('.erfolg-text', erfolg).textContent = 'PROTOKOLL 1 GEKNACKT. Code für Sicherheitskiste 1: ' + (s.kiste1 || '???');
+  $('.erfolg-text', erfolg).textContent = 'PROTOKOLL 1 GEKNACKT. Code ' + (s.code1 || s.kiste1 || '???') + ' akzeptiert, Protokoll 2 ist freigeschaltet.';
   if (neu) erfolg.classList.add('neu');
   baueBonus();
 }
@@ -1764,9 +1760,7 @@ function starteAlgorithmen() {
       const schluessel = gesammelt.join(',');
       if (await Krypto.pruefe(schluessel, HASHES.signaturen)) {
         const s = Terminal.stand;
-        const kiste = await Krypto.entschluessle(KISTE2_VERSCHLUESSELT, schluessel);
         if (spielGesperrt()) return beendet;
-        s.kiste2 = kiste;
         const neu = !s.geloest[2];
         // Effizienzbonus: weniger Blöcke gibt mehr Punkte, Verbesserungen zählen auch später
         const bonus = Math.max(0, BLOCK_BONUS_BASIS + BLOCK_BONUS_PRO_BLOCK * (info.maxBloecke - info.bloecke));
@@ -1795,7 +1789,7 @@ function starteAlgorithmen() {
 
 function erfolgstext2() {
   const s = Terminal.stand;
-  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: ' + (s.kiste2 || '???') +
+  return 'VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert, Protokoll 3 ist freigeschaltet.' +
     (s.blockBonus ? ' (Effizienzbonus ' + s.blockBonus + ' Punkte für ' + s.bloecke + ' Blöcke)' : '');
 }
 
@@ -2583,12 +2577,11 @@ async function zeigeLoesungen() {
       l.fallen = '';
     }
     [
-      ['Protokoll 1 (Code Kiste 1)', l.p1],
+      ['Protokoll 1 (Code)', l.p1],
       ['Protokoll 1 Erklärung', l.p1info],
       ['Bonusfrage', l.bonus],
       ['Protokoll 2 Signaturen', l.signaturen],
       ['Bonusfrage Protokoll 2', 'B (' + TEXTE.bonusFrage2.antworten[1][1] + ')'],
-      ['Code Kiste 2', l.kiste2],
       ['Protokoll 3 (Override)', l.p3],
       ['Protokoll 3 Erklärung', l.p3info],
       ['Protokoll 3 Fallen (infizierte Server)', l.fallen]
@@ -2633,16 +2626,16 @@ async function erzeugeKonfiguration() {
     toast('Code Protokoll 1 muss dreistellig sein, Verschiebung zwischen 1 und 25.', 'warnung');
     return;
   }
-  if (!/^\d{2}$/.test(w('bonus')) || !/^\d{3}$/.test(w('kiste2')) || !/^\d{3}$/.test(w('p3')) || !/^\d,\d,\d$/.test(sig)) {
-    toast('Bonusantwort: 2 Ziffern; Kiste 2 und Override: je 3 Ziffern; Signaturen: 3 einzelne Ziffern mit Komma.', 'warnung');
+  if (!/^\d{2}$/.test(w('bonus')) || !/^\d{3}$/.test(w('p3')) || !/^\d,\d,\d$/.test(sig)) {
+    toast('Bonusantwort: 2 Ziffern; Override: 3 Ziffern; Signaturen: 3 einzelne Ziffern mit Komma.', 'warnung');
     return;
   }
   const loesungen = {
     p1: w('p1'), p1info: w('p1info'), bonus: w('bonus'),
-    signaturen: sig.split(',').join(', '), kiste2: w('kiste2'),
+    signaturen: sig.split(',').join(', '),
     p3: w('p3'),
     // Weg und Fallen hängen von der Stufe ab und stehen in js/netzwerke.js
-    p3info: w('p3info') || 'Kürzester Weg ohne infizierte Server, Summe der Kennzahlen inklusive A und Z. Weg und Fallen je Stufe siehe Leitfaden.',
+    p3info: w('p3info') || 'Weg mit den wenigsten Verbindungen ohne infizierte Server, Summe der Kennzahlen inklusive A und Z. Weg und Fallen je Stufe siehe Leitfaden.',
     fallen: 'Die Fallen je Stufe stehen im Leitfaden und in der Lösungsansicht der Spielleitung.'
   };
   const zeilen = [];
@@ -2667,8 +2660,6 @@ async function erzeugeKonfiguration() {
   zeilen.push('');
   zeilen.push('const P1_VERSCHIEBUNG = ' + verschiebung + ';');
   zeilen.push("const P1_GEHEIMTEXT = '" + p1Nachricht(w('p1'), verschiebung).geheimtext + "';");
-  zeilen.push('');
-  zeilen.push("const KISTE2_VERSCHLUESSELT = '" + await Krypto.verschluessle(loesungen.kiste2, sig) + "';");
   zeilen.push('');
   zeilen.push("const LOESUNGEN_VERSCHLUESSELT = '" + await Krypto.verschluessle(JSON.stringify(loesungen), neuePin) + "';");
   $('#generator-ausgabe').value = zeilen.join('\n');

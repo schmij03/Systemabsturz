@@ -14,7 +14,7 @@ Vor jedem Einsatz einmal auf einem Tablet durchspielen (Safari auf iPad und Chro
 
 1. Kachel «Leitfaden Spielleitung» öffnen. Erwartung: 11 Seiten im Dossier-Layout, Stufe der Spielleitung vorgewählt, Seite 2 «Was die Klasse mitbringen sollte», Seite 3 «Zuerst selbst ausprobieren» mit Druckliste, auf Seite 6 der Hinweis «Geschützt» statt der Lösungen, nirgends die PIN.
 2. Falsche PIN eingeben, «Lösungen einfügen». Erwartung: «Falsche PIN.».
-3. PIN 4711. Erwartung: Seite 6 zeigt Codes (Kiste 1, Kiste 2, Override), Schlüssel, Klartext und Fallen der gewählten Stufe. Bei eigenem Code der Spielleitung steht dieser Code.
+3. PIN 4711. Erwartung: Seite 6 zeigt die Codes (Protokoll 1 und Override), Schlüssel, Klartext und Fallen der gewählten Stufe. Bei eigenem Code der Spielleitung steht dieser Code.
 4. Stufe umstellen: Lösungen, Tipps und Abzeichen passen sich an. Drucken: 11 A4-Seiten, nichts abgeschnitten.
 5. «Als HTML herunterladen»: Datei öffnet ohne Internet, mit Lösungen nur, wenn sie vorher eingefügt waren.
 
@@ -71,7 +71,7 @@ Automatisch: `node werkzeuge/netzwerke_pruefen.js` (meldet einen Fehler, wenn de
 | Schritt | Erwartung |
 |---|---|
 | 123 eingeben, Bestätigen | Fehlerton, «ZUGRIFF VERWEIGERT», Ziffernfeld 2 Sekunden gesperrt |
-| 729 eingeben, Bestätigen | Erfolgston, «PROTOKOLL 1 GEKNACKT. Code für Sicherheitskiste 1: 729», 120 Punkte, Tab 2 freigeschaltet |
+| 729 eingeben, Bestätigen | Erfolgston, «PROTOKOLL 1 GEKNACKT. Code 729 akzeptiert, Protokoll 2 ist freigeschaltet.», 120 Punkte, Tab 2 freigeschaltet |
 | Bonusfrage: 25 | «Richtig! Plus 10 Punkte.», 130 Punkte, kein zweiter Versuch möglich |
 
 ## Protokoll 2 (wichtigster Test)
@@ -99,7 +99,7 @@ wiederhole bis Ziel erreicht
 * ANTI-V läuft den Weg (1,1) bis (8,1), dann (8,2), (7,2), (7,3) bis (7,6), (8,6), (8,7), (8,8).
 * Der jeweils ausgeführte Block leuchtet gelb.
 * Die Leiste zeigt nacheinander **Signaturen: 3 8 5**, genau diese drei Zahlen in dieser Reihenfolge.
-* Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert. Code für Sicherheitskiste 2: 642».
+* Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert, Protokoll 3 ist freigeschaltet.».
 * Zusatz: «Euer Programm: 15 Blöcke (Limit 15). Effizienzbonus: plus 10 Punkte.»
 * Tab 3 wird freigeschaltet, 160 Punkte (mit Bonusfrage und Effizienzbonus, ohne Joker).
 * Unter der Erfolgsmeldung erscheint die Bonusfrage «Was macht der Block «wiederhole fortlaufend»?» mit den Antworten A bis D.
@@ -181,7 +181,7 @@ Vor dem Gerätetest `node --test tests/*.test.js` ausführen.
 * Kurz vor 00:00 eine Codeprüfung oder den letzten Blockly-Schritt auslösen: Nach Ablauf keine zusätzlichen Punkte und keine neu freigeschalteten Protokolle.
 * Blockly unmittelbar nach Erreichen des Ziels zurücksetzen: Keine verspätete Auswertung des alten Durchlaufs.
 * Joker-Dialog offen lassen, bis ein Gratis-Tipp erscheint: Bestätigen darf keinen anderen Tipp ungefragt kaufen.
-* Schwierigkeit Schwer und eigenen Schlosscode einstellen, Runde zurücksetzen: Auswahl, Vorschau, Druckmaterial und Startsignal behalten dieselben Einstellungen; Lösungen werden verborgen.
+* Schwierigkeit Schwer und eigenen Code für Protokoll 1 einstellen, Runde zurücksetzen: Auswahl, Vorschau, Druckmaterial und Startsignal behalten dieselben Einstellungen; Lösungen werden verborgen.
 * Bei `?ende=HH:MM` den Beamer stoppen und neu laden: Die gestoppte Restzeit bleibt erhalten.
 * PIN-Dialog per Enter bestätigen, per Escape abbrechen und mit Tab bedienen. Währenddessen dürfen Beamer-Tastenkürzel nicht reagieren.
 * Vorlesen mehrfach starten und stoppen, sowohl mit Aufnahme als auch Browserstimme; Intro und Anweisung dürfen nicht hängen bleiben.

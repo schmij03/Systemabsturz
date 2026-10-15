@@ -16,7 +16,7 @@ test('Lösungsliste ist mit der PIN entschlüsselbar und enthält keine veraltet
   assert.equal(l.p1, '729');
   assert.match(l.bonus, /^25\b/);
   assert.equal(l.signaturen, '3, 8, 5');
-  assert.equal(l.kiste2, '642');
+  assert.equal(l.kiste2, undefined);
   assert.equal(l.p3, '109');
   for (const feld of ['p3info', 'fallen']) assert.equal(typeof l[feld], 'string');
   const alles = JSON.stringify(l);

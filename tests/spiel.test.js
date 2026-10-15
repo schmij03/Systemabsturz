@@ -28,7 +28,7 @@ test('Konfigurierte Codes, Signaturen und Cäsar-Stufen passen zusammen', async 
     assert.match(c.run('caesar(p1StandardGeheimtext(p1Verschiebung(st)), -p1Verschiebung(st))'),/SIEBEN ZWEI NEUN/);
   }
   const l = JSON.parse(await c.run('Krypto.entschluessle(LOESUNGEN_VERSCHLUESSELT, SPIELLEITUNG_PIN)'));
-  assert.equal(l.kiste2, await c.run("Krypto.entschluessle(KISTE2_VERSCHLUESSELT, '3,8,5')"));
+  assert.equal(l.p3, '109');
 });
 
 for (const st of ['leicht','mittel','schwer']) {
@@ -101,9 +101,9 @@ test('Blockly-Ergebnis nach Zeitablauf vergibt weder Lösung noch Punkte', async
   const c=app(); running(c); noUi(c); c.Algorithmen={init: options=>{c.options=options;}};
   c.run('starteAlgorithmen()');
   let resolve, ready; const started = new Promise(r=>ready=r);
-  c.decrypt=()=>new Promise(r=>{resolve=r;ready();}); c.run('Krypto.entschluessle=decrypt');
+  c.pruefe=()=>new Promise(r=>{resolve=r;ready();}); c.run('Krypto.pruefe=pruefe');
   const result=c.options.zielErreicht([3,8,5],{bloecke:8,maxBloecke:9});
-  await started; c.run('Terminal.stand.endzeit=Date.now()-1'); resolve('385');
+  await started; c.run('Terminal.stand.endzeit=Date.now()-1'); resolve(true);
   assert.equal((await result).ok,false); assert.equal(c.run('Terminal.stand.geloest[2]'),false); assert.equal(c.run('Terminal.stand.punkte'),100);
 });
 
@@ -124,7 +124,7 @@ test('Bezahlter Tipp wird nach fünf Minuten nicht nachträglich als gratis mark
   assert.equal(c.run('Terminal.stand.gratisTipp[1]'),false);
 });
 
-test('Reset bewahrt Schwierigkeit/Schlosscode und schliesst Lösungen', async () => {
+test('Reset bewahrt Schwierigkeit/Code Protokoll 1 und schliesst Lösungen', async () => {
   const c=app(); c.location.href='https://example.test/HackingSchule/spielleitung.html';
   c.storage.set('systemabsturz-spielleitung',JSON.stringify({stufe:'schwer',spielcode:'ABCDE',freigegeben:true,endzeit:Date.now()+600000,p1:{code:'123',verschiebung:8,geheimtext:'ABC',hash:'x'}}));
   c.run("fragePin = async function () { return '4711'; }; initSpielleitung()");
@@ -212,7 +212,7 @@ test('Speicherfehler während des Spiels wird einmalig sichtbar gemeldet',()=>{
 
 test('Konfigurationsgenerator lehnt unerreichbare Code-Längen ab',async()=>{
   const c=app();c.run("fragePin=async function(){return '4711'}");
-  c.el('#gen-p1').value='729';c.el('#gen-bonus').value='123';c.el('#gen-kiste2').value='385';c.el('#gen-p3').value='109';c.el('#gen-signaturen').value='3,8,5';
+  c.el('#gen-p1').value='729';c.el('#gen-bonus').value='123';c.el('#gen-p3').value='109';c.el('#gen-signaturen').value='3,8,5';
   await c.run('erzeugeKonfiguration()');assert.equal(c.el('#generator-ausgabe').value,'');
   c.el('#gen-bonus').value='25';await c.run('erzeugeKonfiguration()');assert.match(c.el('#generator-ausgabe').value,/const HASHES/);
 });

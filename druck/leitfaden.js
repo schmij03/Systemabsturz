@@ -42,10 +42,9 @@ var Leitfaden = (function () {
       '<p class="zeile">Protokoll 1: Verschiebung ' + p1Verschiebung(st) + ' (A wird zu ' + caesar('A', p1Verschiebung(st)) + ')  ·  Protokoll 2: ' + (s.kurz ? s.kurz + ', ' : '') + 'höchstens ' + s.maxBloecke + ' Blöcke, ' + s.energie + ' Felder Energie  ·  Protokoll 3: ' + Object.keys(netz.server).length + ' Server</p>' +
       '<p class="zeile">Spielzeit ' + SPIELDAUER_MINUTEN + ' Minuten, dazu Einstieg (ca. 5 Minuten) und Auswertung (10 bis 15 Minuten).</p></div>' +
       '<h2>Vor der Lektion (ca. 15 Minuten)</h2>' + haken([
-        'Auf der Spielleitung im Reiter «1 Vorbereiten» die <strong>Stufe</strong> wählen und bei Bedarf den <strong>Code für Kiste 1</strong> einstellen.',
+        'Auf der Spielleitung im Reiter «1 Vorbereiten» die <strong>Stufe</strong> wählen und bei Bedarf einen eigenen <strong>Code für Protokoll 1</strong> einstellen.',
         'Pro Team ein <strong>Dossier</strong> der gewählten Stufe drucken (7 Seiten, A4, «Tatsächliche Grösse», farbig). Chiffrierscheiben auf festes Papier.',
         'Chiffrierscheiben vorbereiten: ausschneiden und mit einer Musterklammer verbinden (oder als erste Teamaufgabe).',
-        '<strong>Zahlenschlösser</strong> der Sicherheitskisten stellen: Kiste 1 auf den Code von Protokoll 1, Kiste 2 auf den Code von Protokoll 2 (siehe Lösungen).',
         'Pro Team ein <strong>Tablet oder Laptop</strong> laden, Startseite des Notfall-Terminals öffnen.',
         '<strong>Beamer-Laptop:</strong> Spielleitung öffnen, Ton einschalten, Vollbild testen.',
         '<strong>Internet prüfen:</strong> Das Startsignal läuft über ntfy.sh. Ist der Dienst gesperrt, die Geräte manuell starten (siehe Notfälle).'
@@ -54,8 +53,7 @@ var Leitfaden = (function () {
         ['Auftrag (Seite 1)', 'Lage, Anmeldung, Mission, Regeln, Notizen', 'Papier'],
         ['Protokoll 1 (Seiten 2 bis 4)', 'Nachricht von NULLBYTE entschlüsseln, Chiffrierscheibe', 'Papier'],
         ['Protokoll 2 (Seite 5)', 'Antiviren-Roboter ANTI-V mit Blöcken programmieren', 'Tablet oder Laptop'],
-        ['Protokoll 3 (Seiten 6 und 7)', 'Kürzesten sauberen Weg im Netzwerkplan finden', 'Papier'],
-        ['Sicherheitskisten', 'Kiste 1 und Kiste 2 mit Zahlenschloss, Override am Schluss', 'im Zimmer']
+        ['Protokoll 3 (Seiten 6 und 7)', 'Sauberen Weg mit den wenigsten Verbindungen im Netzwerkplan finden, Override auslösen', 'Papier']
       ]));
   }
 
@@ -102,8 +100,7 @@ var Leitfaden = (function () {
       ], 'mission kompakt') +
       '<h2>Weiteres Material</h2>' + haken([
         'Pro Team eine Schere, eine Musterklammer und Stifte.',
-        'Pro Team ein geladenes Tablet oder Laptop, dazu Beamer mit Lautsprecher.',
-        '<strong>Sicherheitskisten</strong> mit dreistelligem Zahlenschloss (freiwillig): Inhalt nach Wahl, zum Beispiel ein Hinweis oder eine kleine Belohnung. Ohne Kisten zeigt das Terminal die Codes trotzdem an.'
+        'Pro Team ein geladenes Tablet oder Laptop, dazu Beamer mit Lautsprecher.'
       ]));
   }
 
@@ -159,7 +156,7 @@ var Leitfaden = (function () {
     return seite(st, ober, 'Lösungen Stufe ' + s.name,
       '<p>PIN der Spielleitung: <strong>' + esc(SPIELLEITUNG_PIN) + '</strong> (Spielleitung, Lösungen, manueller Start und Zurücksetzen der Geräte).</p>' +
       '<h2>Protokoll 1: Kryptografie</h2>' + tabelle(['', ''], [
-        ['Code Kiste 1', '<strong class="gross">' + esc(code1) + '</strong>' + (eigen ? ' (eigener Code dieser Runde)' : '')],
+        ['Code', '<strong class="gross">' + esc(code1) + '</strong>' + (eigen ? ' (eigener Code dieser Runde)' : '')],
         ['Schlüssel', 'Verschiebung ' + v + ': innen ' + caesar('A', v) + ' unter dem äusseren A. Unterschrift ' + caesar('NULLBYTE', v) + ' = NULLBYTE.'],
         ['Geheimtext', '<span class="mono-klein">' + esc(geheim) + '</span>'],
         ['Klartext', esc(klartext)],
@@ -167,7 +164,6 @@ var Leitfaden = (function () {
       ], 'mission loesung') +
       '<h2>Protokoll 2: Algorithmen</h2>' + tabelle(['', ''], [
         ['Signaturen', esc(l.signaturen || '')],
-        ['Code Kiste 2', '<strong class="gross">' + esc(l.kiste2 || '') + '</strong>'],
         ['Bonusfrage', esc(TEXTE.bonusFrage2.frage) + ' Antwort <strong>B</strong>: ' + esc(TEXTE.bonusFrage2.antworten[1][1])],
         ['Regeln', 'Höchstens ' + s.maxBloecke + ' Blöcke, ' + s.energie + ' Felder Energie, Schleife ist Pflicht.'],
         ['Musterlösung', esc(s.musterloesung)]

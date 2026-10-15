@@ -62,7 +62,7 @@ Hinweis: Damit die Seite auf GitHub Pages erscheint, muss der Spielstand im Bran
 6. Abkürzen: Während der Botschaft sind keine Knöpfe sichtbar. Mit der Tastatur des Beamer-Laptops springt <kbd>Leertaste</kbd> oder <kbd>→</kbd> zur Spielanweisung, <kbd>Esc</kbd> bricht ab. In der Anweisung gibt <kbd>→</kbd> oder <kbd>Enter</kbd> die Aufgaben sofort frei, in der Steuerung unter «Probleme?» «Aufgaben sofort freigeben».
 7. **Schluss:** «System gerettet» zeigt die Schlussszene und hält den Beamer-Countdown an.
 
-Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode; Schwierigkeit und eigener Code für Kiste 1 bleiben erhalten). Die Geräte der Teams müssen nicht zurückgesetzt werden: Nach Spielende tippen die Teams auf «Neues Spiel», oder sie melden sich auf der Startseite mit dem neuen Beitrittscode an.
+Für die nächste Runde: «Spiel zurücksetzen (PIN)» im Reiter «3 Nach dem Spiel» (erzeugt einen neuen Beitrittscode; Schwierigkeit und eigener Code für Protokoll 1 bleiben erhalten). Die Geräte der Teams müssen nicht zurückgesetzt werden: Nach Spielende tippen die Teams auf «Neues Spiel», oder sie melden sich auf der Startseite mit dem neuen Beitrittscode an.
 
 ### Wie kommt das Startsignal auf die Tablets?
 
@@ -90,13 +90,13 @@ Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 
 Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Danach die Teamsets mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 
-* **Code für Protokoll 1:** Dreistelligen Code eures Zahlenschlosses (Kiste 1) eingeben, «Übernehmen (PIN)». Die Verschiebung ergibt sich aus der Stufe und passt sich bei einem Stufenwechsel automatisch an. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
+* **Code für Protokoll 1:** Eigenen dreistelligen Code eingeben (freiwillig), «Übernehmen (PIN)». Die Verschiebung ergibt sich aus der Stufe und passt sich bei einem Stufenwechsel automatisch an. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
 * Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`. Der Geheimtext für die anderen Stufen wird daraus automatisch umgeschlüsselt. Die Verschiebungen je Stufe stehen in `P1_VERSCHIEBUNG_STUFEN`.
 
 ### Die drei Protokolle
 
-* **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln, dreistelligen Code im Terminal eingeben. Der Code öffnet das Zahlenschloss von Sicherheitskiste 1. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte).
-* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg erscheint der Code für Sicherheitskiste 2. Danach folgt eine freiwillige Bonusfrage mit vier Antworten zum Block «wiederhole fortlaufend» (ein Versuch, plus 10 Punkte).
+* **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln, dreistelligen Code im Terminal eingeben. Das schaltet Protokoll 2 frei. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte).
+* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg wird Protokoll 3 freigeschaltet. Danach folgt eine freiwillige Bonusfrage mit vier Antworten zum Block «wiederhole fortlaufend» (ein Versuch, plus 10 Punkte).
 
 ### Protokoll 2: Regeln, Stufen und Effizienzbonus
 
@@ -112,7 +112,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 | Mittel (Standard) | Rechte-Hand-Labyrinth, rote Felder nur als Falle für falsche Regeln | Rechte-Hand-Regel | 9 | 16 | 8 Blöcke |
 | Schwer | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
 
-Die Signaturen sind auf allen Stufen 3, 8, 5, der Code für Kiste 2 bleibt also gleich. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
+Die Signaturen sind auf allen Stufen 3, 8, 5. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
 * **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server finden, die Kennzahlen addieren und als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
 
 ### Help-Desk und Punkte
@@ -195,7 +195,7 @@ Alle Einstellungen stehen gut kommentiert ganz oben in den Dateien:
 * `js/maze.js`: die drei Stufen mit Labyrinth, Zahlen auf den Feldern, Startrichtung, Blocklimit, Energie, erlaubten Blöcken und Musterlösung, dazu die Standardstufe (`STANDARD_STUFE`, voreingestellt «mittel»). Wer ein Labyrinth ändert, muss Energie und Blocklimit neu bestimmen (Musterlösung einmal durchlaufen lassen).
 * `js/blocks.js`: Blockfarben, Tempo, Blockly-Version.
 
-**Codes ändern:** Code-Eingaben werden mit SHA-256-Hashes (mit Salz) verglichen. PIN, Rätseldaten und Prüflogik liegen jedoch im Browser; dreistellige Codes lassen sich durchprobieren und Spielstände lokal verändern. Die Verschleierung der Lösungen dient dem Spielablauf, nicht als Sicherheitsgrenze. Eigene Codes liegen auf dem Gerät der Spielleitung im lokalen Speicher. Neue Hashes erzeugt ihr auf `spielleitung.html` im Reiter «Lösungen und Extras», Abschnitt «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Der Code von Kiste 2 und die Lösungsliste für die Spielleitung werden dabei verschlüsselt mitgeneriert.
+**Codes ändern:** Code-Eingaben werden mit SHA-256-Hashes (mit Salz) verglichen. PIN, Rätseldaten und Prüflogik liegen jedoch im Browser; dreistellige Codes lassen sich durchprobieren und Spielstände lokal verändern. Die Verschleierung der Lösungen dient dem Spielablauf, nicht als Sicherheitsgrenze. Eigene Codes liegen auf dem Gerät der Spielleitung im lokalen Speicher. Neue Hashes erzeugt ihr auf `spielleitung.html` im Reiter «Lösungen und Extras», Abschnitt «Konfiguration erzeugen (Codes ändern)»: Codes eintragen, PIN eingeben und die Ausgabe in `js/app.js` einsetzen. Die Lösungsliste für die Spielleitung wird dabei verschlüsselt mitgeneriert.
 
 ## Technik
 

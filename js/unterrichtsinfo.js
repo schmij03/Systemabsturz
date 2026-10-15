@@ -84,7 +84,6 @@ const UNTERRICHTSINFO = {
         { h: 'Vor der Lektion (ca. 15 Minuten)' },
         { liste: [
           'Teamsets der gewählten Stufe drucken (A4, 100 %, farbig), Chiffrierscheiben auf festes Papier.',
-          'Zahlenschlösser auf die gewählten Codes stellen.',
           'Tablets oder Laptops mit geöffneter Startseite bereitlegen.',
           'Prüfen, ob ntfy.sh im Schulnetz erreichbar ist. Stufe auf der Spielleitung wählen.'
         ] },

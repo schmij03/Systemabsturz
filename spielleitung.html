@@ -71,8 +71,8 @@
         </div>
 
         <div class="karte einstellungen">
-          <h3><span class="schritt">B</span> Code für Kiste 1 (Protokoll 1)</h3>
-          <p class="klein">Zahlenschloss eurer ersten Kiste. Die geheime Nachricht wird automatisch neu verschlüsselt.</p>
+          <h3><span class="schritt">B</span> Code für Protokoll 1 (freiwillig)</h3>
+          <p class="klein">Eigener dreistelliger Code, der in der geheimen Nachricht versteckt ist. Die Nachricht wird automatisch neu verschlüsselt. Ohne Eingabe gilt der Standardcode.</p>
           <div class="p1-einstellung">
             <label>Code <input id="p1-code" class="pin-klein" inputmode="numeric" maxlength="3" placeholder="z. B. 418" autocomplete="off"></label>
             <button type="button" id="p1-uebernehmen" class="knopf primaer">Übernehmen (PIN)</button>
@@ -184,7 +184,7 @@
     <div class="reiter-inhalt" data-inhalt="extras" role="tabpanel" hidden>
       <div class="karte">
         <h3>Lösungen</h3>
-        <p class="klein">Passen sich an die gewählte Stufe und den Code für Kiste 1 an. Nicht auf dem Beamer zeigen.</p>
+        <p class="klein">Passen sich an die gewählte Stufe und den Code für Protokoll 1 an. Nicht auf dem Beamer zeigen.</p>
         <button type="button" id="loesungen-knopf" class="knopf">Lösungen anzeigen</button>
         <a class="knopf link-knopf" href="druck/leitfaden.html" target="_blank" rel="noopener">Leitfaden Spielleitung (Druck und Download)</a>
         <div id="loesungen" hidden>
@@ -205,11 +205,10 @@
         <summary><h3>Konfiguration erzeugen (Codes ändern)</h3></summary>
         <p>Hier erzeugt ihr neue Hashes, wenn ihr das Spiel mit eigenen Codes spielen wollt. Die Ausgabe ersetzt die entsprechenden Konstanten oben in <code>js/app.js</code>. Die Eingaben werden nirgends gespeichert.</p>
         <div class="generator">
-          <label>Code Protokoll 1 (Kiste 1) <input id="gen-p1" inputmode="numeric"></label>
+          <label>Code Protokoll 1 <input id="gen-p1" inputmode="numeric"></label>
           <label>Erklärung Protokoll 1 <input id="gen-p1info"></label>
           <label>Bonusantwort <input id="gen-bonus" inputmode="numeric"></label>
           <label>Signaturen Protokoll 2 (mit Komma) <input id="gen-signaturen"></label>
-          <label>Code Kiste 2 <input id="gen-kiste2" inputmode="numeric"></label>
           <label>Override-Code Protokoll 3 <input id="gen-p3" inputmode="numeric"></label>
           <label>Erklärung Protokoll 3 <input id="gen-p3info"></label>
           <label>Verschiebung Protokoll 1 (1 bis 25) <input id="gen-verschiebung" inputmode="numeric" placeholder="4"></label>
