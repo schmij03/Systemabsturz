@@ -88,7 +88,7 @@ Auf `spielleitung.html` im Reiter **«1 Vorbereiten»**:
 | Mittel | Verschiebung 6 (A wird zu G, Unterschrift TARRHEZK) | 18 Server, 5 infiziert, 32 Verbindungen | A, B, G, H, L, P, Q, Z (7 Verbindungen) | Alle kurzen Wege sind infiziert, der saubere Weg führt im Zickzack von oben nach unten |
 | Schwer | Verschiebung 8 (A wird zu I, Unterschrift VCTTJGBM) | 22 Server, 7 infiziert, 38 Verbindungen | A, Q, R, S, M, H, I, J, K, Z (9 Verbindungen) | Viele verlockende Abkürzungen, der saubere Weg beginnt ganz unten und steigt quer durchs Netz |
 
-Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Danach die Teamsets mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
+Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als der richtige (verlockende Abkürzung), warnt das Terminal «Euer Weg führt über einen infizierten Server!». Umwege: Gibt ein Team die Summe eines sauberen, aber längeren Weges ein, meldet das Terminal «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.». Netzwerke ändern: `js/netzwerke.js` anpassen und mit `node werkzeuge/netzwerke_pruefen.js --hashes` prüfen (eindeutiger Weg) und die Fallen-Hashes für `js/app.js` erzeugen. Danach die Teamsets mit `node werkzeuge/teamsets_erzeugen.js` neu erzeugen.
 
 * **Code für Protokoll 1:** Eigenen dreistelligen Code eingeben (freiwillig), «Übernehmen (PIN)». Die Verschiebung ergibt sich aus der Stufe und passt sich bei einem Stufenwechsel automatisch an. Die geheime Nachricht wird automatisch neu verschlüsselt («... DER ERSTE CODE LAUTET VIER EINS ACHT ...») und mit dem Startsignal an die Tablets geschickt. Auch die Help-Desk-Tipps (Unterschrift von NULLBYTE, Stellung der Scheibe) und das Druckblatt `druck/protokoll1.html` passen sich an. Übertragen werden nur Geheimtext und Hash, nie der Code. «Standard» stellt den Code aus `js/app.js` wieder her.
 * Dauerhaft ändern: Im Bereich «Konfiguration erzeugen» den neuen Code eintragen. Die Ausgabe enthält `HASHES.protokoll1`, `P1_VERSCHIEBUNG` und `P1_GEHEIMTEXT` für `js/app.js`. Der Geheimtext für die anderen Stufen wird daraus automatisch umgeschlüsselt. Die Verschiebungen je Stufe stehen in `P1_VERSCHIEBUNG_STUFEN`.
@@ -96,7 +96,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 ### Die drei Protokolle
 
 * **Protokoll 1, Kryptografie (Papier):** Cäsar-Nachricht mit der Chiffrierscheibe entschlüsseln, dreistelligen Code im Terminal eingeben. Das schaltet Protokoll 2 frei. Danach folgt eine freiwillige Bonusfrage (ein Versuch, plus 10 Punkte).
-* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg wird Protokoll 3 freigeschaltet. Danach folgt eine freiwillige Bonusfrage mit vier Antworten zum Block «wiederhole fortlaufend» (ein Versuch, plus 10 Punkte).
+* **Protokoll 2, Algorithmen (Tablet):** Mit Scratch-ähnlichen Blöcken den Antiviren-Roboter ANTI-V durch ein Labyrinth programmieren. Er muss das Ziel erreichen und genau die Signaturen 3, 8, 5 einsammeln, ohne ein rotes Feld zu betreten. Bei Erfolg wird Protokoll 3 freigeschaltet. Danach folgt eine freiwillige Bonusfrage mit vier Antworten zum Block «wiederhole bis Ziel erreicht» (ein Versuch, plus 10 Punkte).
 
 ### Protokoll 2: Regeln, Stufen und Effizienzbonus
 
@@ -113,7 +113,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 | Schwer | wie Mittel, aber ein rotes Feld direkt rechts am Weg | Rechte-Hand-Regel mit «und» und «nicht» | 15 | 16 | 11 Blöcke |
 
 Die Signaturen sind auf allen Stufen 3, 8, 5. Die Musterlösungen aller Stufen stehen in der Lösungsansicht der Spielleitung (PIN). Die Tipps im Help-Desk passen sich der Stufe an.
-* **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server finden, die Kennzahlen addieren und als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
+* **Protokoll 3, Netzwerke (Papier):** Auf dem Netzwerkplan den Weg mit den wenigsten Verbindungen ohne infizierte Server finden, die Kennzahlen addieren und als Override-Code eingeben. Danach den roten Buzzer «OVERRIDE AUSLÖSEN» drücken.
 
 ### Help-Desk und Punkte
 

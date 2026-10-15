@@ -27,6 +27,9 @@ const JOKER_KOSTEN = 20;
 const BONUS_PUNKTE = 10;
 const PUNKTE_PRO_RESTMINUTE = 1;
 
+/** Anzahl Viren-Signaturen, die ANTI-V in Protokoll 2 einsammeln muss */
+const SIGNATUREN_ANZAHL = 3;
+
 /** Effizienzbonus in Protokoll 2: Grundbonus plus Punkte pro Block,
     der unter dem Blocklimit der Stufe bleibt (Limit siehe js/maze.js) */
 const BLOCK_BONUS_BASIS = 10;
@@ -140,6 +143,27 @@ const HASHES = {
       '272a1760c2cc7264369850ce3344445185d0142f3945c6bdbaf288116b80b6cc',
       '4cf8e4fd534fa3e41f61a5d2474770e91cb8d6fb0ea06e7275d25b991c4427bc'
     ]
+  },
+  /* Umwege: Summen sauberer Wege mit mehr Verbindungen als der richtige
+     Weg (pro Stufe, js/netzwerke.js). Gleich neu berechnen wie die Fallen. */
+  protokoll3Umwege: {
+    leicht: [
+      '64ff5473b982d89e81b4b579a28836a4d171399767c5fa84f72414893f6dafa0',
+      'fdfc5a5d96a62fd4d45186bdff945353d9be7b878b616a66b2f613d5ac45d805',
+      '4f6f336cf931249a0054471f5d18bbff58bc810b237a65c312b02910c3752abd',
+      '3c907caebfec7539e9ddf433e9ace0ecc6794c180c2cbe7d325aeb1ecf71e853',
+      '5a1d97d5ec712634e47cc336bb6da11c964166e6f3160f26546c5c0520879999'
+    ],
+    mittel: [
+      '8107d344949bd3483fd949dc3a84d824782f89ece525119fd45d1ac5f634e06d',
+      '3c907caebfec7539e9ddf433e9ace0ecc6794c180c2cbe7d325aeb1ecf71e853'
+    ],
+    schwer: [
+      '8447a8577b74f0e56c89e44bc8daa83d137c9e0f4a7eb199dd5f0af7f614231d',
+      '58faab6d97ab9e5dc3a58debef6ad324c0e0ee1d9ed28f9c4bdae717992e8b01',
+      '8de93df8872beafa4dd78a53469fc95505480327e7fac223b9c7afd142aff73c',
+      'c0029525eebb977aa7a1d971b1694ceb40ea814dbf9f091c5fafc35b415345df'
+    ]
   }
 };
 
@@ -199,7 +223,7 @@ const TEXTE = {
     2: {
       titel: 'Protokoll 2: Algorithmen',
       kurz: 'Algorithmen',
-      story: 'Stark, Protokoll 1 ist geknackt! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
+      story: 'Stark, Protokoll 1 ist geknackt! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht. ANTI-V sammelt jede gelbe Zahl ein, über die er läuft. Nur der richtige Weg führt über genau die drei Viren-Signaturen. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
       /* Tipps für die Stufen leicht und mittel (schwer: «tipps» darunter) */
       tippsStufen: {
         leicht: [
@@ -222,7 +246,7 @@ const TEXTE = {
     3: {
       titel: 'Protokoll 3: Netzwerke',
       kurz: 'Netzwerke',
-      story: 'Virus gefunden, Protokoll 2 ist geknackt! Repariert das Routing auf eurem Netzwerkplan und gebt die Summe als Override-Code ein.',
+      story: 'Virus gefunden, Protokoll 2 ist geknackt! Repariert das Routing: Sucht auf eurem Netzwerkplan den Weg von A nach Z mit den wenigsten Verbindungen, ohne rote Server. Zählt erst danach die Kennzahlen zusammen und gebt die Summe als Override-Code ein.',
       /* Tipps passend zum Netzwerkplan der Stufe (mittel: «tipps» darunter) */
       tippsStufen: {
         leicht: [
@@ -278,14 +302,14 @@ const TEXTE = {
   bonusFrage: 'Ihr könnt die innere Scheibe in 26 verschiedene Stellungen drehen. Bei wie vielen dieser Stellungen wird die Nachricht wirklich verändert, sodass der Geheimtext anders aussieht als der Klartext?',
   /* Bonusfrage nach Protokoll 2: Auswahlfrage mit einem Versuch */
   bonusFrage2: {
-    frage: 'Was macht der Block «wiederhole fortlaufend»?',
+    frage: 'Wann hört der Block «wiederhole bis Ziel erreicht» auf, die Blöcke darin zu wiederholen?',
     antworten: [
-      ['A', 'Er wiederholt die Blöcke darin genau einmal.'],
-      ['B', 'Er wiederholt die Blöcke darin immer wieder, ohne aufzuhören.'],
-      ['C', 'Er stoppt das ganze Programm.'],
-      ['D', 'Er wiederholt die Blöcke darin 10-mal.']
+      ['A', 'Nach genau einem Durchgang.'],
+      ['B', 'Sobald ANTI-V auf dem Zielfeld steht.'],
+      ['C', 'Nach genau 10 Durchgängen.'],
+      ['D', 'Nie, er wiederholt immer weiter.']
     ],
-    falsch: 'Leider falsch. Richtig wäre B: Die Blöcke darin laufen immer wieder, ohne aufzuhören.'
+    falsch: 'Leider falsch. Richtig wäre B: Vor jedem Durchgang prüft die Schleife, ob ANTI-V auf dem Zielfeld steht. Dann hört sie auf.'
   },
   /* Texte für die Beamer-Ansicht der Spielleitung.
      {UM_ZEIT} wird überall durch «, um HH:MM Uhr,» ersetzt: die Uhrzeit, zu der
@@ -1782,7 +1806,11 @@ function starteAlgorithmen() {
         return { ok: true, text: erfolgstext2() + ' ' + zusatz };
       }
       Ton.spiele('fehler');
-      return { ok: false, text: 'Ziel erreicht, aber Signaturen unvollständig. ANTI-V muss den richtigen Weg nehmen.' };
+      const liste = gesammelt.join(', ');
+      const text = gesammelt.length < SIGNATUREN_ANZAHL
+        ? 'Ziel erreicht, aber nur ' + gesammelt.length + (gesammelt.length === 1 ? ' Signatur' : ' Signaturen') + ' eingesammelt' + (liste ? ' (' + liste + ')' : '') + '. '
+        : 'Ziel erreicht, aber falsche Signaturen (' + liste + '). ';
+      return { ok: false, text: text + 'ANTI-V hat einen anderen Weg genommen. Der richtige Weg führt über genau ' + SIGNATUREN_ANZAHL + ' Signaturen.' };
     }
   });
 }
@@ -1864,9 +1892,14 @@ function baueProtokoll3() {
       const hash = await Krypto.hashCode(code);
       const f = HASHES.protokoll3Fallen;
       const fallen = Array.isArray(f) ? f : (f[Terminal.stand.stufe] || f.mittel || []);
+      const u = HASHES.protokoll3Umwege || {};
+      const umwege = u[Terminal.stand.stufe] || u.mittel || [];
       if (fallen.indexOf(hash) >= 0) {
         Ton.spiele('alarm');
         feld.setzeMeldung('ACHTUNG: Euer Weg führt über einen infizierten Server!', 'fehler');
+      } else if (umwege.indexOf(hash) >= 0) {
+        Ton.spiele('fehler');
+        feld.setzeMeldung('Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.', 'fehler');
       } else {
         Ton.spiele('fehler');
         feld.setzeMeldung('OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.', 'fehler');
@@ -2620,7 +2653,12 @@ async function erzeugeKonfiguration() {
   const sig = w('signaturen').split(/[^0-9]+/).filter(Boolean).join(',');
   // Fallen für Protokoll 3 direkt aus den Netzwerkplänen (js/netzwerke.js)
   const fallenStufen = {};
-  Object.keys(NETZWERKE).forEach(function (st) { fallenStufen[st] = netzwerkAnalyse(st).fallen; });
+  const umwegeStufen = {};
+  Object.keys(NETZWERKE).forEach(function (st) {
+    const a = netzwerkAnalyse(st);
+    fallenStufen[st] = a.fallen;
+    umwegeStufen[st] = a.umwege;
+  });
   const verschiebung = parseInt(w('verschiebung') || P1_VERSCHIEBUNG, 10);
   if (!/^\d{3}$/.test(w('p1')) || !(verschiebung >= 1 && verschiebung <= 25)) {
     toast('Code Protokoll 1 muss dreistellig sein, Verschiebung zwischen 1 und 25.', 'warnung');
@@ -2646,15 +2684,21 @@ async function erzeugeKonfiguration() {
   zeilen.push("  bonus: '" + await Krypto.hashCode(loesungen.bonus) + "',");
   zeilen.push("  signaturen: '" + await Krypto.hashCode(sig) + "',");
   zeilen.push("  protokoll3: '" + await Krypto.hashCode(loesungen.p3) + "',");
-  zeilen.push('  /* Fallen pro Stufe, berechnet aus js/netzwerke.js */');
-  zeilen.push('  protokoll3Fallen: {');
-  const stufenZeilen = [];
-  for (const st of Object.keys(fallenStufen)) {
-    const fh = [];
-    for (const f of fallenStufen[st]) fh.push("      '" + await Krypto.hashCode(f) + "'");
-    stufenZeilen.push('    ' + st + ': [\n' + fh.join(',\n') + '\n    ]');
-  }
-  zeilen.push(stufenZeilen.join(',\n'));
+  // Fallen und Umwege pro Stufe als Hash-Listen
+  const hashListe = async function (name, kommentar, stufen) {
+    zeilen.push('  /* ' + kommentar + ' */');
+    zeilen.push('  ' + name + ': {');
+    const stufenZeilen = [];
+    for (const st of Object.keys(stufen)) {
+      const fh = [];
+      for (const f of stufen[st]) fh.push("      '" + await Krypto.hashCode(f) + "'");
+      stufenZeilen.push('    ' + st + ': [\n' + fh.join(',\n') + '\n    ]');
+    }
+    zeilen.push(stufenZeilen.join(',\n'));
+  };
+  await hashListe('protokoll3Fallen', 'Fallen pro Stufe, berechnet aus js/netzwerke.js', fallenStufen);
+  zeilen.push('  },');
+  await hashListe('protokoll3Umwege', 'Umwege pro Stufe, berechnet aus js/netzwerke.js', umwegeStufen);
   zeilen.push('  }');
   zeilen.push('};');
   zeilen.push('');

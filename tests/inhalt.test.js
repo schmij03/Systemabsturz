@@ -97,7 +97,7 @@ test('Technikcheck bricht hängende Anfragen ab und meldet trotzdem alle Ergebni
 test('Bonusfrage nach Protokoll 2: vier Antworten, nur B ist richtig', async () => {
   const c = app();
   const f = c.run('TEXTE.bonusFrage2');
-  assert.match(f.frage, /wiederhole fortlaufend/);
+  assert.match(f.frage, /wiederhole bis Ziel erreicht/);
   assert.deepEqual(Array.from(f.antworten, a => a[0]), ['A', 'B', 'C', 'D']);
   for (const [buchstabe] of f.antworten) {
     c.b = buchstabe;

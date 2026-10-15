@@ -149,5 +149,10 @@ function netzwerkAnalyse(stufe) {
   const fallen = Array.from(new Set(wege.filter(function (w) { return infiziert(w) && w.length - 1 < kurz; }).map(summe)))
     .filter(function (z) { return z !== code; }).sort(function (a, b) { return a - b; })
     .map(function (z) { return String(z).padStart(3, '0'); });
-  return { weg: beste[0], eindeutig: beste.length === 1, verbindungen: kurz, code: String(code).padStart(3, '0'), fallen: fallen };
+  // Umwege: saubere Wege mit mehr Verbindungen (ohne Summen, die schon Code oder Falle sind)
+  const umwege = Array.from(new Set(sauber.filter(function (w) { return w.length - 1 > kurz; }).map(summe)))
+    .filter(function (z) { return z !== code; }).sort(function (a, b) { return a - b; })
+    .map(function (z) { return String(z).padStart(3, '0'); })
+    .filter(function (z) { return fallen.indexOf(z) < 0; });
+  return { weg: beste[0], eindeutig: beste.length === 1, verbindungen: kurz, code: String(code).padStart(3, '0'), fallen: fallen, umwege: umwege };
 }

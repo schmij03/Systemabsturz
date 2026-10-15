@@ -54,7 +54,7 @@ var Druck = (function () {
         '<table class="mission"><tr><th>Protokoll</th><th>Was ihr tut</th><th>Wo</th></tr>' +
         '<tr><td>1  Kryptografie</td><td>Entschlüsselt die Nachricht aus dem Terminal mit der Chiffrierscheibe und gebt den Code ein.</td><td>Papier</td></tr>' +
         '<tr><td>2  Algorithmen</td><td>Programmiert den Antiviren-Roboter ANTI-V mit Blöcken, bis er die drei Viren-Signaturen einsammelt.</td><td>Tablet oder Laptop</td></tr>' +
-        '<tr><td>3  Netzwerke</td><td>Findet auf dem Netzwerkplan den kürzesten Weg ohne infizierte Server. Die Summe ist der Override-Code.</td><td>Papier</td></tr></table>' +
+        '<tr><td>3  Netzwerke</td><td>Findet auf dem Netzwerkplan den Weg mit den wenigsten Verbindungen ohne infizierte Server. Die Summe der Kennzahlen ist der Override-Code.</td><td>Papier</td></tr></table>' +
         '<h2>Regeln</h2><ul>' +
         '<li>Löst die Protokolle der Reihe nach. Jedes gelöste Protokoll schaltet das nächste frei.</li>' +
         '<li><strong>Help-Desk:</strong> Im Terminal gibt es Tipps. Jedes Team hat ' + JOKER_ANZAHL + ' Joker, jeder Joker kostet ' + JOKER_KOSTEN + ' Punkte. Kommt ihr 5 Minuten nicht weiter, gibt es einen Tipp gratis.</li>' +
@@ -120,7 +120,8 @@ var Druck = (function () {
         '<li>Schneidet beide Scheiben aus (grosse Scheibe auf der vorherigen Seite).</li>' +
         '<li>Legt die kleine rote Scheibe auf die grosse, Mittelpunkt auf Mittelpunkt.</li>' +
         '<li>Stecht mit einem Bleistift durch beide Mittelpunkte und steckt eine Musterklammer durch.</li>' +
-        '<li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li></ol></div>'
+        '<li>Dreht die kleine Scheibe: Aussen steht der Klartext, innen der Geheimtext.</li>' +
+        '<li><strong>So entschlüsselt ihr:</strong> Sucht jeden Buchstaben der Nachricht innen auf der roten Scheibe und schreibt den Buchstaben ab, der aussen daneben steht.</li></ol></div>'
     }, st);
     return s1 + s2 + s3;
   }
@@ -148,7 +149,7 @@ var Druck = (function () {
     return seite({
       ober: 'SICHERHEITSPROTOKOLL 2  ·  ALGORITHMEN', titel: 'Virenscanner programmieren', teil: 'Protokoll 2',
       inhalt:
-        '<p>NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert im Notfall-Terminal den Antiviren-Roboter <strong>ANTI-V</strong> so, dass er das Ziel erreicht und unterwegs die drei Viren-Signaturen einsammelt.' +
+        '<p>Programmiert den Antiviren-Roboter <strong>ANTI-V</strong> im Terminal so, dass er das Ziel erreicht. Er sammelt jede gelbe Zahl ein, über die er läuft. Nur der richtige Weg führt über genau die drei Viren-Signaturen.' +
         (hatInfiziert ? ' Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.' : '') + '</p>' +
         '<h2>So geht ihr vor</h2><ol>' +
         '<li>Zieht die Blöcke aus der Werkzeugleiste unter «wenn Programm startet».</li>' +
@@ -176,7 +177,7 @@ var Druck = (function () {
       inhalt:
         '<p><strong>Virus gefunden!</strong> Doch NULLBYTE hat Server im Schulnetz infiziert. Die Daten müssen von <strong>Server A</strong> zu <strong>Server Z</strong> fliessen, damit ihr den Override auslösen könnt.</p>' +
         '<div class="kasten"><h3>Euer Auftrag</h3><ol>' +
-        '<li>Sucht auf dem Netzwerkplan den Weg von Server A zu Server Z mit <strong>möglichst wenigen Verbindungen</strong>.</li>' +
+        '<li>Sucht auf dem Netzwerkplan den Weg von Server A zu Server Z mit <strong>möglichst wenigen Verbindungen</strong> (Linien). Die Kennzahlen spielen dabei noch keine Rolle.</li>' +
         '<li>Der Weg darf <strong>keinen infizierten (roten) Server</strong> berühren.</li>' +
         '<li>Zählt die Kennzahlen aller Server auf eurem Weg zusammen, <strong>Server A und Server Z eingeschlossen</strong>.</li>' +
         '<li>Die Summe ist der Override-Code. Gebt ihn dreistellig im Terminal ein (zum Beispiel 065) und drückt den roten Buzzer!</li></ol></div>' +

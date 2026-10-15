@@ -54,7 +54,7 @@ Die Steuerung zeigt oben immer Phase, Beitrittscode, Stufe und Restzeit. Der pas
 1. Auf der Spielleitung Stufe «Leicht» wählen, Code 418 eingeben, «Übernehmen (PIN)». Erwartung: «Verschiebung 4 (A wird zu E)», Vorschau zeigt den neuen Geheimtext, Unterschrift RYPPFCXI. Stufe auf «Mittel» stellen: Verschiebung 6, Unterschrift TARRHEZK. Auf «Schwer»: Verschiebung 8, Unterschrift VCTTJGBM. Danach wieder «Leicht».
 2. Tablet anmelden und Spiel freigeben. Erwartung: Protokoll 1 zeigt denselben Geheimtext, 729 ergibt «ZUGRIFF VERWEIGERT», 418 öffnet Protokoll 1.
 3. `druck/protokoll1.html` öffnen. Erwartung: derselbe Geheimtext.
-4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
+4. Protokoll 3 auf Stufe Leicht: 100 ergibt die Warnung «infizierter Server», 136 (sauberer Umweg) ergibt «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.», 111 ergibt «OVERRIDE ABGELEHNT», 109 den Buzzer. Tipp 3: «über F und G, dann nach oben über C, D und E».
 5. «Standard» stellt Code 729 wieder her (Verschiebung weiterhin nach Stufe).
 6. Ohne Spielleitung: `index.html?stufe=mittel` öffnen und manuell starten. Erwartung: Geheimtext endet auf TARRHEZK, 729 öffnet Protokoll 1, Tipp 3 nennt «innen G».
 
@@ -102,9 +102,9 @@ wiederhole bis Ziel erreicht
 * Erfolgston und «VIRUS GEFUNDEN. Signaturen 3, 8, 5 isoliert, Protokoll 3 ist freigeschaltet.».
 * Zusatz: «Euer Programm: 15 Blöcke (Limit 15). Effizienzbonus: plus 10 Punkte.»
 * Tab 3 wird freigeschaltet, 160 Punkte (mit Bonusfrage und Effizienzbonus, ohne Joker).
-* Unter der Erfolgsmeldung erscheint die Bonusfrage «Was macht der Block «wiederhole fortlaufend»?» mit den Antworten A bis D.
+* Unter der Erfolgsmeldung erscheint die Bonusfrage «Wann hört der Block «wiederhole bis Ziel erreicht» auf, die Blöcke darin zu wiederholen?» mit den Antworten A bis D.
 * Antwort B antippen: «Richtig! Plus 10 Punkte.», 170 Punkte. Die Knöpfe verschwinden, auch nach dem Neuladen gibt es keinen zweiten Versuch.
-* In einem zweiten Durchgang eine falsche Antwort (A, C oder D) wählen: «Leider falsch. Richtig wäre B …», keine Punkte.
+* In einem zweiten Durchgang eine falsche Antwort (A, C oder D) wählen: «Leider falsch. Richtig wäre B: Vor jedem Durchgang prüft die Schleife …», keine Punkte.
 
 ### Test B: Programm ohne «nicht»
 
@@ -142,6 +142,7 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 | Schritt | Erwartung |
 |---|---|
 | 104 (Stufe schwer, Abkürzung über rote Server) | Alarmton, «ACHTUNG: Euer Weg führt über einen infizierten Server!» |
+| 150 (Stufe schwer, sauberer Umweg) | «Euer Weg ist sauber, aber es gibt einen Weg mit weniger Verbindungen.» |
 | 999 | «OVERRIDE ABGELEHNT. Zählt Wege und Kennzahlen nach.» |
 | 109 | Fanfare, grosser roter Knopf «OVERRIDE AUSLÖSEN» |
 | Knopf drücken | «SYSTEM WIEDERHERGESTELLT. Ihr habt die Schule gerettet!», Restzeit, Zeitbonus, Endpunktestand, Countdown steht still |
