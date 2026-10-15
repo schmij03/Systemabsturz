@@ -752,6 +752,8 @@ body[data-phase="beendet"] .phase-chip strong { color: var(--text-schwach); }
 .stufen-tabelle { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
 .stufen-tabelle th, .stufen-tabelle td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rand); }
 .stufen-tabelle th { color: var(--text-schwach); font-weight: 600; font-size: 0.8rem; }
+.stufen-tabelle th, .stufen-tabelle td:not(:nth-child(3)) { white-space: nowrap; }
+.stufen-tabelle .stufen-limit { display: block; font-size: 0.8rem; color: var(--text-schwach); }
 .stufen-tabelle tr.gewaehlt td { background: rgba(255, 213, 79, 0.08); color: #fff; }
 .stufen-tabelle tr.gewaehlt td:first-child { color: var(--gelb); font-weight: 700; }
 .zur-steuerung {

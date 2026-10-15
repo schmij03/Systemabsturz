@@ -20,6 +20,7 @@
                 Auf dem richtigen Weg müssen 3, 8, 5 in dieser
                 Reihenfolge liegen (geprüft wird nur als Hash in app.js).
    startRichtung  0 = Norden, 1 = Osten, 2 = Süden, 3 = Westen
+   kurz         was die Stufe schwierig macht (Übersicht der Spielleitung)
    maxBloecke   so viele Blöcke dürfen höchstens verwendet werden
                 (ohne «wenn Programm startet»). Damit ist ein Programm
                 ohne Schleife zu lang und die Musterlösung passt genau.
@@ -34,6 +35,7 @@
 const STUFEN = {
   leicht: {
     name: 'Leicht',
+    kurz: 'Einfacher Weg',
     labyrinth: [
       '##########',
       '#S.......#',
@@ -57,6 +59,7 @@ const STUFEN = {
   },
   mittel: {
     name: 'Mittel',
+    kurz: 'Abzweigungen',
     labyrinth: [
       '##########',
       '#S##..####',
@@ -79,6 +82,7 @@ const STUFEN = {
   },
   schwer: {
     name: 'Schwer',
+    kurz: 'Infizierte Felder meiden',
     labyrinth: [
       '##########',
       '#S##..####',

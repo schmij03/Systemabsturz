@@ -2052,7 +2052,9 @@ function initSpielleitung() {
       const netz = typeof NETZWERKE !== 'undefined' && NETZWERKE[k];
       z.appendChild(erstelle('td', '', STUFEN[k].name));
       z.appendChild(erstelle('td', '', 'A wird zu ' + caesar('A', p1Verschiebung(k))));
-      z.appendChild(erstelle('td', '', 'max. ' + STUFEN[k].maxBloecke + ' Blöcke'));
+      const p2 = erstelle('td', '', STUFEN[k].kurz || '');
+      p2.appendChild(erstelle('span', 'stufen-limit', 'Limit ' + STUFEN[k].maxBloecke + ' Blöcke'));
+      z.appendChild(p2);
       z.appendChild(erstelle('td', '', netz ? Object.keys(netz.server).length + ' Server' : ''));
       t.appendChild(z);
     });

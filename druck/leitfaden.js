@@ -38,7 +38,7 @@ var Leitfaden = (function () {
     return seite(st, 'SPIELLEITUNG  |  NUR FÜR LEHRPERSONEN', 'Leitfaden für die Spielleitung',
       '<p>«Systemabsturz» ist ein Escape Game für den Zyklus 3 (Medien und Informatik). Vier Teams retten parallel das Schulnetz vor der Hackergruppe NULLBYTE. Jedes Team arbeitet mit einem Tablet oder Laptop und einem gedruckten Dossier. Die Spielleitung steuert alles über <strong>' + esc(Druck.adresse()) + '/spielleitung.html</strong> auf dem Beamer-Laptop.</p>' +
       '<div class="kasten"><h3>Diese Runde: Stufe ' + s.name + '</h3>' +
-      '<p class="zeile">Protokoll 1: Verschiebung ' + p1Verschiebung(st) + ' (A wird zu ' + caesar('A', p1Verschiebung(st)) + ')  ·  Protokoll 2: höchstens ' + s.maxBloecke + ' Blöcke, ' + s.energie + ' Felder Energie  ·  Protokoll 3: ' + Object.keys(netz.server).length + ' Server</p>' +
+      '<p class="zeile">Protokoll 1: Verschiebung ' + p1Verschiebung(st) + ' (A wird zu ' + caesar('A', p1Verschiebung(st)) + ')  ·  Protokoll 2: ' + (s.kurz ? s.kurz + ', ' : '') + 'höchstens ' + s.maxBloecke + ' Blöcke, ' + s.energie + ' Felder Energie  ·  Protokoll 3: ' + Object.keys(netz.server).length + ' Server</p>' +
       '<p class="zeile">Spielzeit ' + SPIELDAUER_MINUTEN + ' Minuten, dazu Einstieg (ca. 5 Minuten) und Auswertung (10 bis 15 Minuten).</p></div>' +
       '<h2>Vor der Lektion (ca. 15 Minuten)</h2>' + haken([
         'Auf der Spielleitung im Reiter «1 Vorbereiten» die <strong>Stufe</strong> wählen und bei Bedarf den <strong>Code für Kiste 1</strong> einstellen.',
