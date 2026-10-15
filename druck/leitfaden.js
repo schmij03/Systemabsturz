@@ -2,7 +2,8 @@
    Systemabsturz: Leitfaden für die Spielleitung (Druck und Download)
    ---------------------------------------------------------------------
    Gleiches Layout wie die Teamsets (druck/seiten.js). Inhalt:
-   Vorbereitung, Ablauf, Bedienung und Notfälle, Punkte, Lösungen der
+   Vorbereitung, Voraussetzungen der Klasse, Testlauf, Drucken und
+   Material, Ablauf, Bedienung und Notfälle, Punkte, Lösungen der
    gewählten Stufe, Help-Desk-Tipps und die Unterrichtsinfo.
    Die Lösungen stehen nicht im Klartext im Quellcode: Sie werden erst
    nach Eingabe der PIN entschlüsselt und eingefügt (wie auf der
@@ -58,7 +59,55 @@ var Leitfaden = (function () {
       ]));
   }
 
-  /* ------------------- Seite 2: Ablauf und Bedienung ------------------ */
+  /* ------------- Seite 2: Voraussetzungen der Schülerinnen und Schüler ------------- */
+  function voraussetzungen(st) {
+    return seite(st, 'SPIELLEITUNG  |  VORAUSSETZUNGEN', 'Was die Klasse mitbringen sollte',
+      '<p>«Systemabsturz» ist für den Zyklus 3 gedacht (7. bis 9. Klasse). Auf der Stufe leicht ist es ohne Vorwissen spielbar. Auf den Stufen mittel und schwer helfen Grundlagen aus dem Unterricht in Medien und Informatik.</p>' +
+      tabelle(['Bereich', 'Das sollten die Schülerinnen und Schüler können', 'Hilfreich, aber nicht nötig'], [
+        ['Allgemein', 'Anleitungen genau lesen, sich im Team absprechen und Aufgaben verteilen. Tablet oder Laptop bedienen (tippen, ziehen, scrollen).', 'Erfahrung mit Rätseln oder Escape Games unter Zeitdruck'],
+        ['Protokoll 1<br>Kryptografie', 'Das Alphabet sicher kennen, Buchstaben sorgfältig abschreiben und mit der Scheibe zuordnen. Zahlwörter in Ziffern umsetzen (SIEBEN ZWEI NEUN wird 729).', 'Die Begriffe Klartext, Geheimtext und Verschlüsselung'],
+        ['Protokoll 2<br>Algorithmen', 'Blöcke ziehen und aneinanderhängen wie in Scratch. Verstehen, dass Befehle der Reihe nach ausgeführt werden. Rechts und links aus der Sicht einer Figur bestimmen.', 'Schleife «wiederhole» und «falls dann sonst», auf Stufe schwer auch «und» und «nicht»'],
+        ['Protokoll 3<br>Netzwerke', 'Einen Plan mit Punkten und Verbindungen lesen. Mehrere Zahlen zusammenzählen (bis etwa 200).', 'Die Begriffe Server und Verbindung, systematisch alle Wege vergleichen']
+      ], 'mission vorwissen') +
+      '<h2>Welche Stufe passt?</h2>' + tabelle(['Stufe', 'Passt, wenn die Klasse …'], [
+        ['Leicht', 'noch kaum mit Scratch gearbeitet hat. Gut als Einstieg in eine Einheit oder als teambildende Aktivität.'],
+        ['Mittel (Standard)', 'Schleifen und «falls dann sonst» aus Scratch oder einer ähnlichen Umgebung kennt.'],
+        ['Schwer', 'verschachtelte Bedingungen und die Operatoren «und», «oder», «nicht» kennt. Gut als Abschluss einer Einheit.']
+      ], 'mission kompakt') +
+      '<h2>Wenn Vorwissen fehlt</h2><ul>' +
+      '<li>Stufe leicht wählen. Die Tipps im Help-Desk führen schrittweise zur Lösung.</li>' +
+      '<li>In einer Lektion vorher 10 bis 15 Minuten Scratch: Eine Figur mit «wiederhole» und «falls dann sonst» durch einen Gang steuern.</li>' +
+      '<li>Rechts und links aus der Sicht einer Figur kurz üben, zum Beispiel mit einer Person, die durchs Zimmer geführt wird.</li>' +
+      '<li>Die Cäsar-Verschlüsselung <strong>nicht</strong> vorher erklären: Die Verschiebung selbst zu entdecken, ist Teil des Rätsels.</li></ul>');
+  }
+
+  /* --------- Seite 3: Zuerst selbst ausprobieren, Drucken und Material --------- */
+  function ausprobieren(st) {
+    var adr = esc(Druck.adresse());
+    return seite(st, 'SPIELLEITUNG  |  VOR DEM ERSTEN EINSATZ', 'Zuerst selbst ausprobieren',
+      '<div class="kasten wissen"><span class="label">WICHTIG</span>Spielt das Spiel vor dem ersten Einsatz einmal selbst ganz durch (ca. 45 Minuten), am besten im Schulzimmer mit dem WLAN der Schule. So kennt ihr die Rätsel, die typischen Stolpersteine und die Technik.</div>' +
+      '<ol>' +
+      '<li><strong>' + adr + '/spielleitung.html</strong> öffnen, Unterrichtsinfo lesen und eine Stufe wählen.</li>' +
+      '<li>In einem zweiten Fenster oder auf einem Tablet <strong>' + adr + '</strong> öffnen und sich mit dem Beitrittscode als Team anmelden.</li>' +
+      '<li>Auf der Spielleitung «▶ Spiel starten»: Botschaft und Spielanweisung anschauen, Ton und Beamer prüfen.</li>' +
+      '<li>Alle drei Protokolle selbst lösen, ohne Lösungen: mit gebastelter Chiffrierscheibe, eigenem Programm und gedrucktem Netzwerkplan.</li>' +
+      '<li>Den Help-Desk öffnen und die Tipps ansehen. Ein Joker kostet ' + JOKER_KOSTEN + ' Punkte.</li>' +
+      '<li>Technikcheck: Spielleitung, Reiter «1 Vorbereiten», Karte «Technikcheck». Auf einem Gerät der Teams «Gerät prüfen».</li>' +
+      '<li>Danach auf dem Gerät «Neues Spiel» und auf der Spielleitung «Spiel zurücksetzen (PIN)».</li></ol>' +
+      '<h2>Drucken</h2>' + tabelle(['Was', 'Anzahl', 'Hinweis'], [
+        ['Dossier der gewählten Stufe (7 Seiten)', '1 pro Team', 'Spielleitung, Reiter «1 Vorbereiten», «Gesamtes Dossier». A4, «Tatsächliche Grösse», farbig. Seite 7 (Netzwerkplan) ist quer.'],
+        ['Bastelvorlagen Chiffrierscheibe (Dossier Seiten 3 und 4)', '1 pro Team', 'Auf festes Papier (ab 160 g/m²).'],
+        ['Reserve-Dossier', '1 bis 2', 'Falls ein Blatt verloren geht oder eine Scheibe misslingt.'],
+        ['Leitfaden mit Lösungen', '1 für euch', 'PIN eingeben, «Lösungen einfügen». Nicht im Zimmer liegen lassen.']
+      ], 'mission kompakt') +
+      '<h2>Weiteres Material</h2>' + haken([
+        'Pro Team eine Schere, eine Musterklammer und Stifte.',
+        'Pro Team ein geladenes Tablet oder Laptop, dazu Beamer mit Lautsprecher.',
+        '<strong>Sicherheitskisten</strong> mit dreistelligem Zahlenschloss (freiwillig): Inhalt nach Wahl, zum Beispiel ein Hinweis oder eine kleine Belohnung. Ohne Kisten zeigt das Terminal die Codes trotzdem an.'
+      ]));
+  }
+
+  /* ------------------- Seite 4: Ablauf und Bedienung ------------------ */
   function ablauf(st) {
     return seite(st, 'SPIELLEITUNG  |  ABLAUF', 'Ablauf der Lektion',
       tabelle(['Phase', 'Was passiert', 'Spielleitung'], [
@@ -75,7 +124,7 @@ var Leitfaden = (function () {
       '');
   }
 
-  /* ------------------ Seite 3: Notfälle und Punkte ------------------ */
+  /* ------------------ Seite 5: Notfälle und Punkte ------------------ */
   function notfaelle(st) {
     return seite(st, 'SPIELLEITUNG  |  NOTFÄLLE', 'Wenn etwas nicht klappt',
       tabelle(['Problem', 'Lösung'], [
@@ -92,7 +141,7 @@ var Leitfaden = (function () {
       '<li>Help-Desk: ' + JOKER_ANZAHL + ' Joker pro Team, jeder kostet ' + JOKER_KOSTEN + ' Punkte. Nach ' + GRATIS_TIPP_MINUTEN + ' Minuten ohne Fortschritt gibt es einen Tipp gratis.</li></ul>');
   }
 
-  /* --------------------- Seite 3: Lösungen (PIN) --------------------- */
+  /* --------------------- Seite 6: Lösungen (PIN) --------------------- */
   function loesungen(st, l) {
     var ober = 'SPIELLEITUNG  |  LÖSUNGEN  |  NICHT AUF DEN BEAMER';
     if (!l) {
@@ -130,7 +179,7 @@ var Leitfaden = (function () {
       ], 'mission loesung'));
   }
 
-  /* ----------------------- Seite 4: Help-Desk ------------------------ */
+  /* ----------------------- Seite 7: Help-Desk ------------------------ */
   function tipps(st) {
     var v = p1Verschiebung(st);
     var teile = [1, 2, 3].map(function (p) {
@@ -142,7 +191,7 @@ var Leitfaden = (function () {
       '<p>So sehen die Teams die gestuften Tipps im Terminal. Ein Joker schaltet die nächste Stufe frei. Nach ' + GRATIS_TIPP_MINUTEN + ' Minuten ohne Fortschritt ist die erste Stufe gratis. Wenn ihr mündlich helft, orientiert euch an derselben Reihenfolge.</p>' + teile);
   }
 
-  /* -------------- Seiten 5 und 6: Einsatz im Unterricht -------------- */
+  /* ----------- Seiten 8 bis 11: Einsatz im Unterricht ----------- */
   function infoAbschnitt(a, von, bis, zusatz) {
     return '<h2>' + esc(a.titel) + (zusatz || '') + '</h2>' + a.inhalt.slice(von || 0, bis).map(function (b) {
       if (b.p) return '<p>' + format(b.p) + '</p>';
@@ -165,7 +214,7 @@ var Leitfaden = (function () {
   }
 
   function html(st, l) {
-    return vorbereitung(st) + ablauf(st) + notfaelle(st) + loesungen(st, l) + tipps(st) + unterricht(st);
+    return vorbereitung(st) + voraussetzungen(st) + ausprobieren(st) + ablauf(st) + notfaelle(st) + loesungen(st, l) + tipps(st) + unterricht(st);
   }
 
   function start() {

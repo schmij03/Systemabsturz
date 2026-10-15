@@ -117,7 +117,8 @@ const UNTERRICHTSINFO = {
         { liste: [
           'Pro Team ein Tablet (zum Beispiel iPad mit Safari, Querformat) oder ein Laptop mit aktuellem Browser (Chrome, Edge, Safari oder Firefox). Dazu ein Beamer-Laptop mit `spielleitung.html`.',
           'Das Startsignal läuft über ntfy.sh und braucht Internet. Ohne Internet: Geräte der Teams manuell mit der PIN starten oder den Link `index.html?ende=HH:MM` verwenden.',
-          'Scratch-Erfahrung ist hilfreich, aber nicht nötig. Der Help-Desk liefert gestufte Tipps.',
+          '**Vorwissen der Klasse:** Auf Stufe leicht ohne Vorkenntnisse spielbar. Für mittel helfen Scratch-Grundlagen (Schleife, «falls dann sonst»), für schwer zusätzlich «und» und «nicht». Die Cäsar-Verschlüsselung vorher nicht erklären, sie ist Teil des Rätsels. Details im Leitfaden, Seite 2.',
+          '**Zuerst selbst ausprobieren:** Vor dem ersten Einsatz das Spiel einmal selbst ganz durchspielen (ca. 45 Minuten), am besten im Schulzimmer mit dem WLAN der Schule. Anleitung und Druckliste im Leitfaden, Seite 3.',
           'Lizenz: «Systemabsturz» von Christof Heiss und Jan Schmid, PH Luzern 2026, CC BY-SA 4.0.',
           'Quelle der Kompetenzen: Lehrplan 21, Modullehrplan Medien und Informatik, https://v-ef.lehrplan.ch',
           'Bildnachweis: Hintergrund der Spielanweisung KI-generiert mit Google Gemini; Maske von NULLBYTE eigene Zeichnung.'

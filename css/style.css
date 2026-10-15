@@ -877,6 +877,8 @@ html.info-offen, html.info-offen body { overflow: hidden; }
 .technikcheck-liste li.fehler .technik-zeichen { background: var(--rot); color: #fff; }
 .technikcheck-liste .technik-text { font-family: var(--sans); font-size: 0.95rem; }
 .technikcheck-liste .technik-hinweis { display: block; margin-top: 2px; color: var(--gelb); font-size: 0.88rem; }
+.erstmals-hinweis { margin: 0 0 12px; padding: 10px 14px; border: 1px solid var(--gelb); border-left-width: 4px; border-radius: 6px; background: rgba(255, 213, 79, 0.06); font-size: 0.95rem; }
+.erstmals-hinweis a { color: var(--gelb); }
 .overlay-knoepfe { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; align-items: center; }
 .spiel-laeuft { margin-bottom: 18px; }
 .link-unauffaellig { margin-top: 14px; min-height: 44px; padding: 6px 10px; background: none; border: none; color: var(--text-schwach); font: inherit; font-size: 0.85rem; text-decoration: underline; cursor: pointer; }
