@@ -101,7 +101,7 @@ Fallen: Gibt ein Team die Summe eines infizierten Weges ein, der kürzer ist als
 ### Protokoll 2: Regeln, Stufen und Effizienzbonus
 
 * **Schleife ist Pflicht:** Ein Programm ohne «wiederhole bis Ziel erreicht» startet nicht («Ihr müsst mit der Schleife arbeiten»).
-* **Blocklimit:** Pro Stufe darf das Programm höchstens so viele Blöcke haben, wie die Musterlösung braucht (ohne «wenn Programm startet»). Ist das Limit erreicht, werden die Blöcke in der Toolbox grau. Ein Programm ohne Schleife wäre viel zu lang und passt deshalb nie ins Limit. Die Anzeige «Blöcke 7 / 15» zeigt den Stand.
+* **Blocklimit:** Pro Stufe darf das Programm höchstens so viele Blöcke haben, wie die Musterlösung braucht (ohne «wenn Programm startet»). Es zählen nur die Blöcke unter «wenn Programm startet». Lose Blöcke zählen nicht, so können Teams Blöcke austauschen (höchstens 3 lose Blöcke, dann wird die Toolbox grau). Ist das Programm länger als das Limit, startet es nicht und die Anzeige wird rot. Ein Programm ohne Schleife wäre viel zu lang und passt deshalb nie ins Limit. Die Anzeige «Blöcke 7 / 15 (+1 lose)» zeigt den Stand.
 * **Energie:** ANTI-V darf nur so viele Felder gehen, wie der richtige Weg lang ist («Energie 16 / 16»). Umwege und Hin-und-her-Laufen enden mit «Energie leer!».
 * **Effizienzbonus:** Wer Protokoll 2 löst, erhält 10 Punkte plus 5 Punkte für jeden Block unter dem Limit. Die Musterlösung gibt also 10 Punkte, eine kürzere Lösung mehr. Teams dürfen nach dem Lösen weiter optimieren: Ein neuer Rekord bringt die Differenz als Zusatzpunkte.
 * **Schwierigkeitsstufen** (Auswahl auf `spielleitung.html` im Reiter «1 Vorbereiten», wird mit dem Startsignal an die Tablets geschickt; alternativ per Link `index.html?stufe=leicht`):

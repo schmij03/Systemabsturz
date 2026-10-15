@@ -71,7 +71,7 @@ table.mission td:last-child { width: 15%; }
 /* ---------- Protokoll 2 ---------- */
 table.bloecke td { padding: 2mm 3mm; border-bottom: 0.75pt solid #dfe2e6; vertical-align: middle; font-size: 9.5pt; }
 table.bloecke td.kategorie { width: 23%; color: #fff; font-weight: 700; font-size: 10pt; border-bottom: 0.75pt solid #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.plan { border: 0.75pt solid #b9bfc7; height: 36mm; padding: 1.5mm 3mm; }
+.plan { border: 0.75pt solid #b9bfc7; height: 31mm; padding: 1.5mm 3mm; }
 .plan .hut { display: inline-block; background: #e7f0fb; font-weight: 700; font-size: 9pt; padding: 0.3mm 1.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
 /* ---------- Chiffrierscheiben ---------- */

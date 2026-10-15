@@ -121,7 +121,10 @@ Im Programm aus Test A die beiden «nicht»-Blöcke und die «und»-Blöcke entf
 | Nur «drehe dich nach links» und «gehe 1 Feld vor» anhängen | ANTI-V stösst an die Mauer, «Mauer!» |
 | «wiederhole bis Ziel erreicht» mit nur «drehe dich nach rechts» | Abbruch: «Endlosschleife? ANTI-V dreht sich im Kreis.» |
 | Nur «gehe 1 Feld vor» ohne Schleife | «Ihr müsst mit der Schleife «wiederhole bis Ziel erreicht» arbeiten.» |
-| Mehr als 15 Blöcke ziehen (Stufe schwer) | Ab 15 Blöcken werden die Blöcke in der Toolbox grau, Anzeige «Blöcke 15 / 15» gelb |
+| 15 Blöcke anhängen (Stufe schwer) | Anzeige «Blöcke 15 / 15» gelb |
+| Danach 2 Blöcke lose daneben legen | Anzeige «Blöcke 15 / 15 (+2 lose)», lose Blöcke grau, Programm startet normal |
+| Einen losen Block zusätzlich anhängen | Anzeige «Blöcke 16 / 15» rot, beim Start «Euer Programm hat 16 Blöcke, erlaubt sind höchstens 15. Entfernt 1 Block.» |
+| 3 lose Blöcke neben dem vollen Programm | Toolbox wird grau, keine weiteren Blöcke möglich |
 | Kürzere Lösung mit 11 Blöcken: wiederhole { falls (rechts frei? und nicht rechts infiziert?) dann drehe rechts }, danach { falls vorne frei? dann gehe vor, sonst drehe links } | «Neuer Rekord! Plus 20 Punkte.» |
 
 ### Stufen leicht und mittel

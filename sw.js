@@ -9,7 +9,7 @@
    ===================================================================== */
 
 const CACHE_PRAEFIX = 'systemabsturz:' + self.registration.scope + ':';
-const CACHE_NAME = CACHE_PRAEFIX + 'v34';
+const CACHE_NAME = CACHE_PRAEFIX + 'v35';
 
 const DATEIEN = [
   './',

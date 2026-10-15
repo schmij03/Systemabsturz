@@ -282,17 +282,28 @@ const Algorithmen = (function () {
 
   /** Alle Blöcke im Arbeitsbereich ohne Startblock (auch lose). */
   function alleBloecke() {
-    return ws ? ws.getAllBlocks(false).filter(function (b) { return b.type !== 'antiv_start'; }).length : 0;
+    return ws ? ws.getAllBlocks(false).filter(function (b) { return b.type !== 'antiv_start' && !b.isInsertionMarker(); }).length : 0;
   }
+
+  /* Zum Blocklimit zählen nur die Blöcke unter «wenn Programm startet».
+     Lose Blöcke zählen nicht, damit Teams Blöcke austauschen können. Damit
+     der Arbeitsbereich nicht überquillt, erlaubt Blockly insgesamt nur
+     LOSE_RESERVE Blöcke mehr als das Limit. */
+  const LOSE_RESERVE = 3;
 
   function zeigeZaehler() {
     const max = Maze.stufe().maxBloecke;
-    const n = alleBloecke();
+    const n = programmBloecke().length;
+    const lose = Math.max(0, alleBloecke() - n);
     const el = document.getElementById('block-zaehler');
     if (!el) return;
-    el.textContent = 'Blöcke ' + n + ' / ' + max;
-    el.classList.toggle('voll', n >= max);
-    el.title = n >= max ? 'Keine Blöcke mehr übrig. Löscht Blöcke, um andere zu verwenden.' : 'Noch ' + (max - n) + ' Blöcke übrig';
+    el.textContent = 'Blöcke ' + n + ' / ' + max + (lose ? ' (+' + lose + ' lose)' : '');
+    el.classList.toggle('voll', n === max);
+    el.classList.toggle('zuviel', n > max);
+    if (n > max) el.title = 'Euer Programm hat ' + (n - max) + (n - max === 1 ? ' Block' : ' Blöcke') + ' zu viel. So startet es nicht.';
+    else if (lose && ws.remainingCapacity() <= 0) el.title = 'Kein Platz mehr. Löscht lose Blöcke, um neue zu holen.';
+    else if (n === max) el.title = 'Limit erreicht. Zum Austauschen einen Block lösen und einen anderen anhängen.';
+    else el.title = 'Noch ' + (max - n) + (max - n === 1 ? ' Block' : ' Blöcke') + ' bis zum Limit' + (lose ? '. Lose Blöcke zählen nicht.' : '');
   }
 
   function zeigeEnergie() {
@@ -429,8 +440,8 @@ const Algorithmen = (function () {
       }
       const bloecke = programmBloecke();
       const max = Maze.stufe().maxBloecke;
-      if (bloecke.length > max || alleBloecke() > max) {
-        meldung('Zu viele Blöcke! Erlaubt sind höchstens ' + max + '. Löscht überflüssige Blöcke.', 'warnung');
+      if (bloecke.length > max) {
+        meldung('Euer Programm hat ' + bloecke.length + ' Blöcke, erlaubt sind höchstens ' + max + '. Entfernt ' + (bloecke.length - max) + (bloecke.length - max === 1 ? ' Block.' : ' Blöcke.'), 'warnung');
         rueckrufe.ton('fehler');
         return false;
       }
@@ -617,7 +628,7 @@ const Algorithmen = (function () {
 
     ws = Blockly.inject(container, {
       toolbox: toolboxFuerStufe(),
-      maxBlocks: Maze.stufe().maxBloecke + 1,   // +1 für «wenn Programm startet»
+      maxBlocks: Maze.stufe().maxBloecke + 1 + LOSE_RESERVE,   // +1 für «wenn Programm startet»
       renderer: 'zelos',
       theme: thema,
       media: medien,

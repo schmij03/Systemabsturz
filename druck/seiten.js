@@ -160,11 +160,11 @@ var Druck = (function () {
         '<br><strong>Rechts und links</strong> gelten aus der Sicht von ANTI-V. Stellt euch hinter den Roboter!</div>' +
         '<h2>Regeln des Terminals</h2><ul>' +
         '<li><strong>Schleife ist Pflicht:</strong> Ohne «wiederhole bis Ziel erreicht» startet das Programm nicht.</li>' +
-        '<li><strong>Blocklimit:</strong> Höchstens <strong>' + s.maxBloecke + ' Blöcke</strong>. Ist das Limit erreicht, werden die Blöcke grau.</li>' +
+        '<li><strong>Blocklimit:</strong> Höchstens <strong>' + s.maxBloecke + ' Blöcke</strong> im Programm (lose Blöcke zählen nicht), sonst startet es nicht.</li>' +
         '<li><strong>Energie:</strong> ANTI-V kann höchstens <strong>' + s.energie + ' Felder</strong> gehen. Umwege enden mit «Energie leer!».</li>' +
         '<li><strong>Effizienzbonus:</strong> ' + BLOCK_BONUS_BASIS + ' Punkte plus ' + BLOCK_BONUS_PRO_BLOCK + ' Punkte für jeden Block unter dem Limit. Nach dem Lösen dürft ihr weiter optimieren.</li>' +
         '<li><strong>Bonusfrage:</strong> Nach dem Lösen folgt im Terminal eine Bonusfrage (ein Versuch, plus ' + BONUS_PUNKTE + ' Punkte).</li></ul>' +
-        '<h2>Plant euer Programm</h2><div class="plan"' + (st === 'leicht' ? ' style="height: 44mm"' : '') + '><span class="hut">wenn Programm startet</span></div>' +
+        '<h2>Plant euer Programm</h2><div class="plan"' + (st === 'leicht' ? ' style="height: 39mm"' : '') + '><span class="hut">wenn Programm startet</span></div>' +
         kaestchen('Eingesammelte Signaturen:', 3)
     }, st);
   }
