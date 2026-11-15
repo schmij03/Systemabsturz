@@ -122,6 +122,9 @@ code { font-family: "Courier New", Courier, monospace; font-size: 0.92em; backgr
 @media print {
   html, body { background: #fff; }
   .druckleiste { display: none; }
+  /* Nur die Druckseiten drucken: Knöpfe, die Browser-Erweiterungen in die
+     Seite einblenden (oft fixiert, dann auf jeder Seite oben links), weglassen */
+  html > :not(head):not(body), body > :not(#seiten):not(.seite) { display: none !important; }
   .seite { margin: 0; box-shadow: none; break-after: page; }
   .seite:last-child { break-after: auto; }
 }
