@@ -149,7 +149,7 @@ var Druck = (function () {
     return seite({
       ober: 'SICHERHEITSPROTOKOLL 2  ·  ALGORITHMEN', titel: 'Virenscanner programmieren', teil: 'Protokoll 2',
       inhalt:
-        '<p>Programmiert den Antiviren-Roboter <strong>ANTI-V</strong> im Terminal so, dass er das Ziel erreicht. Er sammelt jede gelbe Zahl ein, über die er läuft. Nur der richtige Weg führt über genau die drei Viren-Signaturen.' +
+        '<p>Programmiert den Antiviren-Roboter <strong>ANTI-V</strong> im Terminal so, dass er das Ziel erreicht. Die Viren-Signaturen sind die gelben Zahlen im Labyrinth. ANTI-V sammelt jede Zahl ein, über die er läuft. Euer Auftrag: ANTI-V kommt ins Ziel und sammelt dabei genau die drei Signaturen auf dem richtigen Weg ein.' +
         (hatInfiziert ? ' Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.' : '') + '</p>' +
         '<h2>So geht ihr vor</h2><ol>' +
         '<li>Zieht die Blöcke aus der Werkzeugleiste unter «wenn Programm startet».</li>' +

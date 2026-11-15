@@ -130,7 +130,7 @@ var Leitfaden = (function () {
         ['Ein Gerät wartet noch, obwohl das Spiel läuft', 'Reiter «2 Spiel durchführen», «Probleme?», «Startsignal erneut senden».'],
         ['Ein Team hat die Seite neu geladen', 'Kein Problem: Spielstand, Punkte und Countdown bleiben erhalten.'],
         ['Gerät für die nächste Runde', 'Nichts löschen: Die Teams tippen nach Spielende auf «Neues Spiel» oder melden sich auf der Startseite mit dem neuen Beitrittscode an. Mitten im Spiel: unten rechts «Spielleitung», PIN, «Spiel zurücksetzen».'],
-        ['Protokoll 2: Team weiss nicht, welche Zahlen zählen', 'ANTI-V sammelt jede gelbe Zahl auf seinem Weg. Nur der richtige Weg führt über genau 3, 8, 5. Die Meldung im Terminal nennt die eingesammelten Zahlen.'],
+        ['Protokoll 2: Team weiss nicht, welche Zahlen zählen', 'Die Viren-Signaturen sind die gelben Zahlen im Labyrinth. ANTI-V sammelt jede Zahl auf seinem Weg ein. Der Auftrag: ins Ziel kommen und dabei genau 3, 8, 5 einsammeln (mittel und schwer: die anderen Zahlen sind Ablenkungen). Die Signaturen sind kein Code zum Eingeben, Protokoll 2 ist gelöst, sobald ANTI-V mit den richtigen Zahlen im Ziel ankommt. Die Meldung im Terminal nennt die eingesammelten Zahlen, Tipp 1 erklärt den Begriff ebenfalls.'],
         ['Protokoll 3: «Euer Weg ist sauber, aber …»', 'Der Weg meidet die roten Server, hat aber zu viele Verbindungen. Hinweis: Verbindungen (Linien) zählen, nicht die Kennzahlen.'],
         ['Kein Ton', 'Lautstärke prüfen und einmal auf den Bildschirm tippen oder klicken. Browser erlauben Ton erst nach einer Berührung.'],
         ['Neue Runde', 'Reiter «3 Nach dem Spiel», «Spiel zurücksetzen (PIN)». Es gibt einen neuen Beitrittscode.']

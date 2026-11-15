@@ -223,22 +223,22 @@ const TEXTE = {
     2: {
       titel: 'Protokoll 2: Algorithmen',
       kurz: 'Algorithmen',
-      story: 'Stark, Protokoll 1 ist geknackt! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht. ANTI-V sammelt jede gelbe Zahl ein, über die er läuft. Nur der richtige Weg führt über genau die drei Viren-Signaturen. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
+      story: 'Stark, Protokoll 1 ist geknackt! NULLBYTE hat einen Virus ins Netzwerk geschleust. Programmiert den Antiviren-Roboter ANTI-V so, dass er das Ziel erreicht. Die Viren-Signaturen sind die gelben Zahlen im Labyrinth. ANTI-V sammelt jede Zahl ein, über die er läuft. Euer Auftrag: ANTI-V kommt ins Ziel und sammelt dabei genau die drei Signaturen auf dem richtigen Weg ein. Rote Felder sind infiziert: Betritt ANTI-V eines, ist er verloren.',
       /* Tipps für die Stufen leicht und mittel (schwer: «tipps» darunter) */
       tippsStufen: {
         leicht: [
-          'ANTI-V soll immer geradeaus gehen. Nur wenn vorne blockiert ist, dreht er sich. Schaut euch die Ecken im Labyrinth an: In welche Richtung muss er dort drehen?',
+          'Die Viren-Signaturen sind die gelben Zahlen im Labyrinth. ANTI-V sammelt sie ein, wenn er darüber läuft. ANTI-V soll immer geradeaus gehen. Nur wenn vorne blockiert ist, dreht er sich. Schaut euch die Ecken im Labyrinth an: In welche Richtung muss er dort drehen?',
           'Ihr braucht «wiederhole bis Ziel erreicht» und darin einen Block «falls dann sonst» mit der Bedingung «vorne frei?». Überlegt: Was soll ANTI-V tun, wenn vorne frei ist, und was, wenn vorne blockiert ist?',
           'Ist vorne frei, geht ANTI-V 1 Feld vor. Ist vorne blockiert, dreht er sich nach rechts. Mehr braucht es nicht.'
         ],
         mittel: [
-          'Stellt euch hinter ANTI-V, dann sind rechts und links klar. Die Idee: ANTI-V hält die rechte Hand an der Wand und folgt ihr. Darum prüft er zuerst, ob rechts frei ist.',
+          'Die Viren-Signaturen sind die gelben Zahlen im Labyrinth. Nur drei davon liegen auf dem richtigen Weg, die anderen sind Ablenkungen. Stellt euch hinter ANTI-V, dann sind rechts und links klar. Die Idee: ANTI-V hält die rechte Hand an der Wand und folgt ihr. Darum prüft er zuerst, ob rechts frei ist.',
           'Die Reihenfolge der Prüfungen: zuerst rechts, dann vorne. Sind rechts und vorne blockiert, dreht ANTI-V nach links. Dafür braucht ihr zwei «falls dann sonst»: Das zweite steckt im «sonst» des ersten.',
           'Ist rechts frei, braucht ANTI-V zwei Blöcke: zuerst nach rechts drehen, dann 1 Feld vor. Im inneren «falls dann sonst» geht er vor, wenn vorne frei ist, sonst dreht er nach links.'
         ]
       },
       tipps: [
-        'Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V folgt der Wand auf seiner rechten Seite. Neu sind die roten Felder: Ein Feld ist nur gut, wenn es frei ist und nicht infiziert.',
+        'Die Viren-Signaturen sind die gelben Zahlen im Labyrinth. Nur drei davon liegen auf dem richtigen Weg, die anderen sind Ablenkungen. Stellt euch hinter ANTI-V, dann sind rechts und links klar. ANTI-V folgt der Wand auf seiner rechten Seite. Neu sind die roten Felder: Ein Feld ist nur gut, wenn es frei ist und nicht infiziert.',
         'Baut es wie die rechte Hand an der Wand: zuerst rechts prüfen, dann vorne, sonst nach links drehen. Jede Prüfung braucht «und» mit «nicht», zum Beispiel: rechts frei? und nicht rechts infiziert?',
         'Ist rechts frei und nicht infiziert: drehe dich nach rechts, dann gehe 1 Feld vor. Sonst prüft ihr vorne auf die gleiche Art. Ist auch vorne blockiert oder infiziert, dreht ANTI-V nach links.'
       ]
