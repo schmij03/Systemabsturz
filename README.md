@@ -6,6 +6,19 @@ Ein digitales Escape Game für die Sekundarstufe I (12 bis 15 Jahre) zu Kryptogr
 
 Die App ist eine rein statische Webseite (HTML, CSS, JavaScript). Sie braucht keinen Server, keine Datenbank und keinen Build-Schritt und läuft direkt auf GitHub Pages.
 
+## Lehrplanbezug und Lernziele
+
+Grundlage ist der Lehrplan 21 Kanton Luzern, Modullehrplan Medien und Informatik (Stand 29.2.2016), vor allem der Kompetenzbereich MI.2 Informatik im Zyklus 3. «Z2» heisst: Aufbau aus Zyklus 2, im Spiel angewendet und vertieft.
+
+| Teil | Kompetenzen |
+|---|---|
+| Protokoll 1, Kryptografie | MI.2.1c (Z2) Geheimschriften, MI.2.3n (Z3) Risiken unverschlüsselter Datenübermittlung |
+| Protokoll 2, Algorithmen | MI.2.2c bis f (Z2) Abläufe lesen, darstellen, programmieren und testen, MI.2.2g und i (Z3) eigene Lösungswege programmieren und vergleichen, MI.2.1i (Z3) logische Operatoren |
+| Protokoll 3, Netzwerke | MI.2.1f (Z3) Netzstrukturen, MI.2.2b (Z2) Lösungswege prüfen, MI.2.3m (Z3) Internet als Infrastruktur |
+| Story und Override | MI.2.3h (Z2) Datenverlust und Schutzmassnahmen, MI.1.1e (Z3) Risiken erkennen und Konsequenzen für das eigene Verhalten ziehen |
+
+**Lernziel Datensicherheit:** Die Schülerinnen und Schüler erkennen, wie schwache Passwörter, entsperrte Geräte und unvorsichtige Klicks Daten gefährden, und nennen Massnahmen, die Daten schützen. Die drei Protokolle zeigen dabei das Prinzip mehrerer Schutzschichten. Die ausführliche Tabelle mit dem Bezug zum Spiel steht in der Unterrichtsinfo (siehe unten) und im Leitfaden.
+
 ## Inhalt
 
 | Datei | Zweck |
@@ -144,7 +157,7 @@ Die Story nennt die Uhrzeit, zu der die Spielleitung «▶ Spiel starten» gedr�
 
 ### NULLBYTE und das Vorlesen
 
-* **Botschaft von NULLBYTE:** Beim Spielstart (oder mit dem Knopf «Botschaft von NULLBYTE») erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
+* **Botschaft von NULLBYTE:** Beim Spielstart (oder mit dem Knopf «Botschaft von NULLBYTE») erscheint auf dem Beamer die Maske von NULLBYTE (`img/maske.svg`, eigene Zeichnung) und die Botschaft tippt sich Zeile für Zeile. Dabei nennt NULLBYTE auch sein Motiv: Die Gruppe will beweisen, dass an der Schule niemand auf Datensicherheit achtet (schwache Passwörter, offene Computer, unvorsichtige Klicks). Das ist der Aufhänger für das Lernziel Datensicherheit, das in der Auswertung aufgegriffen wird. Der Text steht in `js/app.js` unter `TEXTE.nullbyte`.
 * **Vorlesen (Text-to-Speech):** Alle festen Texte (Botschaft von NULLBYTE, Story-Szenen, Story-Texte und Tipps aller Protokolle und Stufen) liegen als fertige Sprachaufnahmen in `audio/tts/`. Sie wurden mit der neuronalen Stimme **«Thorsten»** (Thorsten-Voice, Lizenz CC0) und der freien Sprachsynthese Piper erzeugt. NULLBYTE spricht mit der Variante «wütend», tiefer gestimmt und mit Roboter-Effekt. Vorteile: natürliche Aussprache, auf jedem Gerät gleich, ohne Internet, ohne Kosten und ohne Datenschutzfragen. Im Terminal haben die Story-Texte und der Help-Desk einen Knopf 🔊, auf dem Beamer wird automatisch vorgelesen.
 * **Ersatz:** Fehlt für einen Text eine Aufnahme (zum Beispiel nach einer Textänderung), liest die Sprachausgabe des Browsers vor. Dabei werden neuronale Stimmen bevorzugt (in Edge «Microsoft … Online (Natural)», auf dem iPad «Premium» oder «Erweitert», sofern installiert), zuerst Deutsch (Schweiz), dann Deutsch (Deutschland).
 * Auf dem iPad gibt es Ton nur nach einer Berührung und nur, wenn der Stummschalter aus ist.
@@ -195,7 +208,7 @@ Jede Prüfung hat ein Zeitlimit und liefert immer ein Ergebnis, auch ohne Netz. 
 
 ## Unterrichtsinfo (Fenster in der Spielleitung)
 
-Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im Unterricht»** mit fünf aufklappbaren Abschnitten: Auf einen Blick, Lehrplanbezüge (Lehrplan 21, MI.2 mit Tabelle pro Protokoll, dazu Story und Override als Lernziel Datensicherheit), Einsatz im Unterricht (Ablauf und Reflexionsfragen), Differenzierung und Beurteilung, Voraussetzungen und Technik. Erst nach «Weiter zur Spielleitung», dem Kreuz oder der Escape-Taste ist die Steuerung bedienbar.
+Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im Unterricht»** mit fünf aufklappbaren Abschnitten: Auf einen Blick, Lehrplanbezüge (Lehrplan 21 Kanton Luzern, Tabelle pro Protokoll und für Story und Override, Lernziel Datensicherheit), Einsatz im Unterricht (Ablauf und Reflexionsfragen), Differenzierung und Beurteilung, Voraussetzungen und Technik. Erst nach «Weiter zur Spielleitung», dem Kreuz oder der Escape-Taste ist die Steuerung bedienbar.
 
 * Das Fenster ist nur für die Lehrperson: vor dem Anschliessen oder Teilen des Beamers schliessen.
 * Läuft bereits ein Spiel (Aufgaben freigegeben oder Countdown aktiv, gespeichert unter `systemabsturz-spielleitung`), erscheint es beim Neuladen nicht automatisch.
