@@ -30,7 +30,7 @@ test('Lehrplanstufen in der Unterrichtsinfo entsprechen dem Lehrplan 21', () => 
   const c = app();
   lade(c, 'js/unterrichtsinfo.js');
   const erwartet = {
-    'MI.1.3.d': 'Z2',
+    'MI.1.1.e': 'Z3', 'MI.2.3.h': 'Z2',
     'MI.2.1.c': 'Z2', 'MI.2.2.b': 'Z2', 'MI.2.2.c': 'Z2', 'MI.2.2.d': 'Z2', 'MI.2.2.e': 'Z2', 'MI.2.2.f': 'Z2',
     'MI.2.1.f': 'Z3', 'MI.2.1.i': 'Z3', 'MI.2.2.g': 'Z3', 'MI.2.2.i': 'Z3', 'MI.2.3.m': 'Z3', 'MI.2.3.n': 'Z3'
   };
@@ -50,7 +50,9 @@ test('Lehrplanstufen in der Unterrichtsinfo entsprechen dem Lehrplan 21', () => 
   }
   for (const k of Object.keys(gefunden)) assert.equal(gefunden[k], erwartet[k], k);
   for (const k of Object.keys(erwartet)) assert.ok(gefunden[k], k + ' fehlt in der Tabelle');
-  assert.ok(tabelle.zeilen.some(z => z[0] === '1 Kryptografie' && /MI\.1\.3d \(Z2\)/.test(z[1])));
+  // Story und Override sind als Lernziel Datensicherheit ausgewiesen
+  assert.ok(tabelle.zeilen.some(z => /^Rahmen/.test(z[0]) && /MI\.2\.3h \(Z2\)/.test(z[1])));
+  assert.ok(tabelle.zeilen.some(z => /^Rahmen/.test(z[0]) && /MI\.1\.1e \(Z3\)/.test(z[1])));
 });
 
 test('Technikcheck liefert für jede Prüfung ein Ergebnis, auch ohne Netz', async () => {
