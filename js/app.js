@@ -1050,6 +1050,9 @@ function toast(text, art) {
     document.body.appendChild(t);
   }
   t.textContent = text;
+  // Im Terminal knapp unter die Kopfleiste setzen (ihre Höhe hängt von der Bildschirmbreite ab).
+  const kopf = document.body.classList.contains('seite-terminal') && $('.kopf');
+  if (kopf) t.style.setProperty('--toast-oben', Math.round(kopf.getBoundingClientRect().bottom + 10) + 'px');
   t.className = 'toast sichtbar ' + (art || '');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { t.className = 'toast'; }, 4500);

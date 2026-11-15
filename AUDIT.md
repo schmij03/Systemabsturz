@@ -1,6 +1,6 @@
 # Code-Audit «Systemabsturz»
 
-Ausgangsstand: `main`, 3. Oktober 2026.
+Ausgangsstand: `main`, 3. Oktober 2026. Der Nachtrag am Ende beschreibt, was sich seither geändert hat.
 
 Geprüft wurden die eigenen HTML-/JavaScript-Dateien, Spielzustände, Blockly-Interpreter und Labyrinthe, Netzwerkdaten, Offline-Strategie, Druckgeneratoren, TTS-Werkzeuge und Dokumentation. Die eingebundene Blockly-Bibliothek wurde nicht auf interne Sicherheitslücken auditiert. Ein Code-Audit garantiert keine vollständige Fehlerfreiheit.
 
@@ -21,7 +21,7 @@ Geprüft wurden die eigenen HTML-/JavaScript-Dateien, Spielzustände, Blockly-In
 | Audio | Abbruch von HTML-Audio/Browserstimme konnte wartende Vorlese-Aufträge ungelöst lassen. | Abbruch löst das Promise auf; Sicherheitstimer wird entfernt; abgebrochene Web-Audio-Aufträge nach `resume()` nicht mehr starten. |
 | Bedienung | PIN-Dialog ohne Enter/Escape/Fokusbegrenzung; Tastendrücke konnten Beamer-Aktionen auslösen. Ziffernfeld blieb nach Prüfungsfehler gesperrt. | Dialog-Tastaturführung, Fokus-Rückgabe, Fehlerbehandlung und Wiederholungsmöglichkeit. |
 | Speicher | Bei gesperrtem/vollen lokalem Speicher führte die Anmeldung ins Terminal ohne gespeicherten Spielstand. | Anmeldung bleibt mit Fehlermeldung sichtbar; Speicherfehler während des Teamspiels werden gemeldet. |
-| Konfiguration | Bonus-/Override-/Kistencodes mit unpassender Länge konnten generiert werden; PIN-Sonderzeichen konnten ungültigen JavaScript-Code erzeugen. | Längen und Signaturformat prüfen; PIN als JSON-String ausgeben. |
+| Konfiguration | Bonus-/Override-/Kistencodes mit unpassender Länge (die Kisten wurden inzwischen entfernt) konnten generiert werden; PIN-Sonderzeichen konnten ungültigen JavaScript-Code erzeugen. | Längen und Signaturformat prüfen; PIN als JSON-String ausgeben. |
 | Dokumentation | Falsche Standardstufe, kaputte Tabelle, falscher Netzwerk-Testcode, unzutreffende Sicherheits-/Übertragungsbehauptungen. | README und Testplan korrigiert; PIN-Schutz realistisch beschrieben. |
 
 ## Nachweise und Grenzen
@@ -39,7 +39,7 @@ Geprüft wurden die eigenen HTML-/JavaScript-Dateien, Spielzustände, Blockly-In
 
 | Priorität | Vorschlag | Nutzen und konkrete Umsetzung |
 |---|---|---|
-| Hoch | Technikcheck vor Spielbeginn | Anzeige für lokalen Speicher, Audio, Blockly, vollständigen Offline-Cache und Erreichbarkeit des Startdienstes. Fehlende Voraussetzungen vor dem Austeilen erkennen. |
+| Erledigt | Technikcheck vor Spielbeginn | Umgesetzt in `js/technikcheck.js` (Link «Gerät prüfen» auf der Startseite und in der Spielleitung). Ursprünglicher Vorschlag: Anzeige für lokalen Speicher, Audio, Blockly, vollständigen Offline-Cache und Erreichbarkeit des Startdienstes. Fehlende Voraussetzungen vor dem Austeilen erkennen. |
 | Hoch | Startkanal besser schützen | Der Beitrittscode bestimmt derzeit einen öffentlich beschreibbaren ntfy-Kanal. Für vertrauenswürdige Freigaben authentifizierten Relay-/ntfy-Dienst oder signierte Nachrichten planen. Geheime Schreibschlüssel dürfen nicht in der statischen App liegen. |
 | Mittel | Spielstände sichern und wiederherstellen | Zusätzlich zur neuen Fehlermeldung einen Export/Import und einen Speichercheck für die Spielleitung anbieten. So kann ein defektes Gerät während der Runde ersetzt werden. |
 | Hoch | Browserprüfungen automatisieren | Playwright-Durchlauf für Anmeldung, alle Protokolle, Timer, Reset und Offline-Betrieb; zusätzlich echter iPad-Test. Node-Tests bei jedem Pull Request als CI-Gate ausführen. |
@@ -52,3 +52,12 @@ Geprüft wurden die eigenen HTML-/JavaScript-Dateien, Spielzustände, Blockly-In
 | Niedrig | Didaktische Auswertung | Nach dem Spiel kurze Reflexion zu Verschlüsselung, Schleifen und Routing; Lösungsschritte statt ausschliesslich Punkte vergleichen. |
 
 Die PIN ist eine Bedienhürde, keine Sicherheitsgrenze: Quellcode, Prüfwerte und Spielzustand sind auf den Geräten verfügbar. Für einen lokalen Unterrichts-Escape-Room kann das passen; für manipulationssichere Wettbewerbe wären serverseitige Prüfungen notwendig.
+
+## Nachtrag (15. November 2026)
+
+* Inzwischen bestehen 51 automatisierte Tests (`node --test tests/*.test.js`, geprüft mit Node.js 22).
+* Die Sicherheitskisten (Kistencodes) wurden aus dem Spiel entfernt. Die entsprechenden Prüfungen im Konfigurationsgenerator betreffen nur noch Bonus, Override und Signaturen.
+* Der Technikcheck ist umgesetzt (siehe Tabelle oben).
+* Die Teamsets in `material/` wurden neu erzeugt und mit den eingecheckten Dateien verglichen: Alle drei Stufen sind identisch, also aktuell.
+* Die Meldungen im Terminal (zum Beispiel «Gratis-Tipp freigeschaltet!») erscheinen jetzt oben unter der Kopfleiste statt unten, damit sie Hinweise, Ziffernfeld und Knöpfe nicht mehr verdecken.
+* Weiterhin offen: geschützter Startkanal, Browsertests mit Playwright und CI, Export und Import von Spielständen.

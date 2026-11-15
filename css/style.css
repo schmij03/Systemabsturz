@@ -438,6 +438,10 @@ body.spiel-gesperrt .helpdesk-knopf, body.spiel-gesperrt .tab { pointer-events: 
 .toast.sichtbar { transform: translate(-50%, 0); opacity: 1; }
 .toast.warnung { border-color: var(--rot); color: #ffd0d0; background: #2a0606; }
 .toast.info { border-color: var(--blau); }
+/* Im Terminal oben unter der Kopfleiste, damit Rückmeldungen und Knöpfe
+   unten (Ziffernfeld, Programm starten, Hinweise) frei bleiben. */
+.seite-terminal .toast { bottom: auto; top: var(--toast-oben, 84px); transform: translate(-50%, -30px); }
+.seite-terminal .toast.sichtbar { transform: translate(-50%, 0); }
 
 /* ========================= Spielleitung ============================= */
 
