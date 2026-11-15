@@ -96,7 +96,7 @@ wiederhole bis Ziel erreicht
       drehe dich nach links
 ```
 
-Vor dem Start: Die Story nennt «ANTI-V sammelt jede gelbe Zahl ein, über die er läuft», unter dem Labyrinth steht «Rechts und links aus Sicht von ANTI-V (oranger Pfeil = Blickrichtung). Jedes Feld kostet 1 Energie.» Der orange Pfeil am Roboter ist gut erkennbar.
+Vor dem Start: Die Story erklärt «Die Viren-Signaturen sind die gelben Zahlen im Labyrinth» und nennt den Auftrag («Euer Auftrag: ANTI-V kommt ins Ziel und sammelt dabei genau die drei Signaturen auf dem richtigen Weg ein»), Tipp 1 erklärt den Begriff ebenfalls, unter dem Labyrinth steht «Rechts und links aus Sicht von ANTI-V (oranger Pfeil = Blickrichtung). Jedes Feld kostet 1 Energie.» Der orange Pfeil am Roboter ist gut erkennbar.
 
 «Programm starten» drücken. Erwartung:
 
