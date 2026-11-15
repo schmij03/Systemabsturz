@@ -245,7 +245,7 @@ node --test tests/*.test.js
 node werkzeuge/netzwerke_pruefen.js
 ```
 
-Die Tests prüfen Spiellogik, Interpreter, Punkte, Zeitablauf, Startsignale, Cache-Verhalten, die verschlüsselte Lösungsliste, die Lehrplanstufen der Unterrichtsinfo und den Technikcheck mit Browser-Attrappen. Sie ersetzen nicht den Gerätetest und die Druckkontrolle aus `TESTPLAN.md`. Befunde und priorisierte Verbesserungsvorschläge stehen in `AUDIT.md`.
+Die Tests prüfen Spiellogik, Interpreter, Punkte, Zeitablauf, Startsignale, Cache-Verhalten, die verschlüsselte Lösungsliste, die Lehrplanstufen der Unterrichtsinfo und den Technikcheck mit Browser-Attrappen. Sie ersetzen nicht den Gerätetest und die Druckkontrolle aus `TESTPLAN.md`.
 
 ## Lizenz
 
