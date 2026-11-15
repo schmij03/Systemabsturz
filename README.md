@@ -195,13 +195,13 @@ Jede Prüfung hat ein Zeitlimit und liefert immer ein Ergebnis, auch ohne Netz. 
 
 ## Unterrichtsinfo (Fenster in der Spielleitung)
 
-Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im Unterricht»** mit fünf aufklappbaren Abschnitten: Auf einen Blick, Lehrplanbezüge (Lehrplan 21, MI.2 mit Tabelle pro Protokoll), Einsatz im Unterricht (Ablauf und Reflexionsfragen), Differenzierung und Beurteilung, Voraussetzungen und Technik. Erst nach «Weiter zur Spielleitung», dem Kreuz oder der Escape-Taste ist die Steuerung bedienbar.
+Beim Öffnen von `spielleitung.html` erscheint zuerst das Fenster **«Einsatz im Unterricht»** mit fünf aufklappbaren Abschnitten: Auf einen Blick, Lehrplanbezüge (Lehrplan 21, MI.2 mit Tabelle pro Protokoll, dazu Story und Override als Lernziel Datensicherheit), Einsatz im Unterricht (Ablauf und Reflexionsfragen), Differenzierung und Beurteilung, Voraussetzungen und Technik. Erst nach «Weiter zur Spielleitung», dem Kreuz oder der Escape-Taste ist die Steuerung bedienbar.
 
 * Das Fenster ist nur für die Lehrperson: vor dem Anschliessen oder Teilen des Beamers schliessen.
 * Läuft bereits ein Spiel (Aufgaben freigegeben oder Countdown aktiv, gespeichert unter `systemabsturz-spielleitung`), erscheint es beim Neuladen nicht automatisch.
 * Der Knopf **«ⓘ Unterrichtsinfo»** in der Kopfleiste öffnet es jederzeit wieder, auch während des Spiels (nichts wird pausiert).
 * «Drucken oder als PDF sichern» druckt nur den Fensterinhalt auf A4, alle Abschnitte aufgeklappt.
-* **Texte ändern:** in `js/unterrichtsinfo.js` in der Datenstruktur `UNTERRICHTSINFO` oben in der Datei. Die Lehrplanangaben stammen aus dem Kompetenzraster des Lehrplans 21 (Stand 29.2.2016) und sind bei Bedarf mit der kantonalen Version abzugleichen.
+* **Texte ändern:** in `js/unterrichtsinfo.js` in der Datenstruktur `UNTERRICHTSINFO` oben in der Datei. Die Lehrplanangaben stammen aus dem Lehrplan 21 Kanton Luzern, Modullehrplan Medien und Informatik (Stand 29.2.2016), und wurden im November 2026 damit abgeglichen.
 
 ## Anpassen
 

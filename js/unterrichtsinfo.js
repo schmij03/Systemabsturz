@@ -15,9 +15,8 @@
    **fett** wird fett.
 
    Lehrplanbezüge: Buchstaben und Zyklusangaben (Z2, Z3) stammen aus dem
-   Kompetenzraster des Lehrplans 21, Modullehrplan Medien und
-   Informatik (Stand 29.2.2016). Bei Bedarf mit der kantonalen Version
-   abgleichen.
+   Lehrplan 21 Kanton Luzern, Modullehrplan Medien und Informatik
+   (Stand 29.2.2016), abgeglichen im November 2026.
 
    Benötigt js/app.js (SPEICHER_LEITUNG, ladeJson). Keine externen
    Abhängigkeiten.
@@ -43,7 +42,7 @@ const UNTERRICHTSINFO = {
     {
       titel: 'B  Lehrplanbezüge',
       inhalt: [
-        { p: 'Grundlage: Lehrplan 21, Modullehrplan Medien und Informatik, Kompetenzbereich MI.2 Informatik. «Z2» bedeutet: Aufbau aus Zyklus 2, im Spiel angewendet und vertieft. «Z3» bedeutet: Kompetenzstufe des Zyklus 3.' },
+        { p: 'Grundlage: Lehrplan 21 Kanton Luzern, Modullehrplan Medien und Informatik, vor allem Kompetenzbereich MI.2 Informatik. «Z2» bedeutet: Aufbau aus Zyklus 2, im Spiel angewendet und vertieft. «Z3» bedeutet: Kompetenzstufe des Zyklus 3.' },
         { h: 'Übergeordnete Kompetenzen' },
         { liste: [
           '**MI.2.1:** Die Schülerinnen und Schüler können Daten aus ihrer Umwelt darstellen, strukturieren und auswerten.',
@@ -56,19 +55,21 @@ const UNTERRICHTSINFO = {
           zeilen: [
             ['1 Kryptografie', 'MI.2.1c (Z2): Daten mittels selbstentwickelter Geheimschriften verschlüsseln', 'Cäsar-Verschlüsselung mit der Chiffrierscheibe, Begriffe Schlüssel, Klartext, Geheimtext'],
             ['1 Kryptografie', 'MI.2.3n (Z3): Risiken unverschlüsselter Datenübermittlung und -speicherung abschätzen', 'NULLBYTE liest Klartext mit, die Botschaft wird nur verschlüsselt sicher. Reflexion in der Auswertung'],
-            ['1 Kryptografie', 'MI.1.3d (Z2): Sicherheitsregeln im Umgang mit persönlichen Daten (Passwort)', 'Motiv von NULLBYTE (schwache Passwörter, unvorsichtige Klicks) und Reflexion in der Auswertung'],
-            ['2 Algorithmen', 'MI.2.2f (Z2): Programme mit Schleifen, bedingten Anweisungen und Parametern schreiben und testen', 'Blockprogramm für ANTI-V, Schleife ist Pflicht, Testen mit Start und Fehlermeldung'],
+            ['2 Algorithmen', 'MI.2.2f (Z2): Programme mit Schleifen, bedingten Anweisungen und Parametern schreiben und testen', 'Blockprogramm für ANTI-V mit Schleife und Bedingungen, Testen mit Start und Fehlermeldung. Parameter kommen im Spiel nicht vor'],
             ['2 Algorithmen', 'MI.2.2g (Z3): selbstentdeckte Lösungswege in lauffähigen und korrekten Computerprogrammen formulieren', 'Teams entdecken selbst eine allgemeine Regel (zum Beispiel Rechte-Hand-Regel) und setzen sie um'],
             ['2 Algorithmen', 'MI.2.2i (Z3): verschiedene Algorithmen zur Lösung desselben Problems vergleichen und beurteilen', 'Blocklimit, Energie und Effizienzbonus, Vergleich der Teamlösungen in der Auswertung'],
             ['2 Algorithmen', 'MI.2.2c und MI.2.2d (Z2): Abläufe darstellen, einfache Abläufe lesen und manuell ausführen', 'Planungsfeld auf dem Teamset, Programm vor dem Start im Kopf durchspielen'],
             ['2 Algorithmen', 'MI.2.2e (Z2): verstehen, dass ein Computer nur vordefinierte Anweisungen ausführt', 'ANTI-V tut genau, was die Blöcke sagen, nicht, was das Team meint'],
-            ['2 Algorithmen', 'MI.2.1i (Z3): logische Operatoren verwenden (und, oder, nicht)', 'Stufen mittel und schwer: Bedingungen mit «und» und «nicht»'],
+            ['2 Algorithmen', 'MI.2.1i (Z3): logische Operatoren verwenden (und, oder, nicht)', 'Stufen mittel und schwer: Bedingungen mit «und», «oder» und «nicht»'],
             ['3 Netzwerke', 'MI.2.1f (Z3): Baum- und Netzstrukturen erkennen und verwenden', 'Netzwerkplan mit Servern und Verbindungen als Netzstruktur'],
             ['3 Netzwerke', 'MI.2.2b (Z2) und MI.2.2i (Z3): Lösungswege suchen, auf Korrektheit prüfen und vergleichen', 'Sauberen Weg mit den wenigsten Verbindungen finden, verlockende infizierte Abkürzungen prüfen und verwerfen'],
-            ['3 Netzwerke', 'MI.2.3m (Z3): das Internet als Infrastruktur von seinen Diensten unterscheiden', 'Der Netzwerkplan als Modell für die Verbindungen hinter dem Internet']
+            ['3 Netzwerke', 'MI.2.3m (Z3): das Internet als Infrastruktur von seinen Diensten unterscheiden', 'Der Netzwerkplan zeigt die Infrastruktur (Server, Verbindungen). Die Dienste (Web, E-Mail, Messenger) als Gegenstück in der Auswertung'],
+            ['Rahmen: Story und Override', 'MI.2.3h (Z2): erklären, wie Daten verloren gehen können, und die wichtigsten Massnahmen kennen, sich davor zu schützen', 'NULLBYTE droht, alle Daten zu löschen, und nennt die Schwachstellen. Mehrere Schutzschichten (drei Protokolle) sichern den Override. Massnahmen in der Auswertung sammeln'],
+            ['Rahmen: Story und Override', 'MI.1.1e (Z3): Chancen und Risiken der Mediennutzung benennen und Konsequenzen für das eigene Verhalten ziehen', 'Die Gewohnheiten aus der Botschaft (schwache Passwörter, entsperrte Geräte, Codes auf Zetteln, Klicks auf Lockangebote) mit dem eigenen Verhalten vergleichen']
           ]
         } },
-        { p: '**Querschnitt:** Überfachliche Kompetenzen (soziale und methodische), vor allem Zusammenarbeit im Team, Aufgaben verteilen und systematisches Vorgehen beim Problemlösen. Das Motiv von NULLBYTE (schwache Passwörter, unvorsichtige Klicks) bietet zudem Anschluss an den Kompetenzbereich MI.1 Medien (Sicherheit und Datenschutz).' }
+        { p: '**Lernziel Datensicherheit (Story und Override):** Die Schülerinnen und Schüler erkennen, wie schwache Passwörter, entsperrte Geräte und unvorsichtige Klicks Daten gefährden, und nennen Massnahmen, die Daten schützen (sichere Passwörter, Gerät sperren, Links prüfen, Daten verschlüsseln, Sicherungskopien). Die drei Protokolle zeigen dabei das Prinzip mehrerer Schutzschichten.' },
+        { p: '**Querschnitt:** Überfachliche Kompetenzen (soziale und methodische), vor allem Zusammenarbeit im Team, Aufgaben verteilen und systematisches Vorgehen beim Problemlösen.' }
       ]
     },
     {
@@ -96,6 +97,7 @@ const UNTERRICHTSINFO = {
           '**Kryptografie:** Warum ist die Cäsar-Chiffre heute nicht mehr sicher? Wie liesse sie sich ohne Schlüssel knacken? Wo werden heute Daten verschlüsselt (Messenger, WLAN, Webseiten)?',
           '**Algorithmen:** Welche Regel hat ANTI-V ans Ziel gebracht? Warum brauchte es die Schleife? Wann ist eine kürzere Lösung besser, und wann zählt etwas anderes?',
           '**Netzwerke:** Wie habt ihr den Weg gefunden? Was passiert, wenn ein Server ausfällt oder infiziert ist? Was hat das mit dem Internet zu tun?',
+          '**Datensicherheit:** Welche Gewohnheiten aus der Botschaft von NULLBYTE kennt ihr von euch? Was schützt eure Daten wirklich?',
           '**Transfer:** Wo steckt ein Algorithmus in einem Navi, einem sozialen Netzwerk oder einem KI-Chatbot?'
         ] }
       ]
@@ -119,7 +121,7 @@ const UNTERRICHTSINFO = {
           '**Vorwissen der Klasse:** Auf Stufe leicht ohne Vorkenntnisse spielbar. Für mittel helfen Scratch-Grundlagen (Schleife, «falls dann sonst»), für schwer zusätzlich «und» und «nicht». Die Cäsar-Verschlüsselung vorher nicht erklären, sie ist Teil des Rätsels. Details im Leitfaden, Seite 2.',
           '**Zuerst selbst ausprobieren:** Vor dem ersten Einsatz das Spiel einmal selbst ganz durchspielen (ca. 45 Minuten), am besten im Schulzimmer mit dem WLAN der Schule. Anleitung und Druckliste im Leitfaden, Seite 3.',
           'Lizenz: «Systemabsturz» von Christof Heiss und Jan Schmid, PH Luzern 2026, CC BY-SA 4.0.',
-          'Quelle der Kompetenzen: Lehrplan 21, Modullehrplan Medien und Informatik, https://v-ef.lehrplan.ch',
+          'Quelle der Kompetenzen: Lehrplan 21 Kanton Luzern, Modullehrplan Medien und Informatik (Stand 29.2.2016), https://lu.lehrplan.ch',
           'Bildnachweis: Hintergrund der Spielanweisung KI-generiert mit Google Gemini; Maske von NULLBYTE eigene Zeichnung.'
         ] }
       ]
